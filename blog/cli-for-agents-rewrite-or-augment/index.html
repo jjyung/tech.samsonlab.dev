@@ -1,0 +1,264 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/cli-for-agents-rewrite-or-augment/"><!-- Primary Meta Tags --><title>CLI for Agents: Rewrite or Augment?</title><meta name="title" content="CLI for Agents: Rewrite or Augment?"><meta name="description" content="Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines."><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/cli-for-agents-rewrite-or-augment/"><meta property="og:title" content="CLI for Agents: Rewrite or Augment?"><meta property="og:description" content="Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines."><meta property="og:image" content="https://tech.samsonlab.dev/_astro/cli-for-agents-rewrite-or-augment.DeqGi52H.webp"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/cli-for-agents-rewrite-or-augment/"><meta property="twitter:title" content="CLI for Agents: Rewrite or Augment?"><meta property="twitter:description" content="Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines."><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/cli-for-agents-rewrite-or-augment.DeqGi52H.webp"><link rel="stylesheet" href="/_astro/Header.MVHo5djF.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/cli-for-agents-rewrite-or-augment.DeqGi52H_otcHV.webp" alt loading="lazy" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-03-17T00:00:00.000Z"> Mar 17, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> CLI for Agents: Rewrite or Augment? </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h2 id="problem">Problem</h2>
+<p>隨著 AI Agents 開始大量操作開發工具（如 git、docker、cloud CLI），一個問題逐漸浮現：</p>
+<blockquote>
+<p>傳統 CLI 是否適合 AI Agents 使用？</p>
+</blockquote>
+<p>部分觀點主張：</p>
+<blockquote>
+<p>CLI 應重新設計為 agent-first（JSON-first、schema-driven）</p>
+</blockquote>
+<p>但實務與社群討論逐漸顯示：</p>
+<blockquote>
+<p>問題不在「是否重寫 CLI」，而在「CLI 是否對 agent 友善」</p>
+</blockquote>
+<hr>
+<h2 id="context">Context</h2>
+<p>CLI 原本就是：</p>
+<ul>
+<li>成熟且廣泛存在的 execution interface</li>
+<li>被 LLM 訓練資料大量涵蓋（天然會用）</li>
+<li>token 成本低（相比 schema / MCP）</li>
+</ul>
+<p>但在 agent 使用場景中，仍存在挑戰：</p>
+<ul>
+<li>output 不易解析（table / text 混合）</li>
+<li>interactive 行為難以自動化</li>
+<li>flags 與參數增加推理成本</li>
+<li>缺乏可預測性（predictability）</li>
+</ul>
+<p>然而實務經驗顯示：</p>
+<blockquote>
+<p>agent 並不需要「完美結構化 CLI」，而是需要「不阻礙使用」的 CLI (<a href="https://news.ycombinator.com/item?id=47252459">Hacker News</a>)</p>
+</blockquote>
+<hr>
+<h2 id="the-real-shift">The Real Shift</h2>
+<p>「Rewrite CLI」是一個過度簡化的 framing。</p>
+<p>實際上，業界觀察收斂到：</p>
+<blockquote>
+<p>❌ CLI 不需要被重寫<br>
+✅ CLI 需要變得 <strong>machine-readable</strong></p>
+</blockquote>
+<p>關鍵能力包括：</p>
+<ul>
+<li>JSON output（<code>--output json</code>）</li>
+<li>non-interactive execution</li>
+<li>明確 exit codes</li>
+<li>deterministic behavior</li>
+</ul>
+<p>這些改動通常是「incremental improvement」，而非重構整個 CLI。</p>
+<hr>
+<h2 id="human-dx-vs-agent-dx">Human DX vs Agent DX</h2>
+<p>這個討論的核心，其實不是 CLI，而是：</p>
+<blockquote>
+<p>👉 <strong>使用者是誰？</strong></p>
+</blockquote>
+<hr>
+<h3 id="human-dx">Human DX</h3>
+<ul>
+<li>可讀性（readability）</li>
+<li>可探索性（discoverability）</li>
+<li>容錯性（forgiving）</li>
+</ul>
+<hr>
+<h3 id="agent-dx">Agent DX</h3>
+<ul>
+<li>可解析性（machine-readable）</li>
+<li>可預測性（predictability）</li>
+<li>可約束性（constraint）</li>
+</ul>
+<hr>
+<p>這兩者之間存在天然張力：</p>
+<ul>
+<li>JSON-first 對 agent 友善</li>
+<li>但對 human 不友善</li>
+</ul>
+<hr>
+<h2 id="the-false-dichotomy">The False Dichotomy</h2>
+<p>因此，一個常見但錯誤的假設是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>CLI 必須選擇：</span></span>
+<span class="line"><span>human-first 或 agent-first</span></span></code></pre>
+<hr>
+<h2 id="實際上更合理的模型是">實際上更合理的模型是</h2>
+<blockquote>
+<p>👉 <strong>Dual-mode CLI</strong></p>
+</blockquote>
+<hr>
+<h2 id="dual-mode-cli">Dual-Mode CLI</h2>
+<p>CLI 不會變成 agent 專用工具，而是：</p>
+<blockquote>
+<p><strong>同時服務 multiple consumers</strong></p>
+</blockquote>
+<hr>
+<h3 id="human-mode">Human mode</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">mycli</span><span style="color:#9ECBFF"> deploy</span><span style="color:#79B8FF"> --env</span><span style="color:#9ECBFF"> prod</span></span></code></pre>
+<ul>
+<li>readable output</li>
+<li>pretty formatting</li>
+</ul>
+<hr>
+<h3 id="agent-mode">Agent mode</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">mycli</span><span style="color:#9ECBFF"> deploy</span><span style="color:#79B8FF"> --json</span><span style="color:#9ECBFF"> '{ "env": "prod" }'</span></span>
+<span class="line"><span style="color:#B392F0">mycli</span><span style="color:#9ECBFF"> deploy</span><span style="color:#79B8FF"> --output</span><span style="color:#9ECBFF"> json</span></span></code></pre>
+<ul>
+<li>structured output</li>
+<li>deterministic parsing</li>
+</ul>
+<hr>
+<p>👉 這種設計在實務上已經出現：</p>
+<ul>
+<li>TTY-aware output（人類 vs pipe）</li>
+<li><code>--json</code> flag</li>
+<li>分離 stdout / stderr (<a href="https://dev.to/meimakes/rewrite-your-cli-for-agents-or-get-replaced-2a2h">DEV Community</a>)</li>
+</ul>
+<hr>
+<h2 id="the-architecture-model">The Architecture Model</h2>
+<p>在 agent architecture 中，可以拆成三個層次：</p>
+<hr>
+<h3 id="1-guidanceskills">1. Guidance（Skills）</h3>
+<ul>
+<li>prompt / instruction</li>
+<li>描述如何使用工具</li>
+</ul>
+<p>👉 提供：</p>
+<blockquote>
+<p><strong>guidance</strong></p>
+</blockquote>
+<hr>
+<h3 id="2-executioncli">2. Execution（CLI）</h3>
+<ul>
+<li>command interface</li>
+<li>實際執行操作</li>
+</ul>
+<p>👉 提供：</p>
+<blockquote>
+<p><strong>execution grounding</strong></p>
+</blockquote>
+<hr>
+<h3 id="3-constraintschema--mcp">3. Constraint（Schema / MCP）</h3>
+<ul>
+<li>typed schema</li>
+<li>validation</li>
+</ul>
+<p>👉 提供：</p>
+<blockquote>
+<p><strong>constraint</strong></p>
+</blockquote>
+<hr>
+<h2 id="hallucination-vs-constraint">Hallucination vs Constraint</h2>
+<p>Justin Poehnelt 提到：</p>
+<blockquote>
+<p>“A skill file is cheaper than a hallucination.”
+<a href="https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/">https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/</a></p>
+</blockquote>
+<p>這句話的正確解讀是：</p>
+<blockquote>
+<p>提供 guidance 比讓 agent 自己猜更好</p>
+</blockquote>
+<hr>
+<h3 id="但關鍵不是-skill">但關鍵不是 skill</h3>
+<p>而是：</p>
+<blockquote>
+<p>👉 <strong>constraint</strong></p>
+</blockquote>
+<hr>
+<h2 id="控制能力光譜">控制能力光譜</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>No guidance</span></span>
+<span class="line"><span>→ hallucination ❌</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Skill（guidance）</span></span>
+<span class="line"><span>→ 減少 hallucination ⚠️</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>CLI（execution grounding）</span></span>
+<span class="line"><span>→ 更穩定 ✅</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Schema（constraint）</span></span>
+<span class="line"><span>→ 幾乎消除 ✅</span></span></code></pre>
+<hr>
+<h2 id="核心模型">核心模型</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層級</th><th>本質</th></tr></thead><tbody><tr><td>Skill</td><td>Guidance</td></tr><tr><td>CLI</td><td>Execution</td></tr><tr><td>Schema</td><td>Constraint</td></tr></tbody></table>
+<hr>
+<h2 id="key-insight">Key Insight</h2>
+<blockquote>
+<p>Skills guide the model
+CLI executes the action
+Schema enforces correctness</p>
+</blockquote>
+<hr>
+<h2 id="approaches-revisited">Approaches Revisited</h2>
+<h3 id="1-rewrite-cliagent-first">1. Rewrite CLI（Agent-first）</h3>
+<ul>
+<li>JSON-first</li>
+<li>schema introspection</li>
+</ul>
+<p>👉 適合：</p>
+<ul>
+<li>greenfield system</li>
+</ul>
+<hr>
+<h3 id="2-improve-existing-cli主流">2. Improve Existing CLI（主流）</h3>
+<ul>
+<li><code>--output json</code></li>
+<li>non-interactive</li>
+<li>clear exit codes</li>
+</ul>
+<p>👉 多數實務採用</p>
+<hr>
+<h3 id="3-skills--mcp">3. Skills / MCP</h3>
+<ul>
+<li>Skills → guidance</li>
+<li>MCP → constraint</li>
+</ul>
+<p>👉 與 CLI <strong>互補，而非替代</strong></p>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>CLI 不會被 agent 取代，也不會變成 agent 專用。</p>
+<p>真正的演進方向是：</p>
+<blockquote>
+<p><strong>CLI 成為 dual-mode interface</strong></p>
+</blockquote>
+<ul>
+<li>human-friendly</li>
+<li>machine-readable</li>
+</ul>
+<hr>
+<p>而 agent system 的核心問題，也不是工具選擇，而是：</p>
+<blockquote>
+<p><strong>如何在 guidance、execution、constraint 之間取得平衡</strong></p>
+</blockquote>
+<hr>
+<h2 id="final-insight">Final Insight</h2>
+<blockquote>
+<p>The future of CLI is not agent-first or human-first
+but <strong>dual-mode: human-friendly and machine-readable</strong></p>
+</blockquote>
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://justin.poehnelt.com/posts/rewrite-your-cli-for-ai-agents/">You Need to Rewrite Your CLI for AI Agents</a> — Justin Poehnelt</li>
+<li><a href="https://news.ycombinator.com/item?id=47252459">Hacker News Discussion</a></li>
+<li><a href="https://dev.to/meimakes/rewrite-your-cli-for-agents-or-get-replaced-2a2h">Rewrite Your CLI for Agents or Get Replaced</a> — DEV Community</li>
+<li><a href="https://medium.com/@dminhk/designing-clis-for-ai-agents-patterns-that-work-in-2026-29ac725850de">Designing CLIs for AI Agents: Patterns That Work in 2026</a> — Medium</li>
+<li><a href="https://medium.com/@takafumi.endo/cli-agents-and-agentic-workflows-when-workflow-becomes-invisible-164a7484d3fc">CLI Agents and Agentic Workflows</a> — Medium</li>
+<li><a href="https://arxiv.org/html/2603.05344v1">Terminal-Native Agents</a> — arXiv</li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
