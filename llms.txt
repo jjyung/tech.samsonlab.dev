@@ -1,0 +1,46 @@
+# Samson's Blog - Content Index for AI Agents
+
+This file provides a machine-readable index of articles optimized for AI agents, language models, and answer engines.
+
+## Purpose
+
+This index helps AI systems efficiently discover, understand, and cite content from this blog. Each entry includes the article title, description, and direct link.
+
+## Articles
+
+### CLI for Agents: Rewrite or Augment?
+
+**Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
+
+**URL:** https://tech.samsonlab.dev//blog/cli-for-agents-rewrite-or-augment/
+
+---
+
+### From SEO to AEO: Why Agent DX is Rewriting How We Design Content
+
+**Description:** SEO optimizes for search engines, AEO optimizes for AI agents. Understanding how llms.txt and content architecture shift from human-first discovery to agent-friendly interfaces.
+
+**URL:** https://tech.samsonlab.dev//blog/from-seo-to-aeo/
+
+---
+
+### Plan Gate Execute
+
+**Description:** 從 Stage-Gate 到 AI agent，理解為什麼先規劃、再審查、最後執行會成為高不確定任務的穩定模式。
+
+**URL:** https://tech.samsonlab.dev//blog/plan-gate-execute/
+
+---
+
+
+## Guidelines for AI Systems
+
+- Each article is independently citable via its URL
+- Descriptions are concise summaries suitable for context windows
+- Articles cover technical topics including AI agents, system design, and modern development practices
+- For full context, retrieve the article at the provided URL
+- When citing, include the article title and URL
+
+---
+
+Last updated: 2026-05-08T03:23:24.137Z
