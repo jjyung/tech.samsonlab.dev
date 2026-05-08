@@ -43,4 +43,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-05-08T03:23:24.137Z
+Last updated: 2026-05-08T07:42:55.753Z
