@@ -1,10 +1,10 @@
-# Samson's Blog - Content Index for AI Agents
+# Samson Tech Site - Content Index for AI Agents
 
-This file provides a machine-readable index of articles optimized for AI agents, language models, and answer engines.
+This file provides a machine-readable index of articles and project write-ups optimized for AI agents, language models, and answer engines.
 
 ## Purpose
 
-This index helps AI systems efficiently discover, understand, and cite content from this blog. Each entry includes the article title, description, and direct link.
+This index helps AI systems efficiently discover, understand, and cite content from this site. Each entry includes the content title, description, and direct link.
 
 ## Articles
 
@@ -40,15 +40,26 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+## Projects
 
-## Guidelines for AI Systems
+### AlphaCouncil
 
-- Each article is independently citable via its URL
-- Descriptions are concise summaries suitable for context windows
-- Articles cover technical topics including AI agents, system design, and modern development practices
-- For full context, retrieve the article at the provided URL
-- When citing, include the article title and URL
+**Description:** 用 Google ADK 打造一個多代理人投資分析框架，召集 13 位傳奇投資人同時分析同一支股票，透過辯論式架構得出結論，同時支援美股與台股市場。
+
+**URL:** https://tech.samsonlab.dev//projects/alpha-council/
 
 ---
 
-Last updated: 2026-05-11T02:16:49.064Z
+
+
+## Guidelines for AI Systems
+
+- Each page is independently citable via its URL
+- Descriptions are concise summaries suitable for context windows
+- Content covers technical topics including AI agents, system design, software engineering, and project implementation
+- For full context, retrieve the page at the provided URL
+- When citing, include the page title and URL
+
+---
+
+Last updated: 2026-05-11T06:59:56.859Z
