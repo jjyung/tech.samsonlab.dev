@@ -1,0 +1,467 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/"><!-- Primary Meta Tags --><title>Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶</title><meta name="title" content="Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶"><meta name="description" content="從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/"><meta property="og:title" content="Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶"><meta property="og:description" content="從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/agent-cost-context-cache-compaction-memory.1QUHkqXH.webp"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/"><meta property="twitter:title" content="Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶"><meta property="twitter:description" content="從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/agent-cost-context-cache-compaction-memory.1QUHkqXH.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶","description":"從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。","datePublished":"2026-05-11T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/agent-cost-context-cache-compaction-memory.1QUHkqXH.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.CeH9oH19.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/agent-cost-context-cache-compaction-memory.1QUHkqXH_Z1TpEFP.webp" alt loading="lazy" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-05-11T00:00:00.000Z"> May 11, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h2 id="重點摘要">重點摘要</h2>
+<p>最近大家在談 agent cost，常見的討論方式是比較不同模型的價格表：</p>
+<ul>
+<li>input token 單價</li>
+<li>output token 單價</li>
+<li>context window</li>
+</ul>
+<p>但對真正跑起來的 agent 系統來說，成本通常不只是 model pricing 問題。</p>
+<p>更常見的問題其實是：</p>
+<blockquote>
+<p><strong>你是不是在每一輪 request，都重新支付同一份 context 的成本？</strong></p>
+</blockquote>
+<p>如果答案是 yes，那你要處理的就不只是「換便宜模型」，而是 <strong>context architecture</strong>。</p>
+<p>Google ADK 提供了一個很好的切分方式，把這個問題拆成三層：</p>
+<ul>
+<li><strong>Context caching</strong>：重用相同前綴</li>
+<li><strong>Context compaction</strong>：壓縮持續膨脹的 session</li>
+<li><strong>Session / State / Memory</strong>：管理短期與長期上下文</li>
+</ul>
+<p>這三者常常都被叫做「快取」，但它們其實在解完全不同的問題。</p>
+<p>而把這三層設計成一套可觀測、可優化、可演進的系統，本來就是 <strong>harness engineering</strong> 的工作範圍之一。</p>
+<hr>
+<h2 id="problem">Problem</h2>
+<p>最近 agent 成本會變成熱門話題，不難理解。</p>
+<p>不管是 coding agent、research agent、customer support agent，還是內部 automation agent，這些系統都在做同一件事：</p>
+<ul>
+<li>把更多工具接進來</li>
+<li>把更多上下文塞進 prompt</li>
+<li>把更多步驟拆成多輪 interaction</li>
+</ul>
+<p>於是每個 request 的組成都變得越來越重。</p>
+<p>一個現代 agent request 很可能同時包含：</p>
+<ul>
+<li>system prompt</li>
+<li>tool definitions / schema</li>
+<li>policies / guardrails</li>
+<li>repo 或文件摘要</li>
+<li>session history</li>
+<li>memory retrieval 結果</li>
+<li>最新 user 任務</li>
+<li>最新 tool result</li>
+</ul>
+<p>很多團隊到這個階段，才第一次明確意識到：</p>
+<blockquote>
+<p>agent 很貴，不一定是因為模型太貴，
+而是因為同一份昂貴的 context 被反覆重送。</p>
+</blockquote>
+<hr>
+<h2 id="真正的浪費常常發生在-prefill">真正的浪費，常常發生在 Prefill</h2>
+<p>談 LLM 成本時，大家很容易把注意力放在 output token。</p>
+<p>但在 agent 系統裡，很多時候真正被低估的是 <strong>prefill 成本</strong>。</p>
+<p>所謂 prefill，簡單講就是模型在開始生成前，先把整段輸入讀進去並建立中間表示的過程。</p>
+<p>如果你的 agent 每次都把這些東西重送一次：</p>
+<ul>
+<li>一大段 system instruction</li>
+<li>一堆 tools schema</li>
+<li>相同的 repo policy</li>
+<li>相同的 reference docs</li>
+<li>幾乎沒變的 conversation prefix</li>
+</ul>
+<p>那你其實是在反覆支付同一段前綴的計算成本。</p>
+<p>這也是為什麼 prompt caching / prefix caching 這幾年會成為主流能力。</p>
+<p>它不是附加小優化，而是在處理 agent 架構中最常見的一種浪費：</p>
+<blockquote>
+<p><strong>重複處理相同前綴。</strong></p>
+</blockquote>
+<hr>
+<h2 id="adk-context-caching-在解什麼問題">ADK Context Caching 在解什麼問題</h2>
+<p>Google ADK 的 <a href="https://google.github.io/adk-docs/context/caching/">Context caching</a> 很適合作為理解這件事的起點。</p>
+<p>它的出發點非常直接：</p>
+<p>當 agent 反覆使用長指令或大型資料集時，每次 request 都重送這些內容會慢、會浪費 token，也會增加成本。</p>
+<p>在 ADK 中，context caching 是在 app / agent configuration 層提供的能力，透過 <code>ContextCacheConfig</code> 來控制行為。文件中提到的主要參數包括：</p>
+<ul>
+<li><code>min_tokens</code>：小於這個 token 門檻就不啟用 cache</li>
+<li><code>ttl_seconds</code>：cache 存活多久</li>
+<li><code>cache_intervals</code>：同一份 cached content 最多重用幾次後刷新</li>
+</ul>
+<p>它適用的場景很明確：</p>
+<ul>
+<li>大量且穩定的 system instructions</li>
+<li>反覆分析同一批大型文件</li>
+<li>多次 query 同一份 codebase / repo context</li>
+<li>多輪 agent interaction 中幾乎不變的 prompt prefix</li>
+</ul>
+<p>從工程觀點看，ADK context caching 的重點不是 API 本身，而是它在提醒你一件事：</p>
+<blockquote>
+<p><strong>有些 context 應該被視為 reusable prefix，而不是每次重新拼裝的 request body。</strong></p>
+</blockquote>
+<p>這對 coding agent 特別重要。</p>
+<p>因為 coding agent 的 prompt 常常正好符合這個模式：</p>
+<ul>
+<li>前綴非常重</li>
+<li>前綴變化很慢</li>
+<li>真正高頻變動的是後綴</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li>coding rules</li>
+<li>repo conventions</li>
+<li>allowed tools</li>
+<li>approval policies</li>
+<li>review rubrics</li>
+<li>project architecture summary</li>
+</ul>
+<p>這些資訊如果每一輪都重新付費一次，成本與 latency 很容易失控。</p>
+<hr>
+<h2 id="cache-不是萬靈丹它只解決可重用前綴">Cache 不是萬靈丹，它只解決「可重用前綴」</h2>
+<p>這裡有一個很重要的邊界。</p>
+<p>Context caching 很有用，但它只在某一類問題上特別有效：</p>
+<blockquote>
+<p><strong>相同前綴會被反覆使用。</strong></p>
+</blockquote>
+<p>如果你的 prompt 結構很亂，導致本來應該穩定的部分常常被改動，那 cache 命中率就會很差。</p>
+<p>例如：</p>
+<ul>
+<li>system prompt 版本頻繁變動</li>
+<li>tool schema 順序不穩定</li>
+<li>每次 request 都把動態資料插進前綴中段</li>
+<li>retrieval 結果的位置或排序不穩定</li>
+</ul>
+<p>這時候你不是沒有 cache feature。</p>
+<p>你是沒有 <strong>cache discipline</strong>。</p>
+<p>這也是為什麼 OpenAI 的 <a href="https://platform.openai.com/docs/guides/prompt-caching">Prompt Caching</a>、Anthropic 的 <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Prompt Caching</a>、以及 Gemini API 的 <a href="https://ai.google.dev/gemini-api/docs/caching">Caching</a> 都一直強調同一件事：</p>
+<ul>
+<li>把 static content 放前面</li>
+<li>把 dynamic content 放後面</li>
+<li>讓前綴儘可能保持完全一致</li>
+</ul>
+<p>換句話說，cache 能不能發揮效益，並不是只靠 provider 提供 feature。</p>
+<p>還取決於你是否把 prompt 結構設計成「可快取」。</p>
+<hr>
+<h2 id="adk-context-compaction-解的是另一個問題">ADK Context Compaction 解的是另一個問題</h2>
+<p>很多人在第一次看到 ADK 的 <a href="https://google.github.io/adk-docs/context/compaction/">Context compaction</a> 時，直覺會把它當成另一種 cache。</p>
+<p>但嚴格說，它不是。</p>
+<p>ADK context compaction 的目標是：</p>
+<blockquote>
+<p><strong>當 session event history 持續變長時，用摘要來控制 context 膨脹。</strong></p>
+</blockquote>
+<p>這是一個完全不同的問題。</p>
+<p>如果 context caching 解的是：</p>
+<ul>
+<li>重複送出同樣前綴</li>
+</ul>
+<p>那 context compaction 解的就是：</p>
+<ul>
+<li>單一 session 隨時間推進，不可避免地越來越胖</li>
+</ul>
+<p>ADK 文件裡的做法，本質上是 sliding window 式的 event compaction。
+當 session 事件累積到某個門檻後，就對較舊的事件做摘要，保留較新的原始事件與摘要結果。</p>
+<p>這裡的 trade-off 很明顯：</p>
+<ul>
+<li>好處是 context 可以維持在比較受控的大小</li>
+<li>代價是細節可能被摘要損失</li>
+</ul>
+<p>所以 compaction 的本質不是 reuse，而是 <strong>lossy compression</strong>。</p>
+<p>這點很重要，因為它代表你的優化目標也不一樣。</p>
+<p>你評估 caching 時通常關心：</p>
+<ul>
+<li>cache hit rate</li>
+<li>cached token ratio</li>
+<li>latency 改善</li>
+<li>input cost 降低</li>
+</ul>
+<p>但你評估 compaction 時更應該關心：</p>
+<ul>
+<li>摘要是否丟失關鍵資訊</li>
+<li>長任務成功率有沒有下降</li>
+<li>agent 在多輪互動後是否還能維持正確 state</li>
+</ul>
+<p>一句話總結：</p>
+<blockquote>
+<p><strong>Caching 是重用同樣內容，Compaction 是用摘要換空間。</strong></p>
+</blockquote>
+<p>這兩個能力常常要一起用，但不能混成同一件事。</p>
+<hr>
+<h2 id="sessionstatememory-也不是-cache">Session、State、Memory 也不是 Cache</h2>
+<p>ADK 在 <a href="https://google.github.io/adk-docs/sessions/">Sessions</a> 與 <a href="https://google.github.io/adk-docs/sessions/memory/">Memory</a> 的設計上，也把概念切得很清楚。</p>
+<p>可以這樣理解：</p>
+<ul>
+<li><code>Session</code>：單次會話的事件流</li>
+<li><code>State</code>：該 session 內部的短期狀態</li>
+<li><code>Memory</code>：跨 session 的長期可搜尋知識</li>
+</ul>
+<p>很多實務系統會把這些東西通通叫「記憶」或「快取」，但它們其實在系統行為上完全不同。</p>
+<h3 id="session--state">Session / State</h3>
+<p>這一層比較像是當前會話的工作上下文。</p>
+<p>它負責的是：</p>
+<ul>
+<li>目前聊到哪</li>
+<li>已經做過哪些工具呼叫</li>
+<li>現在有哪些暫時狀態需要保留</li>
+</ul>
+<p>這不是 cache。</p>
+<p>因為它不是為了重用相同前綴，也不是為了降低 prefill 成本設計的。</p>
+<h3 id="memory">Memory</h3>
+<p>Memory 更接近 searchable recall。</p>
+<p>它的核心問題是：</p>
+<blockquote>
+<p><strong>agent 要怎麼從過去對話或外部知識中，把對現在有用的資訊找回來？</strong></p>
+</blockquote>
+<p>這也不是 cache。</p>
+<p>因為 memory 通常是 selective retrieval：</p>
+<ul>
+<li>你查什麼，拿回來的內容就不同</li>
+<li>它不是固定前綴</li>
+<li>它甚至可能讓 prompt 結構更動態</li>
+</ul>
+<p>所以如果把 memory 誤當成 cache，你會很容易得到錯的成本預估。</p>
+<p>memory 可能提升 recall 與回答品質，
+但它不一定會降低 request 成本；
+有時甚至會增加 token 消耗。</p>
+<p>因此更精準的說法是：</p>
+<ul>
+<li><strong>cache</strong> 解決 reuse</li>
+<li><strong>compaction</strong> 解決 growth</li>
+<li><strong>memory</strong> 解決 recall</li>
+</ul>
+<p>這三者都有機會影響成本，但機制完全不同。</p>
+<hr>
+<h2 id="從-provider-與-infra-角度看大家其實都在收斂到同一件事">從 Provider 與 Infra 角度看，大家其實都在收斂到同一件事</h2>
+<p>如果把視角從 ADK 拉高，你會發現主流 provider 與推論 infra 都在往類似方向收斂。</p>
+<h3 id="gemini-api">Gemini API</h3>
+<p>Gemini API 的 <a href="https://ai.google.dev/gemini-api/docs/caching">Caching</a> 分成 implicit caching 與 explicit caching。</p>
+<ul>
+<li>implicit caching：自動啟用，命中時可能帶來成本與延遲改善</li>
+<li>explicit caching：顯式建立 cached content，可控制 TTL，成本模型更可預期</li>
+</ul>
+<p>這其實對應兩種工程哲學：</p>
+<ul>
+<li>平台盡量自動幫你省</li>
+<li>或你自己把 reusable prefix 當成一級資源來管理</li>
+</ul>
+<h3 id="openai">OpenAI</h3>
+<p>OpenAI 的 <a href="https://platform.openai.com/docs/guides/prompt-caching">Prompt Caching</a> 本質也很清楚：</p>
+<ul>
+<li>exact prefix match 才有機會命中</li>
+<li>static content 應該放在 prompt 開頭</li>
+<li>dynamic content 應該放在後面</li>
+</ul>
+<p>這說明了一件事：</p>
+<blockquote>
+<p>prompt caching 不是魔法，它依賴 prompt 結構紀律。</p>
+</blockquote>
+<h3 id="anthropic">Anthropic</h3>
+<p>Anthropic 的 <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Prompt Caching</a> 文件，對 breakpoint、lookback window、automatic caching、explicit caching 都講得非常細。</p>
+<p>對工程師來說，這份文件的價值不只在功能介紹，而是在提醒你：</p>
+<ul>
+<li>cache 命中是可以被設計的</li>
+<li>cache miss 也常常是結構問題，不只是運氣問題</li>
+</ul>
+<h3 id="amazon-bedrock">Amazon Bedrock</h3>
+<p>Bedrock 的 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html">Prompt Caching</a> 進一步把這件事帶到平台治理層。</p>
+<p>它談的是 cache checkpoints、TTL、不同模型限制，以及在平台 API 中如何管理這些能力。</p>
+<p>這表示 prompt caching 已經不只是模型小技巧，而是正式進入 production architecture。</p>
+<h3 id="vllm">vLLM</h3>
+<p>從 infra 層看，vLLM 的 <a href="https://docs.vllm.ai/en/latest/design/prefix_caching.html">Automatic Prefix Caching</a> 更直接點出本質：</p>
+<blockquote>
+<p>prefix caching 是在重用已經計算過的 KV cache blocks，避免重複 prompt computation。</p>
+</blockquote>
+<p>這個視角很好，因為它讓我們知道：</p>
+<ul>
+<li>應用層看到的是 prompt caching</li>
+<li>infra 層看到的是 prefix reuse / KV reuse</li>
+</ul>
+<p>不同抽象層的說法不同，但在解的其實是同一種浪費。</p>
+<hr>
+<h2 id="真正要設計的不只是-cache-feature而是-context-architecture">真正要設計的，不只是 Cache Feature，而是 Context Architecture</h2>
+<p>到這裡可以得到一個更完整的架構視角。</p>
+<p>如果你在做 agent，context 不應該被視為一整塊沒有結構的 prompt blob。</p>
+<p>它至少可以被拆成下面三類：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    A[Stable Prefix] --> B[Context Caching]</span></span>
+<span class="line"><span style="color:#E1E4E8">    C[Growing Session History] --> D[Context Compaction]</span></span>
+<span class="line"><span style="color:#E1E4E8">    E[Long-Term Knowledge] --> F[Memory / Retrieval]</span></span>
+<span class="line"><span style="color:#E1E4E8">    B --> G[Runtime Context]</span></span>
+<span class="line"><span style="color:#E1E4E8">    D --> G</span></span>
+<span class="line"><span style="color:#E1E4E8">    F --> G</span></span></code></pre>
+<h3 id="1-stable-prefix">1. Stable Prefix</h3>
+<p>這類內容變化很慢，最適合拿去做 caching：</p>
+<ul>
+<li>system prompt</li>
+<li>policies</li>
+<li>tool definitions</li>
+<li>coding rules</li>
+<li>architecture guide</li>
+<li>common examples</li>
+</ul>
+<h3 id="2-growing-session-history">2. Growing Session History</h3>
+<p>這類內容會隨互動膨脹，適合用 compaction 控制：</p>
+<ul>
+<li>多輪對話</li>
+<li>多步驟 tool traces</li>
+<li>中間推理軌跡的摘要表示</li>
+</ul>
+<h3 id="3-searchable-long-term-knowledge">3. Searchable Long-Term Knowledge</h3>
+<p>這類內容不應該每次硬塞進 prompt，而應該以 retrieval / memory 方式按需載入：</p>
+<ul>
+<li>過去 session 的重要知識</li>
+<li>使用者偏好</li>
+<li>長期文件庫</li>
+<li>跨任務知識</li>
+</ul>
+<p>當你這樣切分後，很多所謂的 agent 成本問題就會開始變得可處理。</p>
+<p>因為你終於可以問對問題：</p>
+<ul>
+<li>哪些內容值得 cache？</li>
+<li>哪些內容應該被 summary？</li>
+<li>哪些內容應該被 retrieve？</li>
+<li>哪些內容根本不該進 prompt？</li>
+</ul>
+<hr>
+<h2 id="這就是-harness-engineering-的一部分">這就是 Harness Engineering 的一部分</h2>
+<p>從 agent 系統設計角度看，這一整塊工作本來就是 <strong>harness engineering</strong> 的一環。</p>
+<p>如果把 agent 想成一個持續演進的系統，那很多真正影響成本與穩定性的東西，其實不在單一 feature 裡，而在它的執行 harness 裡。</p>
+<p>這個 harness 可能包含：</p>
+<ul>
+<li>prompt 組裝邏輯</li>
+<li>tool schema 管理</li>
+<li>cacheable prefix 設計</li>
+<li>retrieval 注入策略</li>
+<li>compaction 觸發規則</li>
+<li>session / memory 邊界</li>
+<li>eval cases</li>
+<li>latency 與 token metrics</li>
+</ul>
+<p>這些事情很難被單純歸類成：</p>
+<ul>
+<li>application code</li>
+<li>infra code</li>
+<li>model tuning</li>
+</ul>
+<p>它更像是一層讓 agent 可被量測、可被回歸測試、可被持續優化的執行框架。</p>
+<p>也就是說：</p>
+<blockquote>
+<p>harness engineer 的工作，不只是把 agent 跑起來，
+而是把 agent 的 prompt、tools、memory、cache、eval 與 observability 串成一個可優化閉環。</p>
+</blockquote>
+<p>從這個角度看，context caching 就不是「一個可以順手打開的設定」。</p>
+<p>它是 harness design 的一部分。</p>
+<hr>
+<h2 id="給-coding-agent-團隊的實作建議">給 Coding Agent 團隊的實作建議</h2>
+<p>對使用 coding agent 的工程團隊來說，下面幾個設計原則最值得優先處理。</p>
+<h3 id="1-先把-prompt-結構切乾淨">1. 先把 Prompt 結構切乾淨</h3>
+<p>把內容分成：</p>
+<ul>
+<li>穩定前綴</li>
+<li>會成長的 session 部分</li>
+<li>每次不同的動態輸入</li>
+</ul>
+<p>如果這三者混在一起，你很難把 cache 做好。</p>
+<h3 id="2-static-content-前置dynamic-content-後置">2. Static Content 前置，Dynamic Content 後置</h3>
+<p>這幾乎是所有 provider 都反覆強調的原則。</p>
+<p>把下列內容盡可能放前面：</p>
+<ul>
+<li>system rules</li>
+<li>coding style</li>
+<li>review criteria</li>
+<li>tool definitions</li>
+<li>stable repo guidance</li>
+</ul>
+<p>把下列內容放後面：</p>
+<ul>
+<li>當前任務</li>
+<li>最新 diff</li>
+<li>最新 tool result</li>
+<li>即時 retrieval snippets</li>
+</ul>
+<h3 id="3-不要把-compaction-當成免費午餐">3. 不要把 Compaction 當成免費午餐</h3>
+<p>Compaction 可以控制 session 成本，但它可能損失細節。</p>
+<p>所以你需要 eval：</p>
+<ul>
+<li>長任務成功率</li>
+<li>多輪一致性</li>
+<li>關鍵資訊保留率</li>
+</ul>
+<h3 id="4-不要把-memory-當成塞得比較聰明的-prompt">4. 不要把 Memory 當成「塞得比較聰明的 Prompt」</h3>
+<p>Memory 要做的是按需找回，不是把更多內容永遠附加在 request 前面。</p>
+<p>如果 retrieval 沒設計好，memory 只會讓 prompt 更貴、更亂。</p>
+<h3 id="5-量測的不是總-token而是結構化指標">5. 量測的不是總 Token，而是結構化指標</h3>
+<p>至少應該觀測：</p>
+<ul>
+<li>cache hit rate</li>
+<li>cached tokens ratio</li>
+<li>TTFT / latency</li>
+<li>per-run total token cost</li>
+<li>compaction frequency</li>
+<li>retrieval hit quality</li>
+</ul>
+<p>如果沒有這些指標，你就很難知道到底是：</p>
+<ul>
+<li>cache 沒命中</li>
+<li>compaction 太 aggressive</li>
+<li>retrieval 注入太多垃圾</li>
+<li>還是 prompt prefix 根本不穩定</li>
+</ul>
+<h3 id="6-side-agent-與-background-agent-要特別注意-ttl">6. Side-agent 與 Background Agent 要特別注意 TTL</h3>
+<p>有些 agent 工作流不是連續高速互動，而是：</p>
+<ul>
+<li>先開一個 side-agent</li>
+<li>跑很久</li>
+<li>幾分鐘後才有下一輪</li>
+</ul>
+<p>這種情況下，TTL 設定會直接影響 cache 還有沒有價值。</p>
+<p>所以你的快取策略，必須和 workflow 節奏一起設計。</p>
+<hr>
+<h2 id="一個實用的心智模型">一個實用的心智模型</h2>
+<p>如果要把整篇濃縮成一個簡單模型，我會這樣拆：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>問題</th><th>適合機制</th><th>核心目的</th></tr></thead><tbody><tr><td>相同前綴反覆出現</td><td>Context caching</td><td>降低重複 prefill 成本</td></tr><tr><td>單一 session 不斷膨脹</td><td>Context compaction</td><td>控制 context 成長</td></tr><tr><td>需要跨 session 找回資訊</td><td>Memory / retrieval</td><td>提升 recall 能力</td></tr></tbody></table>
+<p>這三個問題常常同時存在。</p>
+<p>真正成熟的 agent 系統，不會只選其中一個，而是會把三者組合起來。</p>
+<hr>
+<h2 id="結論">結論</h2>
+<p>最近大家在談 agent cost，表面上像是在談模型價格。</p>
+<p>但對工程團隊來說，更值得關心的其實是這個問題：</p>
+<blockquote>
+<p><strong>你的 agent，是否把 context 當成一種需要被架構化管理的資源？</strong></p>
+</blockquote>
+<p>ADK 的價值，在於它把幾種常被混淆的能力分開了：</p>
+<ul>
+<li>caching</li>
+<li>compaction</li>
+<li>sessions / state</li>
+<li>memory</li>
+</ul>
+<p>這種切分方式，有助於用更清楚的架構視角理解 agent 成本與上下文管理。</p>
+<p>而當你開始把這些東西放進同一個可觀測、可評估、可回歸優化的執行系統裡，這件事就已經不只是 prompt engineering。</p>
+<p>它更像是 harness engineering。</p>
+<p>在 agent 時代，成本優化不再只是 procurement 問題。</p>
+<p>它是 prompt、runtime、memory、cache 與 eval 的共同設計問題。</p>
+<hr>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a href="https://google.github.io/adk-docs/context/caching/">Google ADK — Context Caching</a></li>
+<li><a href="https://google.github.io/adk-docs/context/compaction/">Google ADK — Context Compaction</a></li>
+<li><a href="https://google.github.io/adk-docs/sessions/">Google ADK — Sessions</a></li>
+<li><a href="https://google.github.io/adk-docs/sessions/memory/">Google ADK — Memory</a></li>
+<li><a href="https://ai.google.dev/gemini-api/docs/caching">Gemini API — Caching</a></li>
+<li><a href="https://platform.openai.com/docs/guides/prompt-caching">OpenAI — Prompt Caching</a></li>
+<li><a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching">Anthropic — Prompt Caching</a></li>
+<li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/prompt-caching.html">Amazon Bedrock — Prompt Caching</a></li>
+<li><a href="https://docs.vllm.ai/en/latest/design/prefix_caching.html">vLLM — Automatic Prefix Caching</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

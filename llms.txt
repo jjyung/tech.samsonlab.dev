@@ -8,6 +8,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ## Articles
 
+### Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶
+
+**Description:** 從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。
+
+**URL:** https://tech.samsonlab.dev//blog/agent-cost-context-cache-compaction-memory/
+
+---
+
 ### CLI for Agents: Rewrite or Augment?
 
 **Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
@@ -43,4 +51,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-05-08T07:42:55.753Z
+Last updated: 2026-05-11T02:16:49.064Z
