@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="en"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/monolithic-agent-vs-multi-agent-context-cost/"><!-- Primary Meta Tags --><title>Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost</title><meta name="title" content="Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost"><meta name="description" content="Multi-agent 與 monolithic agent 的差異，不只在架構拆分，而在 context isolation、context continuity 與整體 context cost shape 的取捨。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/monolithic-agent-vs-multi-agent-context-cost/"><meta property="og:title" content="Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost"><meta property="og:description" content="Multi-agent 與 monolithic agent 的差異，不只在架構拆分，而在 context isolation、context continuity 與整體 context cost shape 的取捨。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/blog-placeholder-1.Bx0Zcyzv.jpg"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/monolithic-agent-vs-multi-agent-context-cost/"><meta property="twitter:title" content="Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost"><meta property="twitter:description" content="Multi-agent 與 monolithic agent 的差異，不只在架構拆分，而在 context isolation、context continuity 與整體 context cost shape 的取捨。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/blog-placeholder-1.Bx0Zcyzv.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost","description":"Multi-agent 與 monolithic agent 的差異，不只在架構拆分，而在 context isolation、context continuity 與整體 context cost shape 的取捨。","datePublished":"2026-05-18T00:00:00.000Z","author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.D_OyUmmi.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14">  </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-05-18T00:00:00.000Z"> May 18, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h2 id="重點摘要">重點摘要</h2>
+<p>拆 multi-agent 的一階動機，是做：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>context isolation</span></span></code></pre>
+<p>也就是避免不同任務、角色、工具與狀態彼此污染。</p>
+<p>context pollution 常見會長這樣：</p>
+<ul>
+<li>不相關的 domain knowledge 被一起塞進 prompt</li>
+<li>上一階段的中間狀態殘留到下一階段</li>
+<li>不同角色的 instructions / guardrails 互相干擾</li>
+<li>長 session 裡的工具痕跡把局部任務越攪越混</li>
+</ul>
+<p>成本通常是二階問題。</p>
+<p>拆開之後，每個 agent 的 local context 可能更乾淨；
+但 system-level cost 可能變高，也可能變低，取決於：</p>
+<ul>
+<li>幾次 model calls</li>
+<li>幾次 routing / delegation</li>
+<li>幾次 handoff summary</li>
+<li>幾份重複的 instructions / tools schema</li>
+<li>幾次重複 retrieval</li>
+<li>最後還要不要再做一次 synthesis</li>
+</ul>
+<p>所以更準確的說法不是：</p>
+<blockquote>
+<p>multi-agent 比 monolithic agent 更便宜。</p>
+</blockquote>
+<p>而是：</p>
+<blockquote>
+<p>multi-agent 常常是在用更多 coordination cost，換更乾淨的 local context 與更強的隔離邊界。</p>
+</blockquote>
+<p>反過來說，monolithic agent 常常是在用更大的 shared context，換更強的 continuity 與更少的 handoff，
+但也更容易累積 context pollution。</p>
+<p>但這裡還有一個常被忽略的前提：</p>
+<p>不是所有 multi-agent 都有一樣的成本模型。</p>
+<p>有些子 agent 會從 fresh context 開始，有些則會繼承父 agent 的上下文、狀態，甚至 prompt cache。</p>
+<p>這個 execution mode 的差別，會直接改變你到底是不是在重複付 shared context 的成本。</p>
+<p>這代表 agent topology 本身，不只是模組化問題。</p>
+<p>它同時也是：</p>
+<ul>
+<li>context architecture</li>
+<li>cost architecture</li>
+</ul>
+<p>的一部分。</p>
+<hr>
+<h2 id="先校正問題">先校正問題</h2>
+<p>monolithic agent 與 multi-agent 這個選擇，至少牽涉這幾個維度：</p>
+<ul>
+<li>modularity</li>
+<li>specialization</li>
+<li>maintainability</li>
+<li>team ownership</li>
+<li>cost</li>
+</ul>
+<p>這些都很重要。</p>
+<p>但這裡其實有兩個問題，而且順序不能反：</p>
+<ol>
+<li>這個任務到底更需要 context sharing，還是 context isolation？</li>
+<li>在選定 topology 之後，它的 context cost shape 會長什麼樣子？</li>
+</ol>
+<p>這篇主要談第二題。</p>
+<p>但如果第一題沒先答對，後面的成本比較很容易失真。</p>
+<p>因為 topology 一變，不只是成本的組成方式會跟著變，
+連 reasoning quality、state cleanliness 與 tool interference 都會一起變。</p>
+<p>如果你只看單次 call，很容易得出錯誤結論。</p>
+<p>更實際的算式通常比較像：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Per-task cost</span></span>
+<span class="line"><span>≈ sum(每一次 model call 的 local context)</span></span>
+<span class="line"><span>+ routing / handoff overhead</span></span>
+<span class="line"><span>+ repeated prefix cost</span></span>
+<span class="line"><span>+ final synthesis cost</span></span></code></pre>
+<p>所以真正該問的不是：</p>
+<blockquote>
+<p>哪一種 agent 比較進階？</p>
+</blockquote>
+<p>也不是：</p>
+<blockquote>
+<p>哪一種 agent 天然比較省？</p>
+</blockquote>
+<p>而是先問：</p>
+<blockquote>
+<p>這個任務先需要 context isolation，還是 context sharing？</p>
+</blockquote>
+<p>然後再問：</p>
+<blockquote>
+<p>哪一種 topology，對我的任務分布、context sharing pattern 與 workflow，總成本更低？</p>
+</blockquote>
+<hr>
+<h2 id="先講結論">先講結論</h2>
+<p>如果把這件事濃縮成三句話，大概會是：</p>
+<blockquote>
+<p>Multi-agent 一階上在解的是 context pollution，不是 token 價格。
+Monolithic 一階上在保留的是 shared context continuity，不是架構上的簡單。
+成本是這兩種選擇各自帶出的二階效果。</p>
+</blockquote>
+<p>所以它們不是「誰比較高級」的關係，
+也不是「誰天然比較省」的關係。</p>
+<p>它們是兩種不同的上下文管理方式，
+也會對應到兩種不同的成本形狀。</p>
+<hr>
+<h2 id="monolithic-agent-的共享優勢與它帶來的成本形狀">Monolithic Agent 的共享優勢，與它帶來的成本形狀</h2>
+<p>Monolithic agent 不一定代表系統很原始。</p>
+<p>它也可能只是表示：</p>
+<ul>
+<li>一個主要 agent 負責規劃</li>
+<li>一個主要 agent 負責工具使用</li>
+<li>一個主要 agent 保持大部分 session continuity</li>
+</ul>
+<p>它的優勢不只在成本，也在於 shared context continuity。</p>
+<h3 id="1-共享上下文天然完整">1. 共享上下文天然完整</h3>
+<p>如果整個任務高度依賴同一份背景資訊，例如：</p>
+<ul>
+<li>同一個 repo context</li>
+<li>同一組 coding rules</li>
+<li>同一份 architecture summary</li>
+<li>同一段 session history</li>
+</ul>
+<p>那 monolithic agent 天然比較容易共享這些資訊。</p>
+<p>你不需要一直做：</p>
+<ul>
+<li>handoff summary</li>
+<li>state projection</li>
+<li>agent 間上下文轉譯</li>
+</ul>
+<h3 id="2-比較容易重用-stable-prefix">2. 比較容易重用 stable prefix</h3>
+<p>如果 system prompt、tools schema、repo policies 都相對穩定，
+那 monolithic agent 通常比較容易維持一個穩定前綴。</p>
+<p>這代表：</p>
+<ul>
+<li>caching 比較容易命中</li>
+<li>prefix reuse 比較直接</li>
+<li>不需要每個 specialist 都重送自己的規則</li>
+</ul>
+<h3 id="3-model-call-數量通常比較少">3. model call 數量通常比較少</h3>
+<p>如果沒有拆 agent，你通常也就少了：</p>
+<ul>
+<li>coordinator call</li>
+<li>transfer call</li>
+<li>specialist invocation call</li>
+<li>synthesis call</li>
+</ul>
+<p>這一點很直接。</p>
+<p>但 monolithic agent 的缺點也同樣明顯。</p>
+<h3 id="4-它很容易把不相關的東西一起背著跑">4. 它很容易把不相關的東西一起背著跑</h3>
+<p>一旦一個 agent 同時要處理：</p>
+<ul>
+<li>多種 domain knowledge</li>
+<li>很多 tools</li>
+<li>很長的 session history</li>
+<li>很多 guardrails</li>
+</ul>
+<p>那 prompt 很快就會變成一個大雜燴。</p>
+<p>典型的浪費是：</p>
+<blockquote>
+<p>使用者只需要其中 10% 的知識，
+但 agent 每一輪都背著 100% 的 context 在跑。</p>
+</blockquote>
+<p>而且這裡的問題不只是在成本。</p>
+<p>當同一個 prompt 裡塞進太多不相關資訊、過時狀態，甚至彼此矛盾的指令時，
+模型也更容易出現注意力分散、約束抓錯與回應漂移。</p>
+<p>把這些現象統稱成 hallucination，常常會太粗。
+在 agent 系統裡，它更接近 context competition 與 state inconsistency 的結果。</p>
+<h3 id="5-成本壓力會往-compaction-移動">5. 成本壓力會往 compaction 移動</h3>
+<p>Monolithic agent 的典型成本問題，不一定是 routing。</p>
+<p>而是：</p>
+<ul>
+<li>session history 不斷膨脹</li>
+<li>compaction 壓力上升</li>
+<li>tool traces 越來越長</li>
+<li>retrieval snippets 越加越多</li>
+</ul>
+<p>換句話說，monolithic agent 往往更依賴：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>cache discipline + compaction discipline</span></span></code></pre>
+<hr>
+<h2 id="multi-agent-的核心價值與它帶來的成本形狀">Multi-Agent 的核心價值，與它帶來的成本形狀</h2>
+<p>Multi-agent 的優勢通常很吸引人。</p>
+<p>但更準確地說，它的核心價值不是「把 prompt 變便宜」，
+而是把一個大問題拆成多個上下文邊界比較乾淨的局部問題。</p>
+<p>你可以讓每個 agent 只處理：</p>
+<ul>
+<li>自己的 instructions</li>
+<li>自己的 tools</li>
+<li>自己的知識域</li>
+<li>自己需要的少量上下文</li>
+</ul>
+<p>這個方向之所以成立，是因為它在解一個 monolithic agent 很難解的問題：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>context isolation</span></span></code></pre>
+<p>換句話說，multi-agent 先在處理的是：</p>
+<ul>
+<li>避免不相干的知識一起進 prompt</li>
+<li>避免不同角色的目標互相覆蓋</li>
+<li>避免中間狀態在長流程裡持續污染後續判斷</li>
+<li>避免 tools / memory / guardrails 全部堆在同一個決策面上</li>
+</ul>
+<p>這也是為什麼 ADK 的官方文件會把 multi-agent 系統描述成一組可組合的 hierarchy、workflow agents 與 interaction mechanisms，而 LangChain 的 multi-agent 文件也直接把 context management 視為核心動機之一。</p>
+<p>成本則是這個設計決定之後，才要看的 downstream effect。</p>
+<p>但 multi-agent 不是免費午餐。</p>
+<p>更準確地說，multi-agent 的成本不只取決於你有沒有拆 agent，
+也取決於子 agent 是怎麼被啟動的。</p>
+<p>如果每個 worker 都從 fresh context 開始，handoff、prefix 與 retrieval duplication 會更明顯。
+如果 execution mode 允許它繼承父 agent 的上下文或共享快取，那成本形狀又會不一樣。</p>
+<h3 id="1-每個-specialist-變小不代表整個系統變便宜">1. 每個 specialist 變小，不代表整個系統變便宜</h3>
+<p>如果系統拓樸變成：</p>
+<ul>
+<li>coordinator</li>
+<li>specialist A</li>
+<li>specialist B</li>
+<li>final synthesizer</li>
+</ul>
+<p>那你的成本就不再是單一 prompt。</p>
+<p>而是很多局部 prompt 的總和。</p>
+<p>每個局部 prompt 都可能包含：</p>
+<ul>
+<li>agent-specific instructions</li>
+<li>tool definitions</li>
+<li>handoff summary</li>
+<li>retrieval 結果</li>
+<li>local history</li>
+</ul>
+<h3 id="2-handoff-會變成新的-token-sink">2. handoff 會變成新的 token sink</h3>
+<p>agent 拆開之後，最常被低估的成本就是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>handoff summary</span></span></code></pre>
+<p>因為子 agent 不是憑空知道前面發生了什麼。</p>
+<p>你通常需要把這些資訊重新包裝後送進去：</p>
+<ul>
+<li>任務目標</li>
+<li>已知限制</li>
+<li>目前狀態</li>
+<li>前一步產出</li>
+<li>需要避免的錯誤</li>
+</ul>
+<p>如果 handoff 做得不好，multi-agent 很快就會變成：</p>
+<blockquote>
+<p>同一批事實被不同 agent 用不同 wording 重複講很多次。</p>
+</blockquote>
+<p>這通常發生在 fresh spawn 的 worker 模式。</p>
+<p>如果子 agent 可以直接繼承父 agent 的上下文，handoff 就不一定要濃縮成一大段 summary，
+而可能只需要一個很短的任務指令。</p>
+<h3 id="3-duplicated-prefix-可能比你想像中多">3. duplicated prefix 可能比你想像中多</h3>
+<p>如果沒有共享機制，每個 specialist 往往都會有自己的：</p>
+<ul>
+<li>role prompt</li>
+<li>guardrails</li>
+<li>tool schema</li>
+<li>memory instructions</li>
+</ul>
+<p>單看每個 agent 都不大。</p>
+<p>但把所有 calls 加總後，你可能只是把一個大前綴，拆成很多個中型前綴反覆重送。</p>
+<p>這是很典型的 failure mode，但不是 multi-agent 的必然屬性。</p>
+<p>如果 runtime 支援 inherited context、shared state，或直接重用 parent prompt cache，
+那 duplicated prefix 的問題可以明顯下降。</p>
+<h3 id="4-routing-錯了成本不只浪費一次">4. routing 錯了，成本不只浪費一次</h3>
+<p>multi-agent 還有一個 monolithic agent 沒那麼強的成本風險：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>misrouting</span></span></code></pre>
+<p>如果 coordinator 先叫錯 specialist，再轉給另一個 specialist，
+你付的不只是一次錯誤判斷。</p>
+<p>你付的是：</p>
+<ul>
+<li>一次 coordinator call</li>
+<li>一次錯誤 specialist call</li>
+<li>一次新的 handoff</li>
+<li>一次真正需要的 specialist call</li>
+</ul>
+<p>所以 multi-agent 更依賴：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>routing discipline + handoff discipline</span></span></code></pre>
+<hr>
+<h2 id="兩種成本流向看起來其實不一樣">兩種成本流向看起來其實不一樣</h2>
+<p>把它們畫成圖，會更直觀。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Mono[Monolithic Agent]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U1[User Task] --> A1[Single Agent]</span></span>
+<span class="line"><span style="color:#E1E4E8">        A1 --> C1[Shared Context]</span></span>
+<span class="line"><span style="color:#E1E4E8">        A1 --> T1[Tools / Memory]</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    subgraph Multi[Multi-Agent]</span></span>
+<span class="line"><span style="color:#E1E4E8">        U2[User Task] --> R[Coordinator]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R --> H1[Routing / Handoff Context]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H1 --> S1[Specialist A]</span></span>
+<span class="line"><span style="color:#E1E4E8">        R --> H2[Routing / Handoff Context]</span></span>
+<span class="line"><span style="color:#E1E4E8">        H2 --> S2[Specialist B]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S1 --> F[Final Synthesis]</span></span>
+<span class="line"><span style="color:#E1E4E8">        S2 --> F</span></span>
+<span class="line"><span style="color:#E1E4E8">    end</span></span></code></pre>
+<p>Monolithic 的主要成本集中在：</p>
+<ul>
+<li>shared context 很大</li>
+<li>session history 很長</li>
+<li>prompt compaction 壓力很高</li>
+</ul>
+<p>Multi-agent 的主要成本集中在：</p>
+<ul>
+<li>call 次數增加</li>
+<li>fresh spawn 時 handoff summary 增加</li>
+<li>未共享快取時 prefixes 被拆開重複出現</li>
+<li>還要再做一次合併</li>
+</ul>
+<hr>
+<h2 id="兩個極簡例子">兩個極簡例子</h2>
+<h3 id="例子-1單領域請求multi-agent-可能更合理">例子 1：單領域請求，Multi-Agent 可能更合理</h3>
+<p>假設你的系統有四種 specialist：</p>
+<ul>
+<li>billing</li>
+<li>support</li>
+<li>compliance</li>
+<li>analytics</li>
+</ul>
+<p>如果 monolithic agent 每次都要帶著這四組 domain instructions 與 tools，
+那即使使用者只是問一個 billing 問題，你仍然可能在每輪都送：</p>
+<ul>
+<li>12k shared domain context</li>
+<li>2k system / policy</li>
+<li>1k current task</li>
+</ul>
+<p>大約就是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>15k input tokens</span></span></code></pre>
+<p>如果你用 router + billing specialist：</p>
+<ul>
+<li>1k routing prompt</li>
+<li>4k billing specialist context</li>
+<li>1k task / handoff</li>
+</ul>
+<p>大約可能是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>6k input tokens</span></span></code></pre>
+<p>這種情況下，multi-agent 很合理。</p>
+<p>因為它真正節省的不是智慧，而是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>不相關領域根本不用進 context</span></span></code></pre>
+<p>而這件事不只可能省 token，
+更重要的是能直接降低 context pollution。</p>
+<h3 id="例子-2高共享長任務monolithic-反而可能更合理">例子 2：高共享長任務，Monolithic 反而可能更合理</h3>
+<p>換另一種情境。</p>
+<p>你在做 coding agent，任務需要反覆使用：</p>
+<ul>
+<li>同一份 repo summary</li>
+<li>同一組 coding rules</li>
+<li>同一批 tools</li>
+<li>同一段逐步累積的 session history</li>
+</ul>
+<p>如果拆成：</p>
+<ul>
+<li>planner</li>
+<li>coder</li>
+<li>reviewer</li>
+</ul>
+<p>很可能三個 agent 都需要讀到大量相同的 repo context。</p>
+<p>這時候你付出的可能是：</p>
+<ul>
+<li>planner 讀一次</li>
+<li>coder 再讀一次</li>
+<li>reviewer 又讀一次</li>
+<li>中間還要再加 handoff summary</li>
+</ul>
+<p>即使每個 local context 比 monolithic 小，
+總和也可能比單一 agent 更大。</p>
+<p>這種情況下，monolithic agent 透過更好的 caching 與 compaction，反而可能更合理，也可能比較省。</p>
+<p>重點不是哪個比較「聰明」，而是：</p>
+<blockquote>
+<p>共享上下文太重，而且每個 worker 都從 fresh context 開始時，拆 agent 很可能只是把 shared context 重複付費。</p>
+</blockquote>
+<p>反過來說，如果 execution mode 允許子 agent 繼承父 agent 的上下文或 prompt cache，
+那 multi-agent 的重複成本可以明顯下降。</p>
+<hr>
+<h2 id="什麼情況-multi-agent-真的比較值得拆">什麼情況 Multi-Agent 真的比較值得拆</h2>
+<p>Multi-agent 比較值得拆，通常先不是因為它比較便宜，
+而是因為它能顯著降低 context pollution。</p>
+<p>如果下面這些條件成立，成本才比較有機會一起變好。</p>
+<h3 id="1-domain-context-彼此高度分離">1. domain context 彼此高度分離</h3>
+<p>如果不同 specialist 需要看的知識域差很多，
+那 context isolation 的價值就很高。</p>
+<h3 id="2-不同角色的-tools--guardrails--objective-會互相干擾">2. 不同角色的 tools / guardrails / objective 會互相干擾</h3>
+<p>如果 planner、executor、reviewer 放在同一個 prompt 裡容易互相拉扯，
+那拆開的價值就很高。</p>
+<h3 id="3-一次任務只會啟用少數-specialists">3. 一次任務只會啟用少數 specialists</h3>
+<p>如果大部分 request 其實只會走 1 到 2 個 specialist，
+那 routing 開銷就有機會被節省下來的 context 抵消。</p>
+<h3 id="4-任務可以-parallel-fan-out">4. 任務可以 parallel fan-out</h3>
+<p>如果幾個子任務彼此獨立，parallel fan-out / gather 不只可能降低 latency，
+有時也能讓每個 agent 的 local context 保持更小。</p>
+<h3 id="5-handoff-可以被壓成小而穩定的-structured-payload">5. handoff 可以被壓成小而穩定的 structured payload</h3>
+<p>如果你能把 handoff 控制成：</p>
+<ul>
+<li>任務 ID</li>
+<li>幾個關鍵欄位</li>
+<li>少量摘要</li>
+</ul>
+<p>那 coordination overhead 會低很多。</p>
+<h3 id="6-routing-準確率夠高">6. routing 準確率夠高</h3>
+<p>如果 router 經常錯，multi-agent 的理論優勢很容易被誤路由吃掉。</p>
+<h3 id="7-execution-mode-支援-shared-cache-或-inherited-context">7. execution mode 支援 shared cache 或 inherited context</h3>
+<p>如果 worker 可以直接重用共同背景，而不是每次從零開始，
+multi-agent 的成本表現會好很多。</p>
+<p>這裡真正關鍵的不是「有沒有多 agent」，
+而是：</p>
+<ul>
+<li>shared context 是不是每次都要重新送</li>
+<li>handoff 是不是可以縮成很小的 payload</li>
+<li>stable prefix 能不能跨 agent 被重用</li>
+</ul>
+<p>這也是為什麼同樣都叫 subagent，實際成本可能差很多。</p>
+<h3 id="一個很具體的例子claude-code-的兩種-subagent-成本模型">一個很具體的例子：Claude Code 的兩種 subagent 成本模型</h3>
+<p>Claude Code 的公開文件就把這件事切得很清楚：</p>
+<ul>
+<li>named subagent 會從新的 context 開始，使用自己的 system prompt，與主對話分開快取</li>
+<li>forked subagent 則繼承父對話的上下文、system prompt 與 tools，第一個 request 可以重用 parent 的 prompt cache</li>
+</ul>
+<p>所以同樣都是把工作丟給子 agent，成本模型其實完全不同。</p>
+<p>前者比較接近本文前面講的 fresh specialist spawn；
+後者比較像在共享背景上另外開一條工作支線。</p>
+<p>這個例子要說明的不是某個產品比較好，
+而是 execution mode 本身就會改變 context cost shape。</p>
+<hr>
+<h2 id="什麼情況-monolithic-反而更合理">什麼情況 Monolithic 反而更合理</h2>
+<p>Monolithic agent 比較合理，通常表示你更需要 continuity 與共享背景，
+而不是強隔離。</p>
+<h3 id="1-大多數步驟都共享同一份背景">1. 大多數步驟都共享同一份背景</h3>
+<p>如果任務每一步都高度依賴同一組 context，
+那 shared context 本來就是系統的核心。</p>
+<h3 id="2-任務偏短但互動連續">2. 任務偏短，但互動連續</h3>
+<p>這種情況下，session continuity 本身很有價值。
+拆 agent 反而會多出很多不必要的 handoff。</p>
+<h3 id="3-tool-surface-雖大但實際使用模式高度重疊">3. tool surface 雖大，但實際使用模式高度重疊</h3>
+<p>如果不同「專家」其實老是在調用相同的一批 tools，
+那多 agent 可能只是表面上的模組化。</p>
+<h3 id="4-handoff-內容很難壓縮">4. handoff 內容很難壓縮</h3>
+<p>有些任務的上下文很難被摘要成短 payload。</p>
+<p>例如：</p>
+<ul>
+<li>長程式碼修改</li>
+<li>複雜架構決策</li>
+<li>長 research trail</li>
+</ul>
+<p>這種情況下，handoff 往往會變成新的 token sink。</p>
+<hr>
+<h2 id="真正應該量什麼">真正應該量什麼</h2>
+<p>如果你已經確認這個任務的一階需求，
+再來比較 monolithic 與 multi-agent，
+最不該看的就是單次 prompt 長短。</p>
+<p>更有價值的觀測指標通常是：</p>
+<ul>
+<li>model calls per user task</li>
+<li>total input tokens per task</li>
+<li>duplicated stable prefix ratio</li>
+<li>handoff summary tokens per task</li>
+<li>per-agent / cross-agent cache hit rate</li>
+<li>specialist activation rate</li>
+<li>final synthesis tokens</li>
+<li>parallel fan-out 的 latency / token trade-off</li>
+</ul>
+<p>LangChain 的 multi-agent 文件其實直接把幾種 pattern 拿來比較：</p>
+<ul>
+<li>model calls</li>
+<li>tokens processed</li>
+<li>repeat request 的行為差異</li>
+</ul>
+<p>這很值得注意。</p>
+<p>因為它提醒我們：</p>
+<blockquote>
+<p>agent topology 不是抽象架構風格，而是會直接改變成本曲線的 runtime design。</p>
+</blockquote>
+<hr>
+<h2 id="這件事其實會回頭影響-context-architecture">這件事其實會回頭影響 Context Architecture</h2>
+<p>如果把這篇和 context caching / compaction / memory 這些概念放在一起看，
+會更清楚。</p>
+<h3 id="monolithic-agent-更依賴-compaction">Monolithic agent 更依賴 compaction</h3>
+<p>因為它的主要風險是：</p>
+<ul>
+<li>shared history 太長</li>
+<li>prompt blob 越來越大</li>
+<li>需要在同一條 session 裡持續壓縮</li>
+</ul>
+<h3 id="multi-agent-更依賴-handoff-discipline">Multi-agent 更依賴 handoff discipline</h3>
+<p>因為它的主要風險是：</p>
+<ul>
+<li>同一件事被重複摘要</li>
+<li>fresh spawn 時同一份 prefix 被不同 agent 各帶一遍</li>
+<li>state transfer 不乾淨，導致重複上下文</li>
+</ul>
+<p>如果 execution mode 可以直接繼承上下文，handoff 壓力會下降；
+但相對地，context isolation 也會變弱。</p>
+<h3 id="兩者都需要-cache-discipline">兩者都需要 cache discipline</h3>
+<p>不管你是一個 agent 還是很多 agent，
+只要 stable prefix 不穩，成本都會上升。</p>
+<h3 id="memory-architecture-會放大或縮小差異">Memory architecture 會放大或縮小差異</h3>
+<p>如果每個 specialist 都各自 retrieval 同一批知識，
+multi-agent 的 token duplication 會變得更嚴重。</p>
+<p>如果 memory 可以被共享、索引一致、按需載入，
+multi-agent 才比較有機會把 context 切乾淨。</p>
+<hr>
+<h2 id="一個更實用的對照表">一個更實用的對照表</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Topology</th><th>主要價值</th><th>主要成本風險</th><th>更依賴的紀律</th></tr></thead><tbody><tr><td>Monolithic agent</td><td>shared context continuity、prefix reuse、較少 handoff</td><td>oversized prompt、history growth、tool overload</td><td>cache discipline、compaction discipline</td></tr><tr><td>Multi-agent</td><td>context isolation、specialization、parallel execution</td><td>routing overhead、handoff summary、未共享時的 duplicated prefixes、未共享時的 repeated retrieval</td><td>routing discipline、handoff discipline</td></tr></tbody></table>
+<hr>
+<h2 id="結論">結論</h2>
+<p>monolithic agent 與 multi-agent 的差異，很容易被理解成「簡單架構 vs 進階架構」。</p>
+<p>但我覺得更準確的理解是：</p>
+<blockquote>
+<p>Multi-agent 通常先是在解 context pollution。
+Monolithic 通常先是在保留 context continuity。
+context cost shape 是這兩種選擇的後果，不是起點。</p>
+</blockquote>
+<p>Monolithic agent 的主要問題是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>一個大腦背了太多共享上下文</span></span></code></pre>
+<p>Multi-agent 的主要問題是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>很多小腦在反覆協調與轉譯上下文</span></span></code></pre>
+<p>但這句話也要再補一個條件：</p>
+<p>如果每個 worker 都從 fresh context 開始，
+這種協調與轉譯成本會特別高。</p>
+<p>如果系統允許 inherited context、shared state 或 shared cache，
+那 multi-agent 的成本曲線會往另一個方向移動。</p>
+<p>如果任務的大部分步驟都共享同一份背景、需要長 session continuity、工具使用模式高度重疊，而且 handoff 很難壓縮，
+那 monolithic agent 往往更合理，也更穩定。</p>
+<p>如果任務的知識域彼此分離、一次只會啟用少數 specialists、可以 parallel fan-out，
+而且 handoff 可以結構化，甚至能設計 shared cache 或 inherited context，
+那 multi-agent 通常更值得。</p>
+<p>所以真正成熟的判準不是 agent 數量，
+也不是單輪 prompt 長短，
+而是你的任務形狀，到底更需要 context sharing，還是 context isolation。</p>
+<p>從這個角度看，agent topology 就不只是軟體模組化問題，
+也不只是 cost architecture。</p>
+<p>它其實也是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>context architecture</span></span></code></pre>
+<p>的一部分。</p>
+<p>不是越多 agent 越進階，
+而是要讓上下文形狀、成本形狀與任務形狀對齊。</p>
+<hr>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a href="https://adk.dev/agents/multi-agents/">ADK — Multi-Agent Systems in ADK</a></li>
+<li><a href="https://docs.langchain.com/oss/python/langchain/multi-agent">LangChain — Multi-agent</a></li>
+<li><a href="https://code.claude.com/docs/en/sub-agents">Claude Code — Create custom subagents</a></li>
+<li><a href="https://google.github.io/adk-docs/context/caching/">Google ADK — Context Caching</a></li>
+<li><a href="https://google.github.io/adk-docs/context/compaction/">Google ADK — Context Compaction</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

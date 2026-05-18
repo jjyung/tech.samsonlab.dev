@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Monolithic Agent 與 Multi-Agent，先看 Context Isolation，再看 Context Cost
+
+**Description:** Multi-agent 與 monolithic agent 的差異，不只在架構拆分，而在 context isolation、context continuity 與整體 context cost shape 的取捨。
+
+**URL:** https://tech.samsonlab.dev//blog/monolithic-agent-vs-multi-agent-context-cost/
+
+---
+
 ### Plan Gate Execute
 
 **Description:** 從 Stage-Gate 到 AI agent，理解為什麼先規劃、再審查、最後執行會成為高不確定任務的穩定模式。
@@ -62,4 +70,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-05-11T06:59:56.859Z
+Last updated: 2026-05-18T06:01:12.375Z
