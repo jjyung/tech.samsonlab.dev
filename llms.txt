@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化
+
+**Description:** MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。
+
+**URL:** https://tech.samsonlab.dev//blog/mcp-toolbox-for-databases-standardizing-agent-data-access/
+
+---
+
 ### Monolithic Agent vs Multi-Agent：先看 Context Isolation，再看 Context Cost
 
 **Description:** Monolithic agent 與 multi-agent 的差異，不只是拆分程度，而是 context isolation、context continuity 與整體 context cost shape 的取捨。
@@ -70,4 +78,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-05-30T16:28:29.465Z
+Last updated: 2026-06-01T05:55:29.012Z

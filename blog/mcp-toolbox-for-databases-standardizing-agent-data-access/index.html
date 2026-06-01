@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/mcp-toolbox-for-databases-standardizing-agent-data-access/"><!-- Primary Meta Tags --><title>MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化</title><meta name="title" content="MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化"><meta name="description" content="MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/mcp-toolbox-for-databases-standardizing-agent-data-access/"><meta property="og:title" content="MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化"><meta property="og:description" content="MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/mcp-toolbox-for-databases-standardizing-agent-data-access.BPrbcUNK.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/mcp-toolbox-for-databases-standardizing-agent-data-access/"><meta property="twitter:title" content="MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化"><meta property="twitter:description" content="MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/mcp-toolbox-for-databases-standardizing-agent-data-access.BPrbcUNK.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化","description":"MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。","datePublished":"2026-06-01T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/mcp-toolbox-for-databases-standardizing-agent-data-access.BPrbcUNK.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Br8Ka4Kl.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/mcp-toolbox-for-databases-standardizing-agent-data-access.BPrbcUNK_roH4t.webp" alt loading="lazy" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-06-01T00:00:00.000Z"> Jun 1, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <p>現在談 AI agent，大家很容易把焦點放在 model、framework 或 prompting。</p>
+<p>但一進到企業場景，真正麻煩的地方通常不是「agent 夠不夠聰明」，而是「它要怎麼安全、穩定、可治理地碰資料」。</p>
+<p>這也是我覺得 MCP Toolbox for Databases 值得注意的原因。</p>
+<p>它不是另一個 agent framework。更準確地說，它比較像一層把 database access 工程化的 tool layer。上面可以接 IDE、CLI、agent framework 或自建應用，下面接各種資料來源，中間用一致方式定義工具、權限與暴露面。</p>
+<p>如果把名詞拆開來看，差別會更清楚：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>名稱</th><th>主要解的問題</th><th>在架構裡比較像什麼</th></tr></thead><tbody><tr><td>MCP</td><td>client 和 server 怎麼標準化溝通</td><td>protocol</td></tr><tr><td>MCP Toolbox</td><td>怎麼把資料能力包成可重用、可治理的工具</td><td>server + tool framework</td></tr></tbody></table>
+<h2 id="先講結論">先講結論</h2>
+<p>如果要用一句話介紹它，我會這樣說：</p>
+<blockquote>
+<p>MCP Toolbox for Databases 是一個開源的 MCP server，也是一個 tool framework。它把資料庫能力包成可重用、可治理的 tools，讓 AI agents、IDEs 和應用程式能用比較一致的方式接到企業資料。</p>
+</blockquote>
+<p>這個專案早期叫做 <strong>Gen AI Toolbox for Databases</strong>，後來正式對齊 <strong>Model Context Protocol</strong>，repo 和文件也一起改名為 <strong>MCP Toolbox for Databases</strong>。</p>
+<p>這個 rename 不只是品牌調整。它更像是在表態：這個專案的重點不是替某個 agent framework 做 integration，而是想成為 MCP 生態裡的資料接入層。</p>
+<h2 id="mcp-解的是協定toolbox-解的是落地">MCP 解的是協定，Toolbox 解的是落地</h2>
+<p>MCP 解的是 protocol 問題，例如：</p>
+<ol>
+<li>client 和 tool server 怎麼溝通</li>
+<li>tool manifest、參數 schema、呼叫流程怎麼標準化</li>
+</ol>
+<p>但只靠 protocol，還不夠把 agent 真正接到資料庫。實務上你還要處理不少事情：</p>
+<ol>
+<li>database connection lifecycle</li>
+<li>connection pooling</li>
+<li>authentication and authorization</li>
+<li>query safety</li>
+<li>observability</li>
+<li>tool definition and reuse</li>
+</ol>
+<p>如果這一層每個團隊都自己做，最後很常變成：</p>
+<ol>
+<li>demo 可以跑</li>
+<li>production 不好治理</li>
+<li>換一個 client 或 framework 就得重包一次</li>
+</ol>
+<p>MCP Toolbox 的價值，就是把這層收斂成現成的 server 與 tool framework。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart LR</span></span>
+<span class="line"><span style="color:#E1E4E8">    A[Gemini CLI / Claude Code / Codex / Agent App] --> B[MCP Toolbox]</span></span>
+<span class="line"><span style="color:#E1E4E8">    B --> C[Postgres / MySQL / BigQuery / Cloud SQL / Spanner / Neo4j ...]</span></span></code></pre>
+<p>所以更精確地說，MCP 是溝通規格，MCP Toolbox 則是把這個規格變成可部署、可共用、可治理的資料接入實作。</p>
+<h2 id="它其實有兩種用法">它其實有兩種用法</h2>
+<p>官方文件目前把 MCP Toolbox 的角色拆成兩個面向：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>適合場景</th><th>你得到什麼</th></tr></thead><tbody><tr><td>Ready-to-use MCP Server</td><td>想快速把 IDE 或 CLI 接到資料庫</td><td>用 <code>--prebuilt=&#x3C;database></code> 拿到現成 generic tools</td></tr><tr><td>Custom Tools Framework</td><td>想做 production-ready agent tools</td><td>用設定檔定義可治理、可重用的 domain tools</td></tr></tbody></table>
+<p>第一種用法很直觀，就是先把資料接進來。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "toolbox-postgres"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"npx"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">        "-y"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "@toolbox-sdk/server"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "--prebuilt=postgres"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "--stdio"</span></span>
+<span class="line"><span style="color:#E1E4E8">      ]</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>配好 environment variables 之後，就能直接拿到像 <code>list_tables</code>、<code>execute_sql</code> 這類通用能力。這很適合 demo、PoC 或教學，因為你不用先寫一堆 server code 或 MCP wrapper。</p>
+<p>第二種用法比較重要，也更接近真正落地。</p>
+<p>當你知道 agent 常做的是「查詢訂單狀態」或「搜尋符合條件的飯店」，你通常就不會想一直把 generic SQL tool 直接丟給它。你會想把操作收斂成比較窄、比較穩、比較容易審計的 domain tools。</p>
+<p>常見例子像是：</p>
+<ol>
+<li>查詢某個訂單狀態</li>
+<li>搜尋符合條件的飯店</li>
+<li>只讀某些 schema 的分析工具</li>
+<li>帶權限與參數限制的 NL2SQL tool</li>
+</ol>
+<p>這時候，MCP Toolbox 的角色就不只是 MCP server，而更像一層 tool governance。</p>
+<p>而且它不是非黑即白。現在的文件也明確支援把 <code>--prebuilt</code> 和自訂 config 混著用。你可以先用 generic tools 把流程跑通，再慢慢補成自己的 domain tools，不用一開始就把整套治理做完。</p>
+<h2 id="一個簡單例子就能看出差別">一個簡單例子就能看出差別</h2>
+<p>如果只是要先驗證 Claude Code、Gemini CLI 或其他 MCP client 能不能碰 PostgreSQL，prebuilt mode 就夠了：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="json"><code><span class="line"><span style="color:#E1E4E8">{</span></span>
+<span class="line"><span style="color:#79B8FF">  "mcpServers"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">    "toolbox-postgres"</span><span style="color:#E1E4E8">: {</span></span>
+<span class="line"><span style="color:#79B8FF">      "command"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"npx"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">      "args"</span><span style="color:#E1E4E8">: [</span></span>
+<span class="line"><span style="color:#9ECBFF">        "-y"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "@toolbox-sdk/server"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "--prebuilt=postgres"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "--stdio"</span></span>
+<span class="line"><span style="color:#E1E4E8">      ]</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>再配上基本連線資訊：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> POSTGRES_HOST</span><span style="color:#F97583">=</span><span style="color:#79B8FF">127.0.0.1</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> POSTGRES_PORT</span><span style="color:#F97583">=</span><span style="color:#79B8FF">5432</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> POSTGRES_DATABASE</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">toolbox_db</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> POSTGRES_USER</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">toolbox_user</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> POSTGRES_PASSWORD</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">my-password</span></span></code></pre>
+<p>這樣的好處很直接：</p>
+<ol>
+<li>不用先寫 server code</li>
+<li>不用先包自己的 MCP tool</li>
+<li>很快就能測 schema、查資料、驗證互動流程</li>
+</ol>
+<p>但如果要進 production，通常就不該讓 agent 永遠拿著 <code>execute_sql</code> 到處跑。這時比較合理的做法會像下面這樣，用 <code>tools.yaml</code> 定義收斂過的 domain tool：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">kind</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">source</span></span>
+<span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">my-pg-source</span></span>
+<span class="line"><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">postgres</span></span>
+<span class="line"><span style="color:#85E89D">host</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">127.0.0.1</span></span>
+<span class="line"><span style="color:#85E89D">port</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">5432</span></span>
+<span class="line"><span style="color:#85E89D">database</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">toolbox_db</span></span>
+<span class="line"><span style="color:#85E89D">user</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">toolbox_user</span></span>
+<span class="line"><span style="color:#85E89D">password</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">${POSTGRES_PASSWORD}</span></span>
+<span class="line"><span style="color:#B392F0">---</span></span>
+<span class="line"><span style="color:#85E89D">kind</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">tool</span></span>
+<span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">search-hotels-by-location</span></span>
+<span class="line"><span style="color:#85E89D">type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">postgres-sql</span></span>
+<span class="line"><span style="color:#85E89D">source</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">my-pg-source</span></span>
+<span class="line"><span style="color:#85E89D">description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Search for hotels based on location.</span></span>
+<span class="line"><span style="color:#85E89D">annotations</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  readOnlyHint</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#85E89D">parameters</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">location</span></span>
+<span class="line"><span style="color:#85E89D">    type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">string</span></span>
+<span class="line"><span style="color:#85E89D">    description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">The location of the hotel.</span></span>
+<span class="line"><span style="color:#85E89D">statement</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">SELECT * FROM hotels WHERE location ILIKE '%' || $1 || '%';</span></span>
+<span class="line"><span style="color:#B392F0">---</span></span>
+<span class="line"><span style="color:#85E89D">kind</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">toolset</span></span>
+<span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">booking-agent</span></span>
+<span class="line"><span style="color:#85E89D">tools</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">  - </span><span style="color:#9ECBFF">search-hotels-by-location</span></span></code></pre>
+<p>這段設定最重要的不是 SQL 本身，而是它把幾件事固定下來：</p>
+<ol>
+<li>agent 只能做特定動作，不是任意查</li>
+<li>參數結構是清楚的</li>
+<li>tool 可以帶有 read-only 語意</li>
+<li>不同 agent 可以用不同 toolset 切開能力範圍</li>
+</ol>
+<p>也就是說，從這一步開始，你不再只是讓 agent 連資料庫，而是在定義它可以做什麼、不能做什麼。</p>
+<p>如果你有自己的應用程式，也可以直接把這些 tools 載進去：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { ToolboxClient } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@toolbox-sdk/core'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> client</span><span style="color:#F97583"> =</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> ToolboxClient</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'http://127.0.0.1:5000'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> bookingTools</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> client.</span><span style="color:#B392F0">loadToolset</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'booking-agent'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> searchHotels</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> client.</span><span style="color:#B392F0">loadTool</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'search-hotels-by-location'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> result</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#B392F0"> searchHotels</span><span style="color:#E1E4E8">({ location: </span><span style="color:#9ECBFF">'Basel'</span><span style="color:#E1E4E8"> });</span></span>
+<span class="line"><span style="color:#E1E4E8">console.</span><span style="color:#B392F0">log</span><span style="color:#E1E4E8">(result);</span></span></code></pre>
+<p>這點很實用，因為它代表同一個 Toolbox server 可以同時服務 MCP client 和你自己的 agent service。你可以先在 Claude Code 或 Gemini CLI 裡驗證工具，再把同一套東西接進正式系統，不用重做一遍。</p>
+<h2 id="它真正有價值的地方">它真正有價值的地方</h2>
+<p>如果只看新聞標題，這件事很容易被理解成「Google 也支援 MCP 了」。但我覺得真正值得看的，主要是下面三件事。</p>
+<h3 id="1-它把-database-access-從零碎實作拉成共用層">1. 它把 database access 從零碎實作拉成共用層</h3>
+<p>很多團隊做 agent，最後會在各自的 repo 裡長出一堆資料工具。有些包得很薄，有些直接把 SQL 暴露出去，有些權限和觀測幾乎沒有統一。</p>
+<p>MCP Toolbox 的方向，則是把這件事往共享層拉。這代表工具可以被多個 agent 或 app 共用，也比較容易集中更新、集中治理，而不是每個專案各做各的。</p>
+<h3 id="2-它的定位不只是一個-mcp-adapter">2. 它的定位不只是一個 MCP adapter</h3>
+<p>目前文件提到的整合面，不只 MCP client，也包含 ADK、LangChain、LlamaIndex、自建應用，以及 Python、JavaScript、Go SDK。</p>
+<p>這表示它想站的位置，不只是「幫 IDE 讀 mcp.json」，而是同時服務 MCP world 和 application SDK world 的資料工具層。</p>
+<h3 id="3-它把安全邊界和可觀測性提早放進設計裡">3. 它把安全、邊界和可觀測性提早放進設計裡</h3>
+<p>官方文件一直強調的，不只是「連得上資料庫」，還包括：</p>
+<ol>
+<li>connection pooling</li>
+<li>integrated auth</li>
+<li>OpenTelemetry-based observability</li>
+<li>restricted access</li>
+<li>用 tool 與 toolset 控制暴露面</li>
+</ol>
+<p>這些問題一旦走到真實資料場景，就不太可能只靠 prompt 解決。你最後一定還是要回到工具邊界、權限模型與可觀測性。</p>
+<h2 id="我認為比較合理的採用方式">我認為比較合理的採用方式</h2>
+<p>如果今天真的要把它帶進團隊，我覺得最實際的路徑是三步。</p>
+<h3 id="第一步先用-prebuilt-tools-驗證需求">第一步：先用 prebuilt tools 驗證需求</h3>
+<p>這個階段先不要急著談完整治理，而是先回答幾個問題：</p>
+<ol>
+<li>agent 到底需不需要直接碰資料</li>
+<li>最常見的查詢模式是什麼</li>
+<li>哪些資訊不適合暴露給 generic tools</li>
+</ol>
+<p>這時候 MCP Toolbox 比較像 discovery layer。</p>
+<h3 id="第二步把高頻操作收斂成-custom-tools">第二步：把高頻操作收斂成 custom tools</h3>
+<p>等你知道 agent 真的在做什麼，就不要讓它一直用泛用 query 能力。把高價值、高頻率的操作收斂成少數幾個 domain tools，才會有比較穩定的 contract、比較清楚的權限邊界，也比較容易審計。</p>
+<h3 id="第三步再把-production-concern-補完整">第三步：再把 production concern 補完整</h3>
+<p>例如：</p>
+<ol>
+<li>read-only 預設</li>
+<li>write access 明確 opt-in</li>
+<li>row limit 與 timeout</li>
+<li>client-to-server auth</li>
+<li>telemetry 與 trace</li>
+<li>toolset 分群</li>
+</ol>
+<p>這條 adoption path 比一開始就直接開一個 agent 去碰資料庫成熟很多。</p>
+<h2 id="它提醒我們的其實是另一件事">它提醒我們的，其實是另一件事</h2>
+<p>很多 agent 討論都把重心放在 model、planning、memory、reasoning 或 multi-agent orchestration。</p>
+<p>但一旦進到真實資料環境，瓶頸常常不是模型，而是更下面那層：</p>
+<ol>
+<li>tool contract</li>
+<li>permissions</li>
+<li>data access</li>
+<li>observability</li>
+<li>operational boundary</li>
+</ol>
+<p>MCP Toolbox 值得注意，不只是因為它掛著 Google 或 MCP，而是因為它把這些原本很零散、很容易被每個團隊重做一遍的東西，整理成一個比較一致的 product surface。</p>
+<p>我覺得更準確的定位是：</p>
+<blockquote>
+<p>它不是在跟 agent framework 競爭，而是在替 agent framework 補上一層可治理的資料接入能力。</p>
+</blockquote>
+<h2 id="結論">結論</h2>
+<p>如果把 AI agent 看成「推理 + 工具 + 資料」的組合，那 MCP Toolbox 真正重要的地方，不是讓 agent 更會做事，而是讓資料接入這件事比較像工程，而不是 patchwork。</p>
+<p>對團隊來說，這通常比「又多一個 agent framework」更有價值。</p>
+<p>因為真正難 scale 的，往往不是 demo 裡那個 agent，而是 demo 成功之後，整個團隊要怎麼共享、限制、審計、更新那些 tools。</p>
+<p>MCP Toolbox for Databases 給的一個很實際的答案是：</p>
+<p><strong>把資料庫能力收斂成標準化、可重用、可治理的工具層。</strong></p>
+<h2 id="參考資料">參考資料</h2>
+<ol>
+<li><a href="https://mcp-toolbox.dev/documentation/introduction/">MCP Toolbox for Databases docs</a></li>
+<li><a href="https://mcp-toolbox.dev/documentation/getting-started/local_quickstart_js/">JS Quickstart (Local)</a></li>
+<li><a href="https://mcp-toolbox.dev/documentation/configuration/prebuilt-configs/">Prebuilt Configs</a></li>
+<li><a href="https://mcp-toolbox.dev/documentation/configuration/tools/">Tools</a></li>
+<li><a href="https://mcp-toolbox.dev/documentation/configuration/toolsets/">Toolsets</a></li>
+<li><a href="https://github.com/googleapis/mcp-toolbox">GitHub repo</a></li>
+<li><a href="https://cloud.google.com/blog/products/ai-machine-learning/mcp-toolbox-for-databases-now-supports-model-context-protocol">Google Cloud Blog：MCP Toolbox for Databases now supports Model Context Protocol</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol</a></li>
+</ol>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
