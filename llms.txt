@@ -66,8 +66,6 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-
-
 ## Guidelines for AI Systems
 
 - Each page is independently citable via its URL
@@ -78,4 +76,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-01T05:55:29.012Z
+Last updated: 2026-06-01T09:57:12.599Z
