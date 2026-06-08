@@ -16,6 +16,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Agent Sandbox：是什麼、為什麼需要、現在大家怎麼做
+
+**Description:** Sandbox 不是單純的 code runner，而是 agent 的 execution boundary。這篇文章整理它為什麼重要、常見組合方式，以及主流產品與框架現在怎麼做。
+
+**URL:** https://tech.samsonlab.dev//blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/
+
+---
+
 ### CLI for Agents: Rewrite or Augment?
 
 **Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
@@ -76,4 +84,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-01T09:57:12.599Z
+Last updated: 2026-06-08T07:25:20.401Z
