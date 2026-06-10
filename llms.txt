@@ -32,7 +32,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### From SEO to AEO: Why Agent DX is Rewriting How We Design Content
+### From SEO to AEO: Why Agent Experience is Rewriting How We Design Content
 
 **Description:** SEO optimizes for search engines, AEO optimizes for AI agents. Understanding how llms.txt and content architecture shift from human-first discovery to agent-friendly interfaces.
 
@@ -84,4 +84,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-08T07:25:20.401Z
+Last updated: 2026-06-10T03:00:45.554Z
