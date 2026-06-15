@@ -48,6 +48,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 微服務與作業系統類比地圖
+
+**Description:** 用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。
+
+**URL:** https://tech.samsonlab.dev//blog/microservices-os-analogy-map/
+
+---
+
 ### Monolithic Agent vs Multi-Agent：先看 Context Isolation，再看 Context Cost
 
 **Description:** Monolithic agent 與 multi-agent 的差異，不只是拆分程度，而是 context isolation、context continuity 與整體 context cost shape 的取捨。
@@ -84,4 +92,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-10T03:00:45.554Z
+Last updated: 2026-06-15T05:45:47.665Z
