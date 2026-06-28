@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力
+
+**Description:** 從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。
+
+**URL:** https://tech.samsonlab.dev//blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/
+
+---
+
 ### From SEO to AEO: Why Agent Experience is Rewriting How We Design Content
 
 **Description:** SEO optimizes for search engines, AEO optimizes for AI agents. Understanding how llms.txt and content architecture shift from human-first discovery to agent-friendly interfaces.
@@ -92,4 +100,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-15T05:45:47.665Z
+Last updated: 2026-06-28T16:56:15.233Z

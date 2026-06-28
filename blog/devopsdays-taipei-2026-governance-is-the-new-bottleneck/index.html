@@ -1,0 +1,467 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/"><!-- Primary Meta Tags --><title>當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力</title><meta name="title" content="當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力"><meta name="description" content="從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/"><meta property="og:title" content="當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力"><meta property="og:description" content="從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/devopsdays-taipei-2026-governance-is-the-new-bottleneck.Bs-Vnltm.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/"><meta property="twitter:title" content="當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力"><meta property="twitter:description" content="從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/devopsdays-taipei-2026-governance-is-the-new-bottleneck.Bs-Vnltm.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力","description":"從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。","datePublished":"2026-06-28T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/devopsdays-taipei-2026-governance-is-the-new-bottleneck.Bs-Vnltm.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BLLR6GpQ.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/devopsdays-taipei-2026-governance-is-the-new-bottleneck.Bs-Vnltm_2nr6rp.webp" alt loading="lazy" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-06-28T00:00:00.000Z"> Jun 28, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h2 id="tldr">TL;DR</h2>
+<p>這次 DevOpsDays Taipei 2026 兩天下來，最清楚的共識不是哪個模型最強，而是：</p>
+<blockquote>
+<p><strong>AI 把實作時間壓得很短，卻無法壓縮治理、溝通與可觀測性這些「人與人之間」的硬時間。</strong></p>
+</blockquote>
+<p>這篇文章整理兩天裡我有參加、或共筆有實質內容的場次，並把共通訊息收成五個結論。<br>
+所有內容來自講者與現場社群共筆的共同貢獻，感謝所有講者與社群參與者。</p>
+<hr>
+<h2 id="核心觀察">核心觀察</h2>
+<p>不是哪個 agent framework 最潮，而是更根本的一件事：當實作速度被 AI 大幅拉高之後，真正的瓶頸開始從 coding 轉向治理。</p>
+<p>換句話說，現在更難的已經不是「做出來」，而是：</p>
+<ul>
+<li>要做什麼</li>
+<li>邊界在哪裡</li>
+<li>誰有權限做什麼</li>
+<li>出錯時怎麼回退</li>
+<li>團隊怎麼在高速產出下維持一致性與可靠性</li>
+</ul>
+<p>AI 雖然把實作時間壓縮得很短，卻很難壓縮團隊之間的溝通、資訊同步與開會成本——這往往是專案最後僅剩的硬時間。</p>
+<hr>
+<h2 id="議程總覽">議程總覽</h2>
+<p>下面照議程時間排序。每場附講者、投影片與原始共筆連結。</p>
+<h3 id="625四">6/25（四）</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>時段</th><th>主題</th><th>講者</th></tr></thead><tbody><tr><td>09:30-09:40</td><td><a href="#welcome-opening-1">Welcome opening</a></td><td>陳正瑋（艦長）</td></tr><tr><td>09:40-10:40</td><td><a href="#ruddy">從多模型視角談與 AI 共智</a></td><td>李智樺（Ruddy 老師）</td></tr><tr><td>11:00-12:00</td><td><a href="#andrew">Coding Agent 時代架構師的改變</a></td><td>吳剛志（Andrew Wu）</td></tr><tr><td>12:45-13:10</td><td><a href="#sdlc">以 AI Agent 重構 SDLC</a></td><td>濮紹華（AlanPu）</td></tr><tr><td>13:30-14:10</td><td><a href="#david">AI 認知負債與 Harness Engineering</a></td><td>柯仁傑（David Ko）</td></tr><tr><td>13:30-14:10</td><td><a href="#augustin">AI 效率提升，誰保護品質？</a></td><td>盧建成（Augustin Lu）</td></tr><tr><td>13:30-14:10</td><td><a href="#hopin">DevSecOps 漏洞自動化</a></td><td>何品緯（Hopin）</td></tr><tr><td>14:30-15:10</td><td><a href="#kamal">Kamal 零停機部署原理</a></td><td>高見龍</td></tr><tr><td>14:30-15:10</td><td><a href="#flow">Flow 不死：DevOps 的不變本質</a></td><td>陳正瑋（艦長）</td></tr><tr><td>14:30-15:10</td><td><a href="#levi">十年 Infra Platform 的產品視角</a></td><td>陳俊毅（Levi Chen）</td></tr><tr><td>14:30-15:10</td><td><a href="#kagent">kagent × A2A 自主協作</a></td><td>蕭兆洋（Charles Hsiao）</td></tr><tr><td>15:30-15:55</td><td><a href="#herb">AI Agent 接管 On-Call</a></td><td>翁傳翔（Herb）</td></tr><tr><td>15:30-16:10</td><td><a href="#rose">工程師新角色：從需求到程式碼</a></td><td>楊琬晴（Rose）</td></tr><tr><td>15:30-15:55</td><td><a href="#james">AI 輔助遺留系統現代化</a></td><td>王家駿（James）</td></tr><tr><td>15:30-15:55</td><td><a href="#shuhsi">Platform Engineering 遇上 GenAI</a></td><td>林樹熙（Shuhsi）</td></tr><tr><td>16:15-16:40</td><td><a href="#max">Agent Skills 智慧測試</a></td><td>蔡明哲（Max）</td></tr><tr><td>16:15-16:40</td><td><a href="#gsi">GSI 協議：AI 驅動 SDD</a></td><td>薛華慶（James）</td></tr><tr><td>17:00-17:40</td><td><a href="#smalltown">AI 維運的四大陷阱</a></td><td>蔡宗城（smalltown）</td></tr><tr><td>17:00-17:40</td><td><a href="#nickle">一個人的 DevOps</a></td><td>鄭重男（Nickle Cheng）</td></tr><tr><td>17:00-17:40</td><td><a href="#openclaw">OpenClaw 無人值守</a></td><td>王仁宏（3ric）&#x26; 簡汎羽（Nick Chien）</td></tr><tr><td>17:00-17:40</td><td><a href="#edward">DevOps 生命週期的 AI 輔助</a></td><td>郭家齊（Edward Kuo）</td></tr></tbody></table>
+<h3 id="626五">6/26（五）</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>時段</th><th>主題</th><th>講者</th></tr></thead><tbody><tr><td>09:30-09:40</td><td><a href="#welcome-opening-2">Welcome opening</a></td><td>吳其勳</td></tr><tr><td>09:40-10:40</td><td><a href="#qms">Agile × QMS 共存</a></td><td>Hosotani Yasuo（三菱電機）</td></tr><tr><td>11:00-12:00</td><td><a href="#okr">OKR 與 DevOps</a></td><td>Ikuo Odanaka</td></tr><tr><td>13:30-14:10</td><td><a href="#appleboy">當專案從 300 暴增到 1500</a></td><td>吳柏毅（appleboy）</td></tr><tr><td>13:30-14:10</td><td><a href="#trend">低成本 Observability 2.0</a></td><td>Scott Liao &#x26; Herber Wang</td></tr><tr><td>13:30-14:10</td><td><a href="#smart">智慧協作</a></td><td>李智樺（Ruddy 老師）</td></tr><tr><td>13:30-14:10</td><td><a href="#tygrus">AI 時代 DevSecOps 變革</a></td><td>蔡龍佑（Tygrus）</td></tr><tr><td>13:30-14:10</td><td><a href="#johnny">MCP 自動完成 RCA</a></td><td>宋岡諺（Johnny Sung）</td></tr><tr><td>14:30-15:10</td><td><a href="#jason">打造 GCP DevOps Agent</a></td><td>楊騏（Jason Yang）</td></tr><tr><td>14:30-15:10</td><td><a href="#miles">Alert 分析的 6 個月演進</a></td><td>周建毅（Miles）</td></tr><tr><td>14:30-15:10</td><td><a href="#alex">AI 軟體供應鏈淨化</a></td><td>王青（Alex Wang）</td></tr><tr><td>15:30-15:55</td><td><a href="#chungwei">每分鐘 5 億筆的可觀測性</a></td><td>熊崇緯（Chungwei）</td></tr><tr><td>15:30-15:55</td><td><a href="#ian">LLM 驅動的 ML Pipeline as Code</a></td><td>陳彥誠（Ian）</td></tr><tr><td>15:30-15:55</td><td><a href="#sre">金融業 SRE Portal</a></td><td>秦芝儀</td></tr><tr><td>15:30-15:55</td><td><a href="#jay">OTel Lakehouse 與 AIOps</a></td><td>游舜傑（Jay）</td></tr><tr><td>16:15-16:40</td><td><a href="#allen">Centralized Pipeline 可觀測性</a></td><td>吳明倫（Allen Wu）</td></tr><tr><td>16:15-16:40</td><td><a href="#michael">群體決策的協作實踐</a></td><td>陳家丞（Michael Chen）</td></tr><tr><td>16:15-16:40</td><td><a href="#xiaosong">自動化版本治理與 DevX</a></td><td>陳松林（小松 XiaoSong）</td></tr><tr><td>17:00-17:30</td><td><a href="#david-hsu">Vibe Coding 到 AI-Native DevOps</a></td><td>董大偉（David）</td></tr><tr><td>17:00-17:40</td><td><a href="#jimmy">Agent Production Day 2 Operations</a></td><td>Jimmy Liao &#x26; Kevin Chiu</td></tr><tr><td>17:00-17:40</td><td><a href="#hackercat">漏洞決策與優先排序</a></td><td>高于凱（HackerCat）</td></tr><tr><td>17:00-17:40</td><td><a href="#che">規格驅動 AI 強化 DevOps</a></td><td>張哲嘉（Che Chia Chang）</td></tr><tr><td>17:00-17:40</td><td><a href="#cio">DevOps 衰退？</a></td><td>王宏仁</td></tr></tbody></table>
+<hr>
+<h2 id="625四-1">6/25（四）</h2>
+<h3 id="welcome-opening--陳正瑋艦長-welcome-opening-1">Welcome opening — 陳正瑋（艦長） {#welcome-opening-1}</h3>
+<p>艦長提到大量使用 AI 與工具可能逐漸削弱技能；今年是第九次 DevOpsDays Taipei，並拋出明年第十次還需不需要 DevOpsDays Taipei、還需不需要 DevOps 這個問題。最後提醒填問卷與參加 OpenSpace。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/Skz9AmKbMx">HackMD</a></p>
+<h3 id="從多模型視角談與-ai-共智--李智樺ruddy-老師-ruddy">從多模型視角談與 AI 共智 — 李智樺（Ruddy 老師） {#ruddy}</h3>
+<p>用指揮家比喻人與多模型協作，提出共智四原則：邀請 AI 入桌、人類持續參與、把 AI 當特定角色、假設它是最差版本。重點在多模型交叉驗證、降低認知負荷，以及工程師從解題者轉為共智系統策展人。</p>
+<p><strong>投影片：</strong> <a href="https://1drv.ms/f/c/68b24674607c69d9/IgBj1a31zSqFRotZC-rWi7YpAUDaGum3hMaea1pJvFHfWHU?e=QG7bec">簡報</a> · <strong>共筆：</strong> <a href="https://hackmd.io/B1GcC7FZfg">HackMD</a></p>
+<h3 id="當-coding-agent-能寫-code架構師該做什麼改變--吳剛志andrew-wu-andrew">當 Coding Agent 能寫 Code，架構師該做什麼改變 — 吳剛志（Andrew Wu） {#andrew}</h3>
+<p>用雙循環方法區分 Vibe Coding 與 SDD：先用 AI 快速驗證價值，再把流程規格化與規模化。架構師的重心從監督實作轉向規格收斂、系統建模與風險前置處理。</p>
+<p><strong>投影片：</strong> <a href="https://docs.google.com/presentation/d/e/2PACX-1vQl82jcXCaqLaaM92Jdy8sQi7pmcOiwqPWHVPVo9r8ipZpVuauwoswGi4M-KlWyy9cIQS_tt7Q4Rmzd/pub">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/ByXqCQt-Gl">HackMD</a></p>
+<p><strong>筆者補充：</strong> 這場最有共鳴的地方，是它把我最近做 side project 的感受講得很具體：當 Coding Agent 已經能有效承接大部分實作後，底層程式撰寫不再是主要瓶頸，真正稀缺的能力開始往業務理解、架構設計與規格定義集中。V 型能力階層圖讓我很有感，因為它點出了一個現實變化：越靠近底層、越偏執行型的工作，正在被快速壓縮。</p>
+<p>但這不代表上層只要丟需求就好，反而代表文件品質會直接決定開發品質。當功能邊界、互斥關係、共用邏輯與命名規則沒有先講清楚，AI 很容易把模糊地帶各自實作一遍，最後形成重複開發與系統分裂。所以我會把這場的收穫理解成：未來真正重要的，不只是會不會寫 code，而是能不能把方法、文件與決策脈絡管理好。</p>
+<p><strong>小編觀點：</strong> 這場的核心不是「架構師更重要」而已，而是「規格與治理」變成主要產出。AI 會把可執行碼做得很快，但只要規格不清、邊界沒定、驗證沒寫，速度只會放大錯誤。</p>
+<p>因此架構師真正的價值，是把需求拆成可驗證的決策，把共用與互斥寫清楚，讓 AI 有路可走。沒有文件的 AI 開發，不是敏捷，是失控。</p>
+<h3 id="以-ai-agent-重構-sdlc--濮紹華alanpu-sdlc">以 AI Agent 重構 SDLC — 濮紹華（AlanPu） {#sdlc}</h3>
+<p>91APP 以人機協作、Tasking Flow 標準化、Coding 與 AutoTesting Agent 三階段導入 AI。重點是把文件當指令、用 arc42 與 ISO 25010 管理風險，讓流程成為核心競爭力。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/Skm5AmtbGe">HackMD</a></p>
+<h3 id="當-ai-帶來思考外包--認知負債--柯仁傑david-ko-david">當 AI 帶來思考外包 × 認知負債 — 柯仁傑（David Ko） {#david}</h3>
+<p>從認知負債切入，指出過度依賴 AI 會讓大腦與團隊失去思考能力。解法是特性團隊、結對編程、多團隊 PBR、端到端所有權、ADR 與 Harness Engineering。</p>
+<p><strong>投影片：</strong> <a href="https://www.slideshare.net/slideshow/ai-x-ai-cognitive-debt-in-genai-era/288242857">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/BJ49A7FWfx">HackMD</a></p>
+<h3 id="ai-讓效率提升但誰來保護品質--盧建成augustin-lu-augustin">AI 讓效率提升，但誰來保護品質 — 盧建成（Augustin Lu） {#augustin}</h3>
+<p>AI 讓產出變便宜，但判斷變貴；講者用數據說明開發速度提升的同時，安全事故與 PR 量也一起增加。重點放在 SDLC 五階段的風險、RePPIT 循環，以及讓產出可判斷、可驗證、可維護。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/BJE507YbMe">HackMD</a></p>
+<h3 id="devsecops-漏洞自動化--何品緯hopin-hopin">DevSecOps 漏洞自動化 — 何品緯（Hopin） {#hopin}</h3>
+<p>以 GitLab Security Policy 觸發 SCA/SAST 掃描，串接 DefectDojo 與 Jira 形成從發現到關閉的自動化流程。實務上用 webhook + Lambda 解耦、用 Claude 預處理誤報，並每週產出統計報表。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/r1BqC7t-Ge">HackMD</a></p>
+<h3 id="部署零停機的秘密kamal-流量切換--高見龍-kamal">部署零停機的秘密：Kamal 流量切換 — 高見龍 {#kamal}</h3>
+<p>從 <code>kamal deploy</code> 追到 kamal-proxy，拆解零停機的核心是原子性切換：先把新請求導到新版容器，再讓舊版處理完手上請求。Kamal 以 SSH + Docker 達成比 K8s 更輕的部署體驗。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/BJL507KZfl">HackMD</a></p>
+<h3 id="flow-不死ai-時代-devops-的不變本質--陳正瑋艦長-flow">Flow 不死：AI 時代 DevOps 的不變本質 — 陳正瑋（艦長） {#flow}</h3>
+<p>回到 DevOps 的四個不變本質：Flow、Feedback、Automation、Collaboration。AI 只是把瓶頸移位，重點還是端到端價值流與團隊協作。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/cheng_wei_chen/flow-bu-si-ai-shi-dai-devops-de-bu-bian-ben-zhi">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/S1w9C7FWGe">HackMD</a></p>
+<h3 id="十年打造的-infra-platform--陳俊毅levi-chen-levi">十年打造的 Infra Platform — 陳俊毅（Levi Chen） {#levi}</h3>
+<p>從十年 infra/SRE 建設回看產品團隊視角，補上平台與使用者之間的認知落差。內容涵蓋異常分級、Operation Master 輪值、Postmortem 與 AI Agent 維運。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/H1w5RXY-Gl">HackMD</a></p>
+<h3 id="以-kagent--a2a-構築自主協作--蕭兆洋charles-hsiao-kagent">以 kagent × A2A 構築自主協作 — 蕭兆洋（Charles Hsiao） {#kagent}</h3>
+<p>kagent 提供一個可持續擴充的協作骨架：既可以直接利用既有監控類 agent，也能透過 A2A 把新 agent 接進來，保留很大的演進彈性。</p>
+<p><strong>投影片：</strong> <a href="https://www.charles-hsiao.com/talks/202606-devopsdays-taipei-2026-kagent-a2a">kagent × A2A</a> · <strong>共筆：</strong> <a href="https://hackmd.io/S1_qA7Y-ze">HackMD</a></p>
+<p><strong>筆者補充：</strong> 這場對我特別有吸引力，因為我本身就在開發 ADK 與 A2A 相關應用，公司內部最近也在研究 AgentOps。從這個角度看，kagent 的價值不只是它已經能兼容監控相關 agent，而是它提供了一個可持續擴充的協作骨架：既可以直接利用既有能力，也能再透過 A2A 把新的 agent 接進來，保留很大的演進彈性。</p>
+<p>另一個讓我特別興奮的是它採用開源模式。對內部正在摸索 agent 協作與維運自動化的團隊來說，這種開放架構比封閉產品更有吸引力，因為不只是能用，還能理解它怎麼運作、怎麼延伸，甚至怎麼改造成更符合自己場景的控制面。</p>
+<p><strong>小編觀點：</strong> 這類平台最有價值的地方，不只是「自動化 K8s」，而是把 agent 變成可組裝的能力單元。A2A 的意義在於，監控、修復、查詢、審核可以分拆成不同專長的 agent，各自演化又能互通。</p>
+<p>不過這也代表治理會比 demo 更重要：權限邊界、失敗回退、可觀測性、以及 agent 之間的責任切分，會決定它到底是可用平台，還是另一個很酷但難維護的實驗品。</p>
+<h3 id="當-ai-agent-接管你的-on-call--翁傳翔herb-herb">當 AI Agent 接管你的 On-Call — 翁傳翔（Herb） {#herb}</h3>
+<p>以 Claude SDK 打造 AI Ops Agent，串接白名單工具、拓撲地圖與 pgvector 知識庫，讓 agent 可以自己診斷與修復告警。也分享記憶體 leak demo、Gemini CLI 救火案例與安全護欄。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/Bk_c0XtbGx">HackMD</a></p>
+<h3 id="工程師的新角色從需求到程式碼--楊琬晴rose-rose">工程師的新角色：從需求到程式碼 — 楊琬晴（Rose） {#rose}</h3>
+<p>工程師的角色轉向決策者，靠 SDD 把需求轉成結構化規格文件。重點是提供足夠上下文、守住需求邊界，避免 AI 生成速度把技術債一起放大。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/SyFq0QYZMx">HackMD</a></p>
+<h3 id="ai-輔助遺留系統現代化--王家駿james-james">AI 輔助遺留系統現代化 — 王家駿（James） {#james}</h3>
+<p>用對抗性對話、Log 驗證、多模型比對來做遺留系統現代化，最後把共識沉澱成特徵測試。關鍵提醒是：重構常常就是刪東西。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/jame2408/ai-fu-zhu-yi-liu-xi-tong-xian-dai-hua-de-jing-yan-fen-xiang">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/H1KqAmYWzg">HackMD</a></p>
+<h3 id="platform-engineering-遇上-genai--林樹熙shuhsi-shuhsi">Platform Engineering 遇上 GenAI — 林樹熙（Shuhsi） {#shuhsi}</h3>
+<p>從 Platform Engineering 視角看 GenAI 對內部平台團隊的衝擊與重塑機會。共筆較少，主要素材在投影片裡。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/sucitw/when-platform-engineering-meets-genai">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/Hy99RmKbMx">HackMD</a></p>
+<h3 id="agent-skills--mcp--playwright-智慧測試--蔡明哲max-max">Agent Skills × MCP × Playwright 智慧測試 — 蔡明哲（Max） {#max}</h3>
+<p>QA 不該成為 AI 時代瓶頸，講者把測試拆成可重用的 Agent Skills，並用 MCP 與 BM25 限縮範圍。流程上由 agent 先產測試程式，再交 QA 驗證與回歸。</p>
+<p><strong>投影片：</strong> <a href="https://docs.google.com/presentation/d/1eb3_M5UyK06saDIlPzj6UzCNi8MlHUOWswaq88Kcac/edit?usp=sharing">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/rJc9AQtWzx">HackMD</a></p>
+<h3 id="gsi-協議ai-驅動-sdd--薛華慶james-gsi">GSI 協議：AI 驅動 SDD — 薛華慶（James） {#gsi}</h3>
+<p>GSI（Gherkin-Structure-Implement）把規格、架構、實作拆成三段，由 AI 扮演 PM/架構師/工程師/QA。用 Gherkin、Playwright BDD 與 SpecBridge 做可追溯的驗收流程。</p>
+<p><strong>投影片：</strong> <a href="https://coding-afternoon.com/slides/gsi-protocol/index.html">GSI 簡報</a> · <strong>共筆：</strong> <a href="https://hackmd.io/BJs9RQtbfe">HackMD</a></p>
+<h3 id="不用擔心被-ai-裁員因為出事還是你要負責--蔡宗城smalltown-smalltown">不用擔心被 AI 裁員，因為出事還是你要負責 — 蔡宗城（smalltown） {#smalltown}</h3>
+<p>用 incident 拆解 AI 在維運現場的四大陷阱，並提出 Evidence Gate、Policy Gate、Change Gate 三道防線。核心是 AI 是加速器，不是自動駕駛。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/HyncRXYbzl">HackMD</a></p>
+<h3 id="一個人的-devops從程式碼到-production--鄭重男nickle-cheng-nickle">一個人的 DevOps：從程式碼到 Production — 鄭重男（Nickle Cheng） {#nickle}</h3>
+<p>用 Rails、AI 規格驅動開發與 Kamal 扛起從 code 到 production 的大部分流程。強調 spec 與測試是護欄，沒有紀律就會把混亂放大。</p>
+<p><strong>投影片：</strong> <a href="https://nicklecheng.turbos.tw/slides/devops">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/Skh9RmY-fg">HackMD</a></p>
+<h3 id="真無人值守openclaw--王仁宏3ric-簡汎羽nick-chien-openclaw">真・無人值守：OpenClaw — 王仁宏（3ric）&#x26; 簡汎羽（Nick Chien） {#openclaw}</h3>
+<p>OpenClaw 接手 on-call、alert、PR approve 與 Terraform 變更等日常維運，達到高比例自動化。講者也直白地說，AI 逼你面對的是你原本沒整理好的知識。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/HyT5RQtZGe">HackMD</a></p>
+<h3 id="devops-生命週期的-ai-輔助驅動--郭家齊edward-kuo-edward">DevOps 生命週期的 AI 輔助驅動 — 郭家齊（Edward Kuo） {#edward}</h3>
+<p>把 AI 輔助的切入點放回監控與生命週期管理，討論也延伸到 SRE 維運工作該如何分工。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/r1p50QY-Ge">HackMD</a></p>
+<hr>
+<h2 id="626五-1">6/26（五）</h2>
+<h3 id="welcome-opening--吳其勳-welcome-opening-2">Welcome opening — 吳其勳 {#welcome-opening-2}</h3>
+<p>開場強調 DevOps 的核心是讓各單位回到同一張桌子談業務目標，技術是業務的支柱。也提到 DevOps 在 AI 時代仍有價值，並延伸到國際社群現況。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/ryCcAQKbMl">HackMD</a></p>
+<h3 id="qms-in-the-agile-era--hosotani-yasuo三菱電機-qms">QMS in the Agile Era — Hosotani Yasuo（三菱電機） {#qms}</h3>
+<p>三菱電機分享如何把 ISO 9001 拆成可執行的工程流程，讓 Agile 與 QMS 共存。重點是把 What 與 How 解耦，並讓 QA 成為團隊中的 companion。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/rJA5CXYZGe">HackMD</a></p>
+<h3 id="okr-and-devops--ikuo-odanaka-okr">OKR and DevOps — Ikuo Odanaka {#okr}</h3>
+<p>OKR 是驅動變革的工具，不是 KPI；常見失敗來自把 KR 當工作清單、目標太輕、沒有 Ownership。DevOps 提供持續學習與回饋機制，讓 OKR 真正落地。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/ikuodanaka/okr-and-devops-why-okrs-fail-and-devops-as-the-practice-to-make-them-work">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/S1koRQYZfl">HackMD</a></p>
+<h3 id="ai-不只幫你寫-code--吳柏毅appleboy-appleboy">AI 不只幫你寫 Code — 吳柏毅（appleboy） {#appleboy}</h3>
+<p>因 AI 工具讓專案量從 300 暴增到 1500，團隊把 DevOps 流程規模化。包含 AI 驅動 PR 審查、8 步驟 Plan 流程、GitOps + MCP Server 自動化上架，讓人專注在 Plan 與 CI。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/appleboy/ai-bu-zhi-bang-ni-xie-code-dang-zhuan-an-cong-300-bao-zeng-dao-1500-wo-men-ru-he-cheng-zhu-devops">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/Hk1j0QtZGg">HackMD</a></p>
+<h3 id="低成本-observability-20--scott-liao--herber-wang趨勢科技-trend">低成本 Observability 2.0 — Scott Liao &#x26; Herber Wang（趨勢科技） {#trend}</h3>
+<p>TrendAI 的 PB 級 pipeline 把成本從百萬級年費壓到 348K 美金，架構用 Kafka、Spark Streaming、Iceberg、Trino 與 Grafana 組成開放格式鏈。也點出 Spark/Trino 的擴容與 partition 取捨。</p>
+<p><strong>投影片：</strong> <a href="https://speakerdeck.com/shazi7804/geng-gao-xiao-lu-di-cheng-ben-de-observability-2-dot-0-shi-dai-ji-jiang-lai-lin-observability-2-dot-0-why-you-need-know-devopsdays-taiwan-2025">2025 版參考</a> · <strong>共筆：</strong> <a href="https://hackmd.io/rJljAQYbGg">HackMD</a></p>
+<h3 id="走出混沌的-devops-時代智慧協作--李智樺ruddy-老師-smart">走出混沌的 DevOps 時代：智慧協作 — 李智樺（Ruddy 老師） {#smart}</h3>
+<p>從控制→引導、防呆→容錯學習、人寫流程→人機共演化三個轉變切入，提出智慧協作路徑。共筆也附上簡報與延伸閱讀。</p>
+<p><strong>投影片：</strong> <a href="https://onedrive.live.com/?redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy82OGIyNDY3NDYwN2M2OWQ5L0lnRGs4cDlrekJXMlFMLVMzelNWQkNaQ0FkdUFldWJrWGg5VXM2UWxjNTNjS2pVP2U9UkhaalpY&#x26;id=68B24674607C69D9%21s649ff2e415cc40b6bf92df3495042642&#x26;cid=68B24674607C69D9">簡報</a> · <strong>共筆：</strong> <a href="https://hackmd.io/rklsRXt-fl">HackMD</a></p>
+<h3 id="ai-時代-devsecops-變革--蔡龍佑tygrus-tygrus">AI 時代 DevSecOps 變革 — 蔡龍佑（Tygrus） {#tygrus}</h3>
+<p>在需求、PRD、原始碼審查到 QA 中導入 AI Agent，並把 SSDF 與安全範本當成護欄。重點是讓 AI 承擔初步滲透測試與誤判調查。</p>
+<p><strong>投影片：</strong> <a href="https://docs.google.com/presentation/d/15nXGe5kjp1DfZwW1zdXZu6JI6noKT0OL03PBARBdhVQ/edit?usp=sharing">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/SJ-s07YZfl">HackMD</a></p>
+<h3 id="mcp-讓-ai-替你完成-rca--宋岡諺johnny-sung-johnny">MCP 讓 AI 替你完成 RCA — 宋岡諺（Johnny Sung） {#johnny}</h3>
+<p>以 MCP 串接 Grafana、Loki 等工具，讓 AI 自動蒐集 incident 時間線與多源證據，產出 RCA 草稿。重點仍是人要把關，且從 read-only tool 與權限限制開始。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/rJ-jC7Kbfe">HackMD</a></p>
+<h3 id="從寫到管打造-gcp-devops-agent--楊騏jason-yang-jason">從寫到管：打造 GCP DevOps Agent — 楊騏（Jason Yang） {#jason}</h3>
+<p>以 SDD 和 codebase wiki 讓 AI 理解專案知識，並透過 prospec 自動化流程。核心觀念是 Agent = Model + Harness，且不可逆變更必須人工確認。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/SygQiRQY-fl">HackMD</a></p>
+<h3 id="alert-分析進化史--周建毅miles-miles">Alert 分析進化史 — 周建毅（Miles） {#miles}</h3>
+<p>從 Excel、Kibana 到 AI Agent 的演進裡，真正瓶頸不是技術而是團隊對 alert 分類的共識。講者也提醒：別用 MCP、用 jq 就好；別用 DB、用 JSONL 就好。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/r1XoRXYbGl">HackMD</a></p>
+<h3 id="淨化-ai-軟體供應鏈--王青alex-wang-alex">淨化 AI 軟體供應鏈 — 王青（Alex Wang） {#alex}</h3>
+<p>以套件中心成長觀察為切入：Docker Hub 增長最快，其次是 NPM，再來是 Hugging Face。其餘以官方議程介紹為主。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/SJxEiRQFZMx">HackMD</a></p>
+<h3 id="每分鐘超過-5-億筆可觀測性服務--熊崇緯chungwei-chungwei">每分鐘超過 5 億筆可觀測性服務 — 熊崇緯（Chungwei） {#chungwei}</h3>
+<p>介紹如何營運每分鐘超過 5 億筆遙測資料的大規模可觀測性服務，涵蓋架構、成本與運維挑戰，主要素材在投影片裡。</p>
+<p><strong>投影片：</strong> <a href="https://drive.google.com/file/d/1chVAEPMSH_hDYMZSmmszwqQtO51uUVXk/view?usp=sharing">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/rJSs0XF-fe">HackMD</a></p>
+<h3 id="llm-驅動的-ml-pipeline-as-code--陳彥誠ian-ian">LLM 驅動的 ML Pipeline as Code — 陳彥誠（Ian） {#ian}</h3>
+<p>把 ML pipeline 變成可程式化的基礎設施，讓從業者脫離重複勞動，也讓更多公司能用上資料科學。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/S1BiAXYZzg">HackMD</a></p>
+<h3 id="金融業-sre-portal--秦芝儀-sre">金融業 SRE Portal — 秦芝儀 {#sre}</h3>
+<p>透過 SRE Portal 把合規治理內建到平台預設行為，包含四眼原則、自助申請與完整軌跡。核心是合規與效率不是對立，而是治理成本持續存在。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/H18s07KbMe">HackMD</a></p>
+<p><strong>筆者補充：</strong> 這場因為同樣身在金融業，所以我特別有感。金融業本來就處在高監管環境裡，很多事情不能只看效率或自動化本身，而要同時考慮可追溯性、責任歸屬與風險控制。</p>
+<p>在 AI 可以快速產出工作成果之後，治理的重要性反而被放大了。因為速度提升的不只是交付能力，也包括錯誤擴散與不合規操作的速度；如果沒有足夠清楚的流程、權限與審核機制，AI 帶來的效率很可能會先轉化成新的治理壓力。</p>
+<p>這個觀點也呼應了這次很多場次的共同感受：當實作不再是主要瓶頸，真正重要的問題就會轉向治理、協作與可靠性。對金融業來說，這不只是工程方法的調整，更是組織能不能安全採用 AI 的前提。</p>
+<h3 id="otel-lakehouse-from-o11y-to-aiops--游舜傑jay-jay">OTel Lakehouse: From O11y to AIOps — 游舜傑（Jay） {#jay}</h3>
+<p>用 OTel + Iceberg 做 unified telemetry lakehouse，把調查時間從 30+ 分鐘壓到約 8 秒。也分享開放表格格式、cross-correlation key 與多層異常偵測的架構。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/ryDjR7K-Gx">HackMD</a></p>
+<h3 id="centralized-pipeline-的觀察與實踐--吳明倫allen-wu-allen">Centralized Pipeline 的觀察與實踐 — 吳明倫（Allen Wu） {#allen}</h3>
+<p>討論 Centralized CI/CD 中 Platform Team 與使用者之間的期待落差，並用可觀測性與共享指標找出介入時機。重點是建立可持續迭代的決策框架。</p>
+<p><strong>投影片：</strong> <a href="https://docs.google.com/presentation/d/1GRwiQfcifw_qMO7w7BPjNMXFHDUhXuHoUagZYQnXR-c/edit?usp=sharing">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/HyvjCmYbGe">HackMD</a></p>
+<h3 id="團隊從各自為政到群體決策--陳家丞michael-chen-michael">團隊從各自為政到群體決策 — 陳家丞（Michael Chen） {#michael}</h3>
+<p>從穀倉效應與 Bus Factor 切入，提出 Scrum × 維運的協作框架：4 週 sprint、3 週 grooming、挑戰者制度與輪替主席。用 Epic → Feature → Requirement → Task 四層拆解，再用 Memo 與 Bug 聯防 SOP 沉澱共同知識。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/Bydi07F-zg">HackMD</a></p>
+<p><strong>筆者補充：</strong> 這場讓我重新思考「框架遵循」與「現場調整」之間的張力。從證照訓練的角度來看，Scrum 強調依框架執行，是因為框架本身就是一種經過抽象與驗證的最小共識；如果太早任意變形，團隊很容易把原本應該暴露的問題藏進流程特例裡，最後失去檢視與改善的基準。</p>
+<p>但回到真實團隊現場，大家又常常不得不妥協。當維運壓力、跨團隊依賴、既有組織分工與人力條件都不理想時，完全照教科書執行未必可行，因此流程往往會依情境調整。只要調整背後有清楚理由，而且沒有背離透明、協作與持續改進的精神，我可以理解這種做法。</p>
+<p>我自己最後的理解是，這本質上是效率與風險之間的取捨。讓更多人共同參與，能降低單點失效與知識壟斷的風險，但也必然增加協作成本；相對地，把事情集中在少數熟手身上雖然效率高，卻會在關鍵人離開時暴露巨大脆弱性。所以這比較像是一種團隊策略選擇，而不是單純的對錯題。</p>
+<p><strong>小編觀點：</strong> 我會把這場看成「流程設計」而不是「Scrum 對不對」的辯論。當系統規模、責任與風險上升時，協作方式一定會偏離理想模型，問題不在變形，而在變形後有沒有保留清楚的 decision rights 與責任邊界。</p>
+<p>群體決策可以降低 bus factor，但不能把所有事情都民主化。最實用的做法通常不是人人都參與所有事，而是讓關鍵知識可被追蹤、可被交接、可被審核，必要時仍由少數人快速拍板。</p>
+<h3 id="自動化版本治理與-devx--陳松林小松-xiaosong-xiaosong">自動化版本治理與 DevX — 陳松林（小松 XiaoSong） {#xiaosong}</h3>
+<p>以 GitFlow 與 CI/CD 把 Release 變成可複製的流程，包含 Conventional Commits、Changelog/Release Note 自動生成，以及前後端版本對齊。重點是降低 PM、QA、RD 的溝通成本。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/ryOiA7Y-Mg">HackMD</a></p>
+<h3 id="從-vibe-coding-到-ai-native-devops--董大偉david-david-hsu">從 Vibe Coding 到 AI-Native DevOps — 董大偉（David） {#david-hsu}</h3>
+<p>把 AI 當作團隊成員，從需求、AC/DoD 到任務拆解都交給流程化系統處理。AI 負責 UI、API、資料存取與測試/Infra，人類聚焦商業規則與核心邏輯。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/B1KsC7Ybfl">HackMD</a></p>
+<h3 id="agent-production-day-2-operations--jimmy-liao--kevin-chiu-jimmy">Agent Production Day 2 Operations — Jimmy Liao &#x26; Kevin Chiu {#jimmy}</h3>
+<p>AI Agent 上線後最難的是變慢、回答劣化與除錯。講者示範可同時輸出到 GCP Cloud Trace 與 Azure Application Insights 的監控架構，並附完整 Colab Notebook。</p>
+<p><strong>投影片：</strong> <a href="https://jimmyliao.pse.is/day2ops">Day 2 Operations</a> · <strong>共筆：</strong> <a href="https://hackmd.io/B19jRmtWGe">HackMD</a></p>
+<h3 id="漏洞決策與優先排序--高于凱hackercat-hackercat">漏洞決策與優先排序 — 高于凱（HackerCat） {#hackercat}</h3>
+<p>從 SAST/DAST/SCA 談到 alert fatigue，並指出 CVSS 的限制，改用 EPSS 與 KEV 協助排序。最後提出漏斗式篩選模型：All CVE → CVSS High/Critical → EPSS 高分 → 優先修補。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/ry5sAXtWzx">HackMD</a></p>
+<h3 id="規格驅動的-ai-強化-devops--張哲嘉che-chia-chang-che">規格驅動的 AI 強化 DevOps — 張哲嘉（Che Chia Chang） {#che}</h3>
+<p>以 GitHub Spec-kit 做 SDD，自動化 DevOps 任務。討論也提到 SDD 可能像 waterfall、過度設計、以及工具限制。</p>
+<p><strong>投影片：</strong> <a href="https://chechia.net/slides/2026-06-25-speckit-devops/">投影片</a> · <strong>共筆：</strong> <a href="https://hackmd.io/H1siCXK-fl">HackMD</a></p>
+<h3 id="devops-衰退從-cio-大調查看-ai-原生浪潮的衝擊--王宏仁-cio">DevOps 衰退？從 CIO 大調查看 AI 原生浪潮的衝擊 — 王宏仁 {#cio}</h3>
+<p>用 CIO/CISO 大調查反駁 DevOps 已死論，指出它仍在採用但已進入高原期，真正改變的是 AI 相關技術快速上升。也提到新職缺與 DORA 新指標 rework rate。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/HksiAXYbfe">HackMD</a></p>
+<hr>
+<h2 id="工作坊補充">工作坊補充</h2>
+<h3 id="google-adk-即時語音串流--devops--葉昱宏國泰人壽">Google ADK 即時語音串流 × DevOps — 葉昱宏（國泰人壽）</h3>
+<p>工作坊主題聚焦用 Google ADK 的即時語音串流能力，串接 GCP 平台與 DevOps 場景，讓參與者實際操作語音互動與雲端整合流程。</p>
+<p><strong>共筆：</strong> <a href="https://hackmd.io/8BvSIDomR4qbADVncShewQ">HackMD</a></p>
+<p><strong>筆者補充：</strong> 我在這場擔任助教。比較可惜的是，會前提供給學員的準備資訊還不夠完整，導致不少人當天帶著 Windows 電腦，或尚未準備好 GCP 帳號與相關資源，因此無法完整跟著 workshop 一路實作。</p>
+<p>但也有學員反饋內容本身很扎實。以 90 分鐘的時長來看，這類同時包含環境設定、雲端資源準備與實作操作的 workshop，要完整講完並讓大家同步做完，本來就會非常趕。</p>
+<p>這次經驗也很有價值，因為它直接暴露出工作坊成敗不只取決於內容本身，而是高度依賴前置準備是否充分。下次我們會把相關資訊公布得更完整，並補上雙 OS 的操作指令，降低學員卡在環境問題上的機率。</p>
+<p><strong>小編觀點：</strong> 這類 workshop 的真正瓶頸，常常不是教學內容，而是環境前置條件沒有被產品化。當課程同時依賴雲端帳號、權限、作業系統差異與本機工具鏈時，講師其實也在設計一條 onboarding flow。</p>
+<p>如果前置資訊不足，再好的內容都會被 setup friction 吃掉；反過來說，只要把帳號、權限、OS 指令、驗證步驟與失敗排查文件化，workshop 品質通常就會大幅提升。這和前面很多場次談到的主題一致：方法、治理與文件，正在變成比單次實作更重要的基礎能力。</p>
+<hr>
+<h2 id="另一個難以節省的瓶頸溝通資訊同步與開會">另一個難以節省的瓶頸：溝通、資訊同步與開會</h2>
+<p>AI 把實作時間壓縮得很短，但有一塊時間反而更難省下來：團隊之間的溝通、資訊同步與開會的實踐。</p>
+<p>這次有幾場議程直接碰觸到這個問題：</p>
+<ul>
+<li><strong>〈團隊從各自為政到群體決策〉</strong>：用 Scrum × 維運框架、挑戰者制度與輪替主席，把「誰該知道什麼、誰該決定什麼」變成可被設計的東西。</li>
+<li><strong>〈走出混沌的 DevOps 時代：智慧協作〉</strong>：把控制→引導、防呆→容錯學習、人寫流程→人機共演化看成同一條轉變曲線。</li>
+<li><strong>〈自動化版本治理與 DevX〉</strong>：用 Conventional Commits、Changelog 自動生成與前後端版本對齊，把 PM、QA、RD 之間的溝通成本從源頭壓掉。</li>
+<li><strong>〈十年打造的 Infra Platform〉</strong>：點出平台團隊與產品團隊之間最常被忽略的，其實是認知落差。</li>
+<li><strong>〈Flow 不死〉</strong>：回到 DevOps 四個不變本質中的 Feedback 與 Collaboration，本質上就是溝通問題。</li>
+</ul>
+<p>把這些場次放在一起看，可以得到一個不太舒服的結論：</p>
+<blockquote>
+<p><strong>AI 越會寫 code，人與人之間的對齊就越重要。</strong></p>
+</blockquote>
+<p>因為產出越快，決策失準的後果也越大，而決策失準往往不是發生在寫 code 那一段，而是發生在需求、開會、交接與驗收的縫隙。</p>
+<hr>
+<h2 id="我最後帶走的-5-個結論">我最後帶走的 5 個結論</h2>
+<p>把這次幾十場議程讀完一輪後，我會把共通訊息收成下面五件事。</p>
+<h3 id="1-ai-把速度問題變成決策問題">1. AI 把速度問題變成決策問題</h3>
+<p>以前交付慢，大家先優化實作效率。現在 AI 先把實作加速了，於是決策品質開始直接決定產出品質。</p>
+<h3 id="2-文件是執行介面不只是知識庫">2. 文件是執行介面，不只是知識庫</h3>
+<p>在 AI 時代，文件不只是給人看，也是給系統執行的輸入。規格、邊界、命名、驗證條件越清楚，AI 的輸出才越穩。</p>
+<h3 id="3-治理不是官僚而是風險控制面">3. 治理不是官僚，而是風險控制面</h3>
+<p>權限、審核、回退、可追蹤性，這些東西以前常被視為拖慢速度；現在反而是讓高速產出不失控的必要條件。</p>
+<h3 id="4-可靠性不再只屬於-sre">4. 可靠性不再只屬於 SRE</h3>
+<p>當 agent、平台、自動化流程都能直接產生變更時，可靠性不再只是某個團隊的責任，而是每個設計規格、流程與權限的人共同承擔的結果。</p>
+<h3 id="5-溝通是僅剩的硬時間無法再被-ai-直接壓縮">5. 溝通是僅剩的硬時間，無法再被 AI 直接壓縮</h3>
+<p>AI 可以幫忙寫程式、寫文件、產測試、回 RCA，但「誰該知道什麼」、「會議怎麼開」、「決策怎麼留下脈絡」這些事，本質上還是要人來設計。把這塊當作剩餘成本處理，團隊才不會在高速產出下，輸在資訊落差上。</p>
+<hr>
+<h2 id="筆者補充">筆者補充</h2>
+<p>這次我自己最大的感受是，很多場次最後雖然題目不同，但大家都在收斂到同一件事：現在不是只比誰寫得快，而是比誰能把方法、文件和治理做得更穩。</p>
+<p>對我來說，這比任何單一工具都更值得記下來。</p>
+<h2 id="小編觀點">小編觀點</h2>
+<p>如果要把這次 DevOpsDays Taipei 2026 濃縮成一句話，我會寫成：</p>
+<blockquote>
+<p><strong>當實作不再是主要瓶頸，治理與溝通就是新的工程核心。</strong></p>
+</blockquote>
+<p>AI 並沒有讓工程變簡單，它只是把困難往上推。未來團隊的差距，很可能不在於誰先用上 agent，而在於誰先把規格、協作與可靠性重新工程化。</p>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
