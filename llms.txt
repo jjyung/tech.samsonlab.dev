@@ -52,7 +52,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。
 
-**URL:** https://tech.samsonlab.dev//blog/graphify-knowledge-graph-first-code-tracing-2026-06-15/
+**URL:** https://tech.samsonlab.dev//blog/graphify-knowledge-graph-first-code-tracing/
 
 ---
 
@@ -108,4 +108,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-07-08T08:35:34.108Z
+Last updated: 2026-07-08T09:39:26.572Z
