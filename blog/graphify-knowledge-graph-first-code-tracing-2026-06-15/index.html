@@ -1,0 +1,401 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing-2026-06-15/"><!-- Primary Meta Tags --><title>Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本</title><meta name="title" content="Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本"><meta name="description" content="Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing-2026-06-15/"><meta property="og:title" content="Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本"><meta property="og:description" content="Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/graphify-knowledge-graph-first-code-tracing-2026-06-15.C6hfy93P.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing-2026-06-15/"><meta property="twitter:title" content="Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本"><meta property="twitter:description" content="Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/graphify-knowledge-graph-first-code-tracing-2026-06-15.C6hfy93P.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本","description":"Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。","datePublished":"2026-06-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/graphify-knowledge-graph-first-code-tracing-2026-06-15.C6hfy93P.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.ByY2QLHh.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <h2 class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </h2> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/graphify-knowledge-graph-first-code-tracing-2026-06-15.C6hfy93P_Z2hJF7d.webp" alt loading="lazy" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time>  </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <p>我最近對一件事越來越有感。</p>
+<p>不是模型又變強了，也不是又多了一個新的 agent framework。</p>
+<p>而是很多公司開始發現，AI 這件事一旦真的進到日常工作流程，最先浮上來的問題常常不是 capability，而是帳單。</p>
+<p>前幾個月你還會看到很多公司在鼓勵員工多用 AI，甚至把使用量做成 leaderboard，想辦法把 adoption 推上去。結果到了 2026 年 6 月，風向很明顯變了：</p>
+<ul>
+<li><code>2026-06-02</code>，TechCrunch 引述 Uber 新規，提到 Uber 在年初鼓勵大量使用 AI coding tools 之後，因為很快燒完年度預算，開始對每位員工、每個 agentic coding tool 設每月 <code>$1,500</code> 上限</li>
+<li><code>2026-06-05</code>，TechCrunch 把這股趨勢寫成 <code>the token bill comes due</code>，直接點出企業現在談的是 visibility、auditability、token controls 與 efficiency</li>
+<li><code>2026-06-17</code>，Business Insider 也在寫 <code>the next office power struggle: AI tokens</code>，描述企業從鼓勵 tokenmaxxing，轉向開始設定 ceiling 與使用規則</li>
+</ul>
+<p>這幾條新聞放在一起看，我覺得它們其實在講同一件事：</p>
+<blockquote>
+<p>token 不再只是模型供應商的計價單位，<br>
+它開始變成企業內部要治理的工程資源。</p>
+</blockquote>
+<p>一旦事情走到這一步，問題就不會只剩下：</p>
+<blockquote>
+<p>哪個模型比較強？</p>
+</blockquote>
+<p>更現實的問題會變成：</p>
+<blockquote>
+<p>哪些工作流程，正在把大量 token 花在重複、機械、可前置處理的事情上？</p>
+</blockquote>
+<p>我覺得這才是 <code>Graphify</code> 這類工具真正值得看的地方。</p>
+<p>老實說，我一開始不是先看到 <code>Graphify</code>。</p>
+<p>比較早先注意到的其實是 <code>jqassistant</code> 這條線。它用圖的方式去理解 codebase、規則與架構關係，這個方向本身我一直覺得很合理。只是如果把場景換成今天的 AI workflow，我後來會開始在意另一個問題：</p>
+<blockquote>
+<p>這套東西跟 agent 怎麼接？<br>
+要不要多養一套額外基礎設施？<br>
+對團隊來說，導入門檻到底重不重？</p>
+</blockquote>
+<p>後來是單位裡一位資深學長注意到 <code>Graphify</code>，跟我提這個工具比較適合現在這種和 AI 一起工作的使用情境。原因很務實，不是因為它聽起來比較新，而是它剛好解掉幾個很現實的採用阻力：</p>
+<ul>
+<li>跟 AI / agent workflow 的整合比較直接</li>
+<li>不需要另外裝一套 <code>Neo4j</code></li>
+<li>整體更輕量，比較像可以先拿來試、先拿來接進分析流程</li>
+</ul>
+<p>這也讓我後來對它更有興趣。因為很多工具不是想法不好，而是太重，重到你還沒開始驗證價值，就先多背了一層維運成本。</p>
+<p>真正讓我停下來想的是另一件事：</p>
+<p>很多人第一次用 coding agent 分析 repo，直覺上都會這樣做：</p>
+<blockquote>
+<p>把問題丟給 LLM，讓它自己去 trace code。</p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li>這個 API 最後寫進哪張表？</li>
+<li>某個 controller 背後實際呼叫了哪些 service？</li>
+<li>權限檢查到底在哪一層做？</li>
+</ul>
+<p>這種方式在小專案不是不能用，demo 也常常很好看。</p>
+<p>但 codebase 一大，問題就會很快冒出來：</p>
+<ol>
+<li>agent 每次都要重新讀很多檔案</li>
+<li>multi-hop 關係很容易漏掉</li>
+<li>context window、latency 與 token cost 一起膨脹</li>
+</ol>
+<p>所以我後來比較在意的，不是 <code>Graphify</code> 是不是又一個 AI coding tool，而是它把問題換了一個 framing：</p>
+<blockquote>
+<p>不要每次都讓 LLM 從 raw code 重新理解一次 repo。<br>
+先把 codebase 編譯成可查詢的結構，再讓 agent 來查。</p>
+</blockquote>
+<p>這個想法對我來說很有意思，因為它解的不是 prompt wording，而是 <strong>code understanding 的成本結構</strong>。</p>
+<h2 id="很多舊專案真正花時間的不是改-code而是先把事故查清楚">很多舊專案真正花時間的，不是改 code，而是先把事故查清楚</h2>
+<p>如果你手上碰的是一個跑了很多年的舊專案，這個問題通常會更明顯。</p>
+<p>我自己比較常想到的，不是 greenfield 開發，而是另一種很典型的場景。</p>
+<p>半夜有人丟一個 incident 過來，現象是 <code>POST /api/users</code> 偶爾回 <code>500</code>。更麻煩的是，營運那邊已經先回報，有些使用者雖然看到失敗訊息，但資料後來又真的存在，甚至下游通知也發出去了。</p>
+<p>這種時候你第一個問題通常不是「怎麼修」，而是：</p>
+<ul>
+<li>到底哪一層先出錯？</li>
+<li>response 失敗前，哪些 side effect 已經發生？</li>
+<li>transaction 有沒有真的 rollback？</li>
+<li>event 是先發出去，還是 DB 先寫成功？</li>
+</ul>
+<p>很多時候，我們找 agent 不是要它從零生一個新功能，而是要它幫忙做這些比較不討喜、但又很常見的事情：</p>
+<ul>
+<li>incident 後的 root cause analysis</li>
+<li>某個 API 為什麼突然回 <code>500</code></li>
+<li>某個 batch job 為什麼資料重複寫入</li>
+<li>某條查詢鏈在哪一層吞掉 exception</li>
+<li>某個權限判斷為什麼在某個 edge case 失效</li>
+</ul>
+<p>這些工作的共同點是：</p>
+<blockquote>
+<p>你不是只問一次。</p>
+</blockquote>
+<p>因為真正的 RCA 很少是一問一答就結束。它通常會一路長出更多追問：</p>
+<ul>
+<li>這個錯誤是從哪個 entrypoint 進來的？</li>
+<li>中間經過哪些 service？</li>
+<li>哪裡有 retry、fallback、transaction 或 async handoff？</li>
+<li>最後是哪一層真的把錯誤吞掉？</li>
+<li>以前還有哪些類似路徑碰過同樣問題？</li>
+</ul>
+<p>這裡最麻煩的地方是，如果每追一條新線索，agent 都要重新 trace 一遍舊 repo，那成本很快就會失控。</p>
+<p>而且麻煩的不只是 token 帳單。整個調查流程也會一起慢下來：</p>
+<ol>
+<li>每一輪都重新找 entrypoint</li>
+<li>每一輪都重新讀相似的檔案</li>
+<li>每一輪都重新建立局部 mental model</li>
+<li>每一輪都可能在不同分支上漏掉關鍵一跳</li>
+</ol>
+<p>所以在 RCA 場景裡，我越來越不覺得問題是「context window 再大一點就好」。</p>
+<p>我後來越來越覺得，在這種場景裡，我們需要的比較像是一種能把重複結構理解前置掉的方法：</p>
+<blockquote>
+<p>一種能減少重複 trace、降低 token 花費，同時縮短 investigation time 的方法。</p>
+</blockquote>
+<p>而這正好把問題帶回 graph。</p>
+<h2 id="真正昂貴的常常不是-token-單價而是一直重建同一份-mental-model">真正昂貴的，常常不是 token 單價，而是一直重建同一份 mental model</h2>
+<p>如果把話講白一點，純 LLM trace code 最痛的地方，不只是一次 call 很貴。</p>
+<p>真正一直在漏水的是這件事：</p>
+<blockquote>
+<p>同一份 repo 結構，被 agent 一次又一次重新理解。</p>
+</blockquote>
+<p>如果每次問問題，agent 都要重新：</p>
+<ul>
+<li>找 controller 在哪</li>
+<li>找 route 綁到哪個 handler</li>
+<li>找 handler call 哪個 service</li>
+<li>找 service 又依賴哪個 repository</li>
+<li>找 repository 最後碰哪個 model 或 table</li>
+</ul>
+<p>這時候你消耗掉的就不只是 input token，還包括：</p>
+<ul>
+<li>更多工具調用</li>
+<li>更多 grep / read file / search retries</li>
+<li>更長的 prefill 與推理時間</li>
+<li>更高的漏關係機率</li>
+</ul>
+<p>所以很多 repo analysis 問題，表面上像是在問答，本質上更像：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>repeated reconstruction of structure</span></span></code></pre>
+<p>而這件事，正是最適合被前置編譯掉的部分。</p>
+<h2 id="graphify-吸引我的地方是它比較像在做-knowledge-compilation">Graphify 吸引我的地方，是它比較像在做 knowledge compilation</h2>
+<p><code>Graphify</code> 對我來說比較有意思的地方，在於它不是單純把 repo 切 chunk 丟去檢索。</p>
+<p>它更接近：</p>
+<blockquote>
+<p>先把 codebase 裡的符號、引用、依賴、檔案關係與結構訊號抽出來，整理成可查詢的知識圖譜。</p>
+</blockquote>
+<p>一旦這個中間層先建立起來，後面的查詢就不必每次都從 raw code 開始。</p>
+<p>它的價值也不是把 LLM 突然變成更厲害的架構師，而是讓 LLM 少做幾件很花錢、也很重複的事：</p>
+<ol>
+<li>少重建一次 repo 結構</li>
+<li>少重走一次跨檔案依賴</li>
+<li>少把大量不變的 context 重新塞進 prompt</li>
+</ol>
+<p>這讓 code query 比較像：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>在已知關係圖上走訪</span></span></code></pre>
+<p>而不是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>在一堆原始文字裡重新拼湊架構</span></span></code></pre>
+<p>我覺得關鍵就在這裡。</p>
+<p>當 query 從「重建結構」變成「利用結構」，時間、成本，甚至 agent 的失誤型態都會一起變。</p>
+<h2 id="為什麼-ast-很重要">為什麼 AST 很重要</h2>
+<p>這裡我想補一個我自己很在意、但很多文章會快速帶過的點：<code>AST</code>。</p>
+<p>很多人一談 code graph，很容易直接往「knowledge graph」或「agent memory」跳。但對 codebase 這件事來說，我反而覺得最穩的起點不是 LLM 自己猜，而是：</p>
+<blockquote>
+<p>先從 deterministic structure 開始。</p>
+</blockquote>
+<p>也就是 <code>AST</code>。</p>
+<p><code>AST</code> 不是語意理解的全部，但它至少先提供了可靠的語法骨架：</p>
+<ul>
+<li>哪裡有 class、function、method</li>
+<li>哪裡有 import / export</li>
+<li>哪裡有 call expression</li>
+<li>哪裡有 decorator、annotation、route binding</li>
+<li>哪裡有欄位、型別、參數</li>
+</ul>
+<p>像 Graphify 這類工具如果先用 parser 或 <code>tree-sitter</code> 去抽這一層，好處其實很務實：</p>
+<ol>
+<li>成本低</li>
+<li>結果穩</li>
+<li>覆蓋率高</li>
+<li>不需要每個檔案都先交給 LLM 做一次 expensive extraction</li>
+</ol>
+<p>換句話說：</p>
+<blockquote>
+<p>AST 不是讓 agent 更聰明。<br>
+AST 是讓 agent 不必一直重做基礎理解。</p>
+</blockquote>
+<h2 id="一個很實際的例子從-api-controller-一路追到資料庫">一個很實際的例子：從 API controller 一路追到資料庫</h2>
+<p>假設今天有一條很常見的呼叫鏈：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>POST /api/users</span></span>
+<span class="line"><span>  -> UserController.createUser()</span></span>
+<span class="line"><span>  -> UserService.createUser()</span></span>
+<span class="line"><span>  -> UserRepository.save()</span></span>
+<span class="line"><span>  -> users table</span></span></code></pre>
+<p>如果用純 LLM trace code，agent 通常要自己逐步找：</p>
+<ol>
+<li>route 定義在哪裡</li>
+<li>controller method 是哪個</li>
+<li>controller call 了哪個 service</li>
+<li>service 又 call 了哪個 repository</li>
+<li>repository 最後寫到哪個 model / table</li>
+</ol>
+<p>這在小 repo 當然還追得動，但專案一大，常見麻煩就來了：</p>
+<ul>
+<li>routing 分散在別的檔案</li>
+<li>DI / interface 把真實實作藏在另一層</li>
+<li>repository 不是直接 SQL，而是 ORM 包裝</li>
+<li>中間夾了 validation、auth、transaction、domain event</li>
+</ul>
+<p>如果前面已經有 graph，問題就會變得很不一樣。</p>
+<p>我們可以把這條鏈拆成幾種 edge：</p>
+<ul>
+<li><code>route -> controller method</code></li>
+<li><code>controller method -> service method</code></li>
+<li><code>service method -> repository method</code></li>
+<li><code>repository method -> model / table</code></li>
+<li><code>file -> import -> symbol</code></li>
+</ul>
+<p>然後 agent 不需要「從頭推理這條鏈可能怎麼走」，而是可以先查：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>entrypoint: POST /api/users</span></span></code></pre>
+<p>再沿著 graph 往下走。</p>
+<p>這時候 agent 的角色比較像是在：</p>
+<ul>
+<li>驗證關係</li>
+<li>補語意說明</li>
+<li>產出人類可讀的 tracing 結果</li>
+</ul>
+<p>而不是每次都重新當 parser、indexer、architect。</p>
+<p>如果把這件事放回剛剛那種 RCA 現場，感覺會更明顯。</p>
+<p>假設 production error 出現在 <code>POST /api/users</code>，你要追查的是：</p>
+<ul>
+<li>request 是怎麼進來的</li>
+<li>哪一層開始出現異常</li>
+<li>資料最後有沒有真的寫進 <code>users table</code></li>
+<li>哪裡有 side effect 已經發生、但 response 失敗</li>
+</ul>
+<p>沒有 graph 的時候，你每追一次都很像在請 agent 再把整條 call chain 拼回來一次。</p>
+<p>但如果 graph 已經在那裡，流程就比較像：</p>
+<ol>
+<li>先定位 entrypoint</li>
+<li>走過 controller -> service -> repository 關係</li>
+<li>找出例外處理、transaction、event publish 這些關鍵分支</li>
+<li>只在必要節點打開原始碼確認細節</li>
+</ol>
+<p>這個差異會很直接地反映在 RCA 速度上，也會很直接地反映在 token 消耗上。</p>
+<p>差別不是 agent 有沒有在工作，而是它到底把時間花在「重新理解 repo」，還是花在「沿著既有結構做 investigation」。</p>
+<h2 id="如果要驗證這個想法可以把它當成一個小型實驗">如果要驗證這個想法，可以把它當成一個小型實驗</h2>
+<p>如果想把這件事講得更工程一點，我覺得可以把它當成一個簡單的對照實驗。</p>
+<p>給 agent 同樣一個問題：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>追查 POST /api/users 的失敗路徑，確認錯誤在哪一層發生，是否已寫入資料庫，以及哪些 side effects 已經發生。</span></span></code></pre>
+<p>然後比較兩種 workflow：</p>
+<h3 id="workflow-a純-llm-trace-code">Workflow A：純 LLM trace code</h3>
+<ul>
+<li>直接讓 agent 搜檔、讀檔、grep、推理</li>
+<li>每次追新分支時，再打開更多原始碼</li>
+<li>讓 agent 自己在 raw code 中重建 call chain</li>
+</ul>
+<h3 id="workflow-b先有-ast--graph再讓-agent-查">Workflow B：先有 AST / graph，再讓 agent 查</h3>
+<ul>
+<li>先用 parser / <code>tree-sitter</code> 抽出 symbols、imports、calls、routes</li>
+<li>先把關係建成 graph</li>
+<li>agent 先查結構，再針對少數節點打開原始碼</li>
+</ul>
+<p>如果這個想法是對的，你大概會看到這幾個差異：</p>
+<ol>
+<li><code>Workflow B</code> 讀的檔案更少</li>
+<li><code>Workflow B</code> 工具調用次數更少</li>
+<li><code>Workflow B</code> 在 multi-hop tracing 上比較穩</li>
+<li><code>Workflow B</code> 比較不容易把不相關檔案塞進 context</li>
+<li><code>Workflow B</code> 在重複查詢與後續追問時更省 token</li>
+</ol>
+<p>我自己現在比較在意的也是這一層。</p>
+<p>不是某次 demo 到底快了幾倍，而是它在 workflow 上到底改變了什麼：</p>
+<blockquote>
+<p>原本每次 query 都要重建結構，<br>
+變成先有結構，再沿結構追查。</p>
+</blockquote>
+<h2 id="這對-agents-真正有價值的地方是減少-context-汙染">這對 agents 真正有價值的地方，是減少 context 汙染</h2>
+<p>如果只把這件事理解成「省 token」，我覺得還是太窄了。</p>
+<p>更重要的是，它會減少 agent 在大 repo 裡常見的 context pollution。</p>
+<p>當 agent 每次都拿著很多原始檔案進 prompt，它很容易：</p>
+<ol>
+<li>抓到不相關但表面相似的檔案</li>
+<li>漏掉真正關鍵的中間一跳</li>
+<li>在很長的 tracing 過程中狀態漂移</li>
+<li>把一次查詢中看到的局部線索誤當全局架構</li>
+</ol>
+<p>反過來，如果前面已經有 graph 或某種結構化中間層，agent 的工作上下文就會乾淨很多：</p>
+<ul>
+<li>先看關係，再決定要不要打開原始碼</li>
+<li>先縮小候選範圍，再投入昂貴推理</li>
+<li>先用結構定位，再做語意補全</li>
+</ul>
+<p>這其實跟我前面幾篇一直在想的事情很接近：</p>
+<blockquote>
+<p>agent 成本問題，常常不是模型太貴，<br>
+而是同一份 context 被反覆重送、重建、重查。</p>
+</blockquote>
+<p>在 code tracing 這件事上，graph 就是在幫你把這種浪費前置消化掉。</p>
+<h2 id="context-window-變大不代表-graph-這層就可以省掉">Context window 變大，不代表 graph 這層就可以省掉</h2>
+<p>我猜很多人看到這裡，第一個反應會是：</p>
+<blockquote>
+<p>但現在 model context window 已經很大了，直接丟更多 code 不就好了？</p>
+</blockquote>
+<p>但我的看法是，<code>window 變大</code> 不等於 <code>結構問題消失</code>。</p>
+<p>原因很簡單。</p>
+<p>第一，大 context 只是讓你可以塞更多東西，不代表模型會更穩地追多跳關係。</p>
+<p>第二，能塞進去不代表值得每次都塞。</p>
+<p>第三，當查詢是重複發生的，raw context 的重送本身就是浪費。</p>
+<p>所以真正該問的不是：</p>
+<blockquote>
+<p>模型能不能一次吞下整個 repo？</p>
+</blockquote>
+<p>而是：</p>
+<blockquote>
+<p>repo 裡哪些資訊值得被做成可重用的中間層，而不是每次重新丟進上下文？</p>
+</blockquote>
+<p>這也是為什麼我會把 graph 理解成一種 <code>context architecture</code>。</p>
+<p>它不是在和 model 對抗，而是在幫 agent 做 context 分層：</p>
+<ul>
+<li>穩定的結構資訊，先編譯</li>
+<li>動態的任務問題，後查詢</li>
+<li>真正需要語意判斷時，再把少量原始碼打開</li>
+</ul>
+<h2 id="真正省下來的也不只是一張-token-帳單">真正省下來的，也不只是一張 token 帳單</h2>
+<p>如果這套 workflow 真的有效，它省下來的通常不只是一筆 API 費。</p>
+<p>它還可能同時省掉：</p>
+<ol>
+<li>查詢 latency</li>
+<li>tool calling 次數</li>
+<li>失敗後的重試成本</li>
+<li>人類等待 agent 找路的時間</li>
+<li>因 tracing 不完整導致的誤判成本</li>
+</ol>
+<p>所以更準確的說法可能不是：</p>
+<blockquote>
+<p>Graph 讓 LLM 更便宜。</p>
+</blockquote>
+<p>而是：</p>
+<blockquote>
+<p>Graph 把 code understanding 裡最重複、最機械、最適合預先整理的那一層，從每次 query 中抽離出來。</p>
+</blockquote>
+<p>所以我覺得 Graphify 那張對比圖真正有價值的，也不是某個絕對 benchmark 數字，而是它提醒了一個更值得帶回團隊裡討論的 workflow insight：</p>
+<blockquote>
+<p>對大型 repo 而言，先建圖再查詢，常常比每次直接 trace code 更符合成本結構。</p>
+</blockquote>
+<h2 id="這不是銀彈但我覺得它很適合某幾種場景">這不是銀彈，但我覺得它很適合某幾種場景</h2>
+<p>我不會把這件事講成唯一正解。</p>
+<p>如果 repo 很小、模組邊界很單純，或者你只是一次性回答一個很局部的問題，直接讓 agent 讀原始碼就可能夠用了。這時先建 graph，反而可能是額外流程。</p>
+<p>而且 graph 也不是自動就會準。它還是有自己的維護成本，例如：</p>
+<ul>
+<li>parser 支援哪些語言</li>
+<li>framework-specific routing 能不能抽準</li>
+<li>interface、reflection、dynamic dispatch 能不能補齊</li>
+<li>code 變動後 graph 更新的頻率要怎麼設計</li>
+</ul>
+<p>所以我比較願意把它看成一種很實用的中間層，而不是銀彈。</p>
+<p>它特別適合的，通常是這幾種情境：</p>
+<ul>
+<li>舊專案 RCA，要反覆追很多條呼叫鏈</li>
+<li>大型 repo analysis，要跨檔案、跨模組追多跳關係</li>
+<li>同一類架構問題會被反覆問很多次</li>
+<li>團隊開始在意 agent token 花費、latency 與調查效率</li>
+</ul>
+<p>對我來說，這類做法最有價值的地方，不是它看起來比較進階，而是它很貼近一個老問題：</p>
+<blockquote>
+<p>當系統已經變大、問題已經變雜時，<br>
+我們到底要不要每次都為同一份結構理解重複付費？</p>
+</blockquote>
+<h2 id="這篇先停在-code-understanding下一步才是-repo-wiki">這篇先停在 code understanding，下一步才是 repo wiki</h2>
+<p>如果沿著這條線繼續往前推，其實很自然就會接到另一個更大的問題：</p>
+<blockquote>
+<p>那這個中間層，可不可以不只拿來 tracing code，還拿來維護 repo 知識？</p>
+</blockquote>
+<p>這就會從 <code>code graph</code> 走向 <code>repo wiki</code>。</p>
+<p>也就是說，graph 可以先解：</p>
+<ul>
+<li>結構理解</li>
+<li>關係追蹤</li>
+<li>多跳查詢</li>
+</ul>
+<p>再往上一層，wiki 可以開始解：</p>
+<ul>
+<li>架構摘要</li>
+<li>模組說明</li>
+<li>決策脈絡</li>
+<li>慣例、限制與 known issues</li>
+<li>隨 repo 演進而更新的知識維護</li>
+</ul>
+<p>這兩件事當然有關，但我覺得不是同一篇硬講完會比較好。</p>
+<p>所以這篇先聚焦在前者：</p>
+<blockquote>
+<p>為什麼 code understanding 應該先被結構化。<br>
+為什麼 AST / graph 會讓 agent 在大 repo 上更省時、更省成本，也更穩。</p>
+</blockquote>
+<p>下一篇再接著談：</p>
+<blockquote>
+<p>如果 graph 是 repo 的結構層，<br>
+那 repo wiki 會不會是 agent 的持久化知識層？</p>
+</blockquote>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li>Graphify GitHub: <a href="https://github.com/safishamsi/graphify">https://github.com/safishamsi/graphify</a></li>
+<li>Safi Shamsi GitHub profile summary mentioning <code>71.5x fewer tokens per query vs raw context</code>: <a href="https://github.com/safishamsi">https://github.com/safishamsi</a></li>
+<li>TechCrunch, <code>Uber caps employee AI spending after blowing through budget in 4 months</code>, published June 2, 2026: <a href="https://techcrunch.com/2026/06/02/uber-caps-employee-ai-spending-after-blowing-through-budget-in-four-months/">https://techcrunch.com/2026/06/02/uber-caps-employee-ai-spending-after-blowing-through-budget-in-four-months/</a></li>
+<li>TechCrunch, <code>The token bill comes due: Inside the industry scramble to manage AI’s runaway costs</code>, published June 5, 2026: <a href="https://techcrunch.com/2026/06/05/the-token-bill-comes-due-inside-the-industry-scramble-to-manage-ais-runaway-costs/">https://techcrunch.com/2026/06/05/the-token-bill-comes-due-inside-the-industry-scramble-to-manage-ais-runaway-costs/</a></li>
+<li>Business Insider, <code>The next office power struggle: AI tokens</code>, published June 17, 2026: <a href="https://www.businessinsider.com/ai-token-economy-spending-workplace-budgets-usage-caps-software-engineer-2026-6">https://www.businessinsider.com/ai-token-economy-spending-workplace-budgets-usage-caps-software-engineer-2026-6</a></li>
+<li>Business Insider, <code>Satya Nadella is trying to rein in the tokenmaxxers at Microsoft</code>, published June 11, 2026: <a href="https://www.businessinsider.com/satya-nadella-tokenmaxxing-microsoft-rein-in-2026-6">https://www.businessinsider.com/satya-nadella-tokenmaxxing-microsoft-rein-in-2026-6</a></li>
+<li>Karpathy, <code>LLM Wiki</code>: <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f</a></li>
+<li>LangChain, <code>Introducing OpenWiki, an open source agent for repo documentation</code>, published July 1, 2026: <a href="https://www.langchain.com/blog/introducing-openwiki-an-open-source-agent-for-repo-documentation">https://www.langchain.com/blog/introducing-openwiki-an-open-source-agent-for-repo-documentation</a></li>
+<li><code>Reliable Graph-RAG for Codebases: AST-Derived Graphs vs LLM-Extracted Knowledge Graphs</code>, arXiv, January 13, 2026: <a href="https://arxiv.org/abs/2601.08773">https://arxiv.org/abs/2601.08773</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.BYQIjxRK.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

@@ -48,6 +48,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本
+
+**Description:** Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。
+
+**URL:** https://tech.samsonlab.dev//blog/graphify-knowledge-graph-first-code-tracing-2026-06-15/
+
+---
+
 ### MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化
 
 **Description:** MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。
@@ -100,4 +108,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-06-28T16:56:15.233Z
+Last updated: 2026-07-08T08:24:57.582Z
