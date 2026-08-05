@@ -88,6 +88,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 當 AI 說「做完了」，我們到底該相信什麼？
+
+**Description:** AI 讓生成變快，但產品能不能上線，關鍵早就不是生成本身，而是驗證能力。從社群討論與實務觀察出發，整理我對 Verification Engineering 的幾個想法。
+
+**URL:** https://tech.samsonlab.dev//blog/when-ai-says-done-verification-before-production/
+
+---
+
 ## Projects
 
 ### AlphaCouncil
@@ -108,4 +116,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-03T08:47:17.294Z
+Last updated: 2026-08-05T05:49:22.816Z
