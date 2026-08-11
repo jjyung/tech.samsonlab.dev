@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/"><!-- Primary Meta Tags --><title>Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡</title><meta name="title" content="Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡"><meta name="description" content="整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/"><meta property="og:title" content="Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡"><meta property="og:description" content="整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/blog-placeholder-1.Bx0Zcyzv.jpg"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/"><meta property="twitter:title" content="Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡"><meta property="twitter:description" content="整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/blog-placeholder-1.Bx0Zcyzv.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡","description":"整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。","datePublished":"2026-08-11T00:00:00.000Z","dateModified":"2026-08-11T00:00:00.000Z","author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DpR5Qlcl.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14">  </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-11T00:00:00.000Z"> Aug 11, 2026 </time> <div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">
+Last updated on <time datetime="2026-08-11T00:00:00.000Z"> Aug 11, 2026 </time> </div> </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> ai </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> agent </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> agentops </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h1 id="loop-engineering從-anthropicopenaiibm-文件看-agent-loop-的工程脈絡">Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡</h1>
+<p>最近大家開始講 <code>loop engineering</code>。它不是另一套 agent framework，而是把工程焦點從「怎麼寫好下一個 prompt」移到「怎麼設計一個讓 agent 持續工作的循環」。這個說法最有代表性的來源是 Addy Osmani 的〈Loop Engineering〉：loop 的重點變成設計一個系統，由它取代你來 prompting agent。<a href="#ref-1">[1]</a></p>
+<p>先分清楚三個詞：<code>agent loop</code> 是 agent 實際執行工作的循環；<code>loop engineering</code> 是設計這個循環的工程實務；<code>loop engineer</code> 是負責設計觸發、工作分派、驗證、重試、狀態保存與停止條件的人。</p>
+<p>這個轉變的關鍵在於，當 agent 能連續工作數十分鐘、數小時，甚至跨 session 接續任務時，人就不用逐輪手動提示。但工程師得先設計好它何時開始、每輪做什麼、怎麼知道做對了、什麼時候該停。</p>
+<p>本文回到 Anthropic、OpenAI、IBM 的官方文件，把 loop engineering 落到具體的工程問題：觸發、停止、排程、事件、狀態、記憶、驗證與治理。Addy 的文章提供 practitioner 側的定義，官方文件提供的是它被實作出來的能力。下面的 pattern 與分類是為了方便讀文件而整理，每一項都附上原始文件，方便回頭對照。</p>
+<h2 id="先講結論loop-engineering-可以拆成三組可驗證的問題">先講結論：Loop Engineering 可以拆成三組可驗證的問題</h2>
+<p>從這幾條文件脈絡看，loop engineering 至少包含三組問題：</p>
+<ol>
+<li><strong>下一輪怎麼開始</strong>：由人、目標條件、時間或外部事件觸發。</li>
+<li><strong>什麼時候停止</strong>：由完成條件、驗證結果、grader 或人工 gate 決定。</li>
+<li><strong>跨輪次留下什麼</strong>：保存 state、artifacts、memory 與 audit trail，讓後續工作可以接續，也讓發生過的事可以追溯。</li>
+</ol>
+<p>後文先看前兩組問題對應的 loop pattern，再補上長時間執行時必須處理的 continuity、memory、eval 與 governance。</p>
+<h2 id="anthropic-文件怎麼描述-agent-loop">Anthropic 文件怎麼描述 agent loop</h2>
+<p>先看 Anthropic。Claude Code 文件其實已經把 <code>agent loop</code> 講得很清楚。</p>
+<p>在〈How Claude Code works〉裡，Claude Code 把自己的工作方式描述成三個反覆循環的階段：<strong>gather context、take action、verify results</strong>。文件也明講，Claude 會根據前一步拿到的資訊持續重複這個循環，使用者可以中途插手改變方向。<a href="#ref-2">[2]</a></p>
+<p>在 Agent SDK 文件裡，Anthropic 又把它說得更工程化：agent 啟動後，系統接收 prompt、評估當前狀態、請求工具呼叫、接收結果，再重複直到任務完成。<a href="#ref-3">[3]</a></p>
+<p>Anthropic 真正做的，是把 agent 當成一個<strong>可重複執行、可控制、可觀測</strong>的 loop。這比「它會呼叫工具」這個說法更值得注意。</p>
+<h2 id="從-anthropic-的產品文件可以看到四種-loop-pattern">從 Anthropic 的產品文件可以看到四種 loop pattern</h2>
+<h3 id="1-human-triggered由人決定下一輪什麼時候開始">1. Human-triggered：由人決定下一輪什麼時候開始</h3>
+<p>這是最基本的 pattern。你下 prompt，agent 開始工作；做完一輪，結果回給你；下一輪要不要繼續，通常還是由你決定。</p>
+<p>Anthropic 在 Claude Code 文件裡描述：你給 Claude 一個 task，它進入 gather context / take action / verify results 的循環，你可以隨時中斷與引導，這就是人類逐輪驅動的 loop。<a href="#ref-2">[2]</a></p>
+<p>這也是大多數聊天式 agent 最自然的起點。好處是控制感強，代價是 outer loop 還在你身上。agent 會做內部推理與工具循環，但「下一輪要不要開始」常常還是你在決定。</p>
+<h3 id="2-goal-driven給定完成條件直到條件成立才停">2. Goal-driven：給定完成條件，直到條件成立才停</h3>
+<p>這一類在 Anthropic 文件裡最明確。</p>
+<p>Claude Code 的 <code>/goal</code> 文件直接寫到：你可以設定 completion condition，Claude 會跨多輪持續工作，直到條件成立為止。每一輪結束後，還有一個小模型檢查條件是否達成，沒達成就繼續下一輪。<a href="#ref-4">[4]</a></p>
+<p>這就是典型的 goal-driven loop。重點不在「跑很多輪」，而在<strong>停止條件被外顯化</strong>。它判斷完成的標準，是某個可描述、可驗證的條件是否成立，不是模型自己覺得差不多。Addy 在整理 loop 的 primitive 時也特別指出，<code>/goal</code> 這類「由獨立小模型判斷是否完成」的機制，Codex 與 Claude Code 兩邊都已經內建。<a href="#ref-1">[1]</a></p>
+<p>這裡可以接回經典的 agent 分類。IBM 在〈Types of AI Agents〉裡把 <code>goal-based agents</code> 列為五大類之一，定義是 agent 會圍繞一個明確目標做規劃與推理，選擇最有可能讓自己接近目標的行動。<a href="#ref-5">[5]</a></p>
+<p>也就是說，<code>goal-driven</code> 在本文同時連到兩個層次：IBM 的 <code>goal-based agent</code> 是 agent 類型；Anthropic 的 <code>/goal</code> 是跨輪執行、以 completion condition 判斷是否停止的產品能力。</p>
+<h3 id="3-time-driven--scheduled按時間重跑不等人再問一次">3. Time-driven / scheduled：按時間重跑，不等人再問一次</h3>
+<p>這一類在 Claude Code 也有清楚的產品對應。</p>
+<p>在〈Run prompts on a schedule〉裡，Anthropic 把 <code>/loop</code> 定義成按固定時間重跑 prompt，用來輪詢狀態、檢查長時間建置、照顧 PR 或做一次性提醒。文件還特別區分兩件事：</p>
+<ul>
+<li><code>/loop</code> 是按時間間隔重跑</li>
+<li><code>/goal</code> 是按完成條件持續重跑</li>
+</ul>
+<p>這個區分值得留意，因為它代表 Anthropic 已經把「時間驅動」和「目標驅動」視為兩種不同的 outer loop。<a href="#ref-6">[6]</a></p>
+<p>同一份文件也說得很清楚：如果你不是想輪詢，而是想在事件發生時立刻反應，就去看 Channels；如果你想讓排程獨立於目前工作階段存在，就使用 Routines。也就是說，時間驅動的 loop 在 Anthropic 的產品實作裡又細分成：</p>
+<ul>
+<li>session 內的 <code>/loop</code></li>
+<li>本機或雲端持久排程</li>
+<li>事件發生時觸發，而不是定時輪詢</li>
+</ul>
+<h3 id="4-event-driven由外部事件觸發工作">4. Event-driven：由外部事件觸發工作</h3>
+<p>Claude Code 的〈Automate work with routines〉明講，Routines 可以：</p>
+<ul>
+<li>按排程觸發</li>
+<li>被 API 呼叫觸發</li>
+<li>對 GitHub 事件自動反應</li>
+</ul>
+<p>而且這些 routine 可以在 Anthropic 管理的雲端基礎設施上持續運作，就算你的筆電關了也能繼續跑。<a href="#ref-7">[7]</a></p>
+<p>從這份文件可以直接看到三種觸發方式：定時啟動、API trigger、event-driven trigger。</p>
+<h2 id="agent-loop-拉長之後會連到四個外層問題">Agent loop 拉長之後，會連到四個外層問題</h2>
+<p>一旦 agent loop 不是單輪回覆，而是要長時間持續工作，問題立刻變多。這部分不只 Anthropic 有寫，OpenAI 也已經把其中幾塊拆成正式工程主題。</p>
+<h3 id="1-checkpoint--continuity不是只保存對話而是要能接著做">1. Checkpoint / continuity：不是只保存對話，而是要能接著做</h3>
+<p>Anthropic 對這件事寫得很實際。</p>
+<p>在 Claude Code 的核心文件裡，session 會被保存，工具呼叫與結果會寫入檔案，而且在 Claude 改檔前也會做 snapshot，讓你可以回退。這是 Anthropic 在工作階段層處理 continuity 的方式。<a href="#ref-2">[2]</a></p>
+<p>再往長時間 agent 看，Anthropic 在〈Effective harnesses for long-running agents〉裡講得更直接：光靠 context compaction 不夠，長時間 agent 需要把工作切成可接續的增量，留下讓下一輪或下一個 session 能理解的清楚 artifact，不然下一輪只會花很多時間猜前一輪做到哪裡。<a href="#ref-8">[8]</a> Addy 把這件事放進 loop 的第六件套件：一個放在 conversation 之外的 memory，它記得做完了什麼、下一步是什麼。因為 agent 每一輪之間會忘，但 repo 不會忘。<a href="#ref-1">[1]</a></p>
+<p>所以這裡真正的問題在於三件事：狀態怎麼保存；保存的是原始對話、摘要，還是明確工作產物；下一輪能不能不靠猜測就接手。</p>
+<h3 id="2-memory把向量搜尋接上去不算做完">2. Memory：把向量搜尋接上去不算做完</h3>
+<p>OpenAI 在 memory 相關 cookbook 裡講得很清楚，memory 不是單一模型能力，而是整條 orchestration pipeline：包含 distillation、consolidation、injection。</p>
+<p>文件特別提醒，memory eval 和一般 model eval 不一樣，因為它有時間依賴：過去的資訊應該在相關時幫上忙，但不該壓過當前使用者意圖。<a href="#ref-11">[11]</a></p>
+<p>Anthropic 的 multi-agent research system 文章也提到，長程對話需要 external memory 和 intelligent compression，否則 context window 不夠用。<a href="#ref-9">[9]</a></p>
+<p>兩邊的共識很清楚：<strong>memory 是獨立的架構層</strong>，不是「多塞一點上下文」就結束。</p>
+<h3 id="3-evalloop-能不能停不該只靠-agent-自己說了算">3. Eval：loop 能不能停，不該只靠 agent 自己說了算</h3>
+<p>這大概是現在 Anthropic 與 OpenAI 文件裡最一致的一點。</p>
+<p>Anthropic 的 <code>/goal</code> 文件說，每輪結束後會檢查 completion condition。OpenAI 的 agent eval 文件則把 traces、graders、datasets、eval runs 都明確列成 agent workflow 的正式工具鏈。<a href="#ref-4">[4]</a> <a href="#ref-10">[10]</a></p>
+<p>OpenAI 特別強調，當你還在 debug agent 行為時，應該先從 traces 開始，因為 trace 會把模型呼叫、工具呼叫、guardrails、handoffs 記下來，讓你看見整條 workflow 到底怎麼跑。等你比較知道「好」長什麼樣，再把這些判準變成可重複的 eval。</p>
+<p>這代表 eval 在 agent loop 裡已經不是附屬功能，而是 outer loop 是否可靠的核心。Addy 在 practitioner 側講的其實是同一件事：loop 在無人監督時自己跑，也就會自己犯錯；把 verifier sub-agent 從 maker 分開，目的就是讓 loop 的「完成」有意義。但即便如此，「done」也只是一個 claim，不是 proof。<a href="#ref-1">[1]</a></p>
+<h3 id="4-governance長時間-agent-的問題很多時候是邊界不是能力">4. Governance：長時間 agent 的問題，很多時候是邊界，不是能力</h3>
+<p>Governance 在 OpenAI 和 Anthropic 的文件裡不是抽象口號。</p>
+<p>OpenAI 的 agents / eval 文件已經把 governance、compliance、audit events、observability 放進正式文件結構裡。<a href="#ref-10">[10]</a></p>
+<p>Anthropic 在提交給 NIST 的 agentic security 意見書裡，則把 persistent memory poisoning 講得很具體：如果錯誤或惡意資訊進入 agent 的長期狀態，它可能在很久之後才拿這些內容去做看起來「很合理」的推理與行動。<a href="#ref-12">[12]</a></p>
+<p>這其實點出了長時間 agent 最麻煩的地方：風險會被累積、被延後、被正常化，而且常常不發生在當下那一輪。Addy 對 loop 也有類似的提醒：loop 會加速理解，也可能成為逃避理解的工具。同一套 loop，一個人拿來加速自己已經懂的工作，另一個人拿來避免理解工作本身，loop 自己分不出差別。<a href="#ref-1">[1]</a></p>
+<h2 id="把這些-pattern-放回-loop-engineering">把這些 pattern 放回 Loop Engineering</h2>
+<p>前面的 pattern 可以直接對應到文件裡的產品能力：人類逐輪互動對應 Claude Code 的工作循環；goal-driven 對應 <code>/goal</code> 的 completion condition；time-driven 對應 <code>/loop</code> 與 scheduled tasks；event-driven 則對應 Routines 的排程、API 與 GitHub 事件觸發。</p>
+<p>這些 pattern 不是彼此排斥的選項。實際系統通常會把它們組合起來：外部事件或排程啟動工作，agent 在內部反覆呼叫工具，驗證器判斷結果是否達標，state 或 artifact 讓下一輪接續。</p>
+<p>Addy 在〈Loop Engineering〉裡把同一個組合整理成五件套加 memory：Automations 負責排程觸發、Worktrees 隔離並行、Skills 寫下專案知識、Plugins / connectors 接上既有工具、Sub-agents 把「提出想法的人」和「檢查想法的人」分開，最後用一個放在 conversation 之外的 state 記住做到哪裡。<a href="#ref-1">[1]</a> 這套切法和前面的 pattern 是一體兩面：官方文件描述能力，Addy 描述它們怎麼組成一個能自己跑的 loop。</p>
+<p>閱讀或設計一個 loop 時，可以固定檢查三件事：</p>
+<ol>
+<li><strong>誰觸發下一輪</strong>：人、目標條件、時間或外部事件？</li>
+<li><strong>怎麼知道該停</strong>：完成條件、測試、grader、hook、guardrail 或人工審核？</li>
+<li><strong>跨多輪之後留下什麼</strong>：state、artifacts、memory 或 audit trail？</li>
+</ol>
+<h2 id="結語agent-loop-是-loop-engineering-的基本單位">結語：Agent Loop 是 Loop Engineering 的基本單位</h2>
+<p>從現在 Anthropic、OpenAI、IBM 這幾條文件脈絡看，可以很明確地說：<strong>Loop Engineering 的核心，已經轉向把 agent 放進一個可持續執行、可驗證、可停止、可追蹤的 outer loop。</strong></p>
+<p>這也解釋了為什麼最近的 <code>loop engineering</code> 討論，會和 long-running agents、harness、eval、memory、observability 同時出現。它們是同一組工程問題的不同切面，不是互相競爭的流行名詞：agent loop 負責工作循環，harness 提供執行環境，eval 與 verifier 判斷結果，state 與 memory 讓下一輪接得起來。Addy 的結論也落在同一個地方：loop 會改變工作方式，但不會把你從工作中刪掉，驗證的責任最後還是在你身上。<a href="#ref-1">[1]</a></p>
+<p>把這三組問題想清楚，再去設計或檢視一個 agent loop，會比直接套用任何一套分類更有把握。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] Addy Osmani，<a href="https://addyosmani.com/blog/loop-engineering/"><code>loop-engineering</code></a>，2026-06-07</li>
+<li><a id="ref-2"></a>[2] Anthropic，<a href="https://code.claude.com/docs/en/how-claude-code-works"><code>how-claude-code-works</code></a></li>
+<li><a id="ref-3"></a>[3] Anthropic，<a href="https://code.claude.com/docs/en/agent-sdk/agent-loop"><code>agent-sdk-agent-loop</code></a></li>
+<li><a id="ref-4"></a>[4] Anthropic，<a href="https://code.claude.com/docs/en/goal"><code>claude-code-goal-completion-condition</code></a></li>
+<li><a id="ref-5"></a>[5] IBM，<a href="https://www.ibm.com/think/topics/ai-agent-types"><code>types-of-ai-agents</code></a></li>
+<li><a id="ref-6"></a>[6] Anthropic，<a href="https://code.claude.com/docs/en/scheduled-tasks"><code>claude-code-scheduled-tasks</code></a></li>
+<li><a id="ref-7"></a>[7] Anthropic，<a href="https://code.claude.com/docs/en/routines"><code>claude-code-routines</code></a></li>
+<li><a id="ref-8"></a>[8] Anthropic，<a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents"><code>effective-harnesses-for-long-running-agents</code></a></li>
+<li><a id="ref-9"></a>[9] Anthropic，<a href="https://www.anthropic.com/engineering/multi-agent-research-system"><code>multi-agent-research-system</code></a></li>
+<li><a id="ref-10"></a>[10] OpenAI，<a href="https://developers.openai.com/api/docs/guides/agent-evals"><code>evaluate-agent-workflows</code></a></li>
+<li><a id="ref-11"></a>[11] OpenAI Cookbook，<a href="https://developers.openai.com/cookbook/examples/agents_sdk/context_personalization"><code>context-personalization-long-term-memory</code></a></li>
+<li><a id="ref-12"></a>[12] Anthropic，<a href="https://www-cdn.anthropic.com/43ec7e770925deabc3f0bc1dbf0133769fd03812.pdf"><code>nist-rfi-agentic-security</code></a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

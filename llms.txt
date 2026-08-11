@@ -16,6 +16,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡
+
+**Description:** 整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。
+
+**URL:** https://tech.samsonlab.dev//blog/agent-loops-and-long-running-agents-from-official-docs/
+
+---
+
 ### Agent Sandbox：是什麼、為什麼需要、現在大家怎麼做
 
 **Description:** Sandbox 不是單純的 code runner，而是 agent 的 execution boundary。這篇文章整理它為什麼重要、常見組合方式，以及主流產品與框架現在怎麼做。
@@ -116,4 +124,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-06T02:32:44.567Z
+Last updated: 2026-08-11T07:51:01.717Z
