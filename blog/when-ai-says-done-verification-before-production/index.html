@@ -1,141 +1,115 @@
-<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><!-- Primary Meta Tags --><title>當 AI 說「做完了」，我們到底該相信什麼？</title><meta name="title" content="當 AI 說「做完了」，我們到底該相信什麼？"><meta name="description" content="AI 讓生成變快，但產品能不能上線，關鍵早就不是生成本身，而是驗證能力。從社群討論與實務觀察出發，整理我對 Verification Engineering 的幾個想法。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><meta property="og:title" content="當 AI 說「做完了」，我們到底該相信什麼？"><meta property="og:description" content="AI 讓生成變快，但產品能不能上線，關鍵早就不是生成本身，而是驗證能力。從社群討論與實務觀察出發，整理我對 Verification Engineering 的幾個想法。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><meta property="twitter:title" content="當 AI 說「做完了」，我們到底該相信什麼？"><meta property="twitter:description" content="AI 讓生成變快，但產品能不能上線，關鍵早就不是生成本身，而是驗證能力。從社群討論與實務觀察出發，整理我對 Verification Engineering 的幾個想法。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"當 AI 說「做完了」，我們到底該相信什麼？","description":"AI 讓生成變快，但產品能不能上線，關鍵早就不是生成本身，而是驗證能力。從社群討論與實務觀察出發，整理我對 Verification Engineering 的幾個想法。","datePublished":"2026-07-28T00:00:00.000Z","dateModified":"2026-07-28T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DpR5Qlcl.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><!-- Primary Meta Tags --><title>AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統</title><meta name="title" content="AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統"><meta name="description" content="AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><meta property="og:title" content="AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統"><meta property="og:description" content="AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/"><meta property="twitter:title" content="AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統"><meta property="twitter:description" content="AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統","description":"AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。","datePublished":"2026-07-28T00:00:00.000Z","dateModified":"2026-08-11T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/when-ai-says-done-verification-before-production.CkweFx28.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DpR5Qlcl.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
 Skip to main content
-</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/when-ai-says-done-verification-before-production.CkweFx28_Z1rwnjI.webp" alt="當 AI 說「做完了」，我們到底該相信什麼？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-07-28T00:00:00.000Z"> Jul 28, 2026 </time> <div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">
-Last updated on <time datetime="2026-07-28T00:00:00.000Z"> Jul 28, 2026 </time> </div> </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> ai </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> verification </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> software-engineering </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 當 AI 說「做完了」，我們到底該相信什麼？ </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h1 id="當-ai-說做完了我們到底該相信什麼">當 AI 說「做完了」，我們到底該相信什麼？</h1>
-<p>現在很多人在談 AI 開發風險時，還是會把問題收斂成一句「AI 產出品質不穩」。</p>
-<p>現在的問題，很多時候已經不是 AI 會不會寫，而是它寫得越來越快之後，我們到底要靠什麼相信它真的做完了，而且做對了。</p>
-<p>如果只是 demo，很多事情都可以先過。畫面能跑、流程能動、測試有幾個綠燈，通常就足以讓人往下一步走。</p>
-<p>但只要開始碰真實專案，問題就會完全變樣：</p>
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/when-ai-says-done-verification-before-production.CkweFx28_Z1rwnjI.webp" alt="AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-07-28T00:00:00.000Z"> Jul 28, 2026 </time> <div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">
+Last updated on <time datetime="2026-08-11T00:00:00.000Z"> Aug 11, 2026 </time> </div> </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> ai </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> verification </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <h1 id="ai-時代的自動化測試與驗收一從測試金字塔到信任系統">AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統</h1>
+<p>最近跟人聊 AI 開發，最常被問到的問題已經不是「AI 能不能寫」，而是「它寫得那麼快，我們怎麼相信它寫對了」。</p>
+<p>GitHub 那篇〈AI made code easy. Trust is now the bottleneck.〉講的其實就是這件事：程式產出已經不再是瓶頸，信任才是。 <a href="#ref-1">[1]</a></p>
+<p>很多人談 AI 開發風險時，還是會把問題收斂成一句「AI 產出品質不穩」，但現在的風險結構已經不太一樣了。社群裡大型 AI 任務翻車的案例，問題多半不是它直接亂寫一通，而是它會持續產生一個看起來很合理的進度敘事——每一步都像在推進，每一輪回報都像在收斂，但真正被驗證過的東西，可能比你以為的少很多。 <a href="#ref-2">[2]</a></p>
+<p>如果只是做 demo，很多事情都可以先過。畫面能跑、流程能動、測試有幾個綠燈，通常就足以讓人往下一步走。但一碰真實專案，問題就會完全變樣：</p>
 <ul>
 <li>這個結果是不是只是看起來合理？</li>
 <li>它是不是漏掉了最重要的邊界情境？</li>
 <li>它說已完成，到底是指文字上完成，還是有證據支持的完成？</li>
-<li>如果換一個人、換一個 agent、換一條 pipeline，還能不能得到同樣結論？</li>
 </ul>
-<p>我後來越來越覺得，AI 時代真正需要被工程化的，不是生成，而是驗證。</p>
-<h2 id="我原本以為review-壓力只是暫時變重">我原本以為，review 壓力只是暫時變重</h2>
-<p>一開始我比較直覺的想法其實很簡單。</p>
-<p>AI 把程式寫快了，團隊的 review 壓力當然會變大一點，但本質上應該還是同一套工程問題。多補一些測試、多做一些 code review、多跑幾輪 CI，大概就能接住。</p>
-<p>後來我發現，事情沒有那麼單純。</p>
-<p>因為 AI 帶來的改變，不只是產出速度提升，而是把整個 bottleneck 往後推了。以前最花時間的是寫出來，現在越來越花時間的是判斷這個東西到底能不能信。</p>
-<p>尤其在任務規模一變大之後，風險常常不是它直接亂寫一通，而是它會持續產生一個看起來很合理的進度敘事。每一步都像是有在推進，每一輪回報也都像是有在收斂，但真正被驗證過的東西，可能比你以為的少很多。</p>
-<p>這種情況麻煩的地方在於，它不像傳統 bug 那麼容易被看見。你不是看到明顯錯誤才出事，而是先相信了那個「應該差不多好了」的感覺，最後把不確定性一路帶進 production。</p>
-<h2 id="問題不是-ai-會不會出錯而是我們怎麼定義完成">問題不是 AI 會不會出錯，而是我們怎麼定義「完成」</h2>
-<p>我覺得這裡真正要改的是完成定義。</p>
-<p>如果今天一個 agent 跟你說「這個功能已完成」，那到底代表什麼？</p>
-<p>如果完成只是：</p>
-<ul>
-<li>它自己說完成了</li>
-<li>PR 看起來很完整</li>
-<li>測試全部綠燈</li>
-<li>demo 跑起來沒問題</li>
-</ul>
-<p>那這個完成其實還很脆弱。</p>
-<p>因為 PR 綠燈不代表測到真正重要的情境，demo 能跑也不代表系統邊界已經被覆蓋。很多 production 問題不是因為實作完全錯，而是因為那個最該被驗證的情境，根本沒進到驗證流程裡。</p>
-<p>所以我現在比較傾向把「完成」定義成下面三件事：</p>
+<p>我後來越來越覺得，AI 時代真正需要被工程化的，不是生成，而是驗證。這篇是這個系列的第一篇，我想先把地圖畫出來。後面每一篇，都會沿著這張地圖往下一層走。</p>
+<h2 id="信任不是一個問題是五個問題">信任不是一個問題，是五個問題</h2>
+<p>大家熟悉的測試金字塔，通常是用執行速度與維護成本來解釋：底層測試多、快速且便宜；越往上越少、越慢也越脆弱。這個原則在 AI 時代依然有效。</p>
+<p>但它還多了一個角色：把信任拆成不同粒度的回饋迴路。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層次</th><th>它主要在問什麼</th><th>最適合抓的問題</th></tr></thead><tbody><tr><td>Unit test</td><td>單一規則是否成立？</td><td>邊界條件、計算、狀態轉換、domain rule</td></tr><tr><td>Integration test</td><td>元件接在一起時是否正確？</td><td>資料庫、queue、框架設定、實際序列化</td></tr><tr><td>Contract test</td><td>系統邊界的承諾是否一致？</td><td>API schema、事件格式、consumer/provider 假設</td></tr><tr><td>E2E test</td><td>關鍵使用者流程是否走得完？</td><td>跨服務流程、前後端整合、部署後煙霧測試</td></tr><tr><td>Acceptance</td><td>交付是否值得被接受？</td><td>需求意圖、使用情境、風險與商業判斷</td></tr></tbody></table>
+<p>每一層答一個不同的問題。unit test 問「這段邏輯還符合我們的規則嗎」，契約測試問「邊界上的雙方還說同一種語言嗎」，E2E 問「真正的使用者流程還走得完嗎」，驗收問「這次交付的產品，還是我們要的那個東西嗎」。</p>
+<p>這不是要把每個行為都在每一層測一次。每一層都有自己的責任。把所有信心壓在 E2E，CI 會又慢又脆；只寫 unit test，很容易到服務邊界才發現大家理解不同。</p>
+<p>真正的工程問題，是每一層都要說得出自己保護哪種風險，也接受什麼不該由自己負責。</p>
+<h2 id="測試與驗收是兩件事">測試與驗收是兩件事</h2>
+<p>自動化測試要驗證的是「系統依照已知規則運作」。驗收要回答的則是「這個交付是否真的解決了要解的問題」。兩者會重疊，但不能互相取代。</p>
+<p>登入流程的 unit test、API 測試和 E2E 測試都通過，只能說已被編碼成測試的行為仍然成立。它不會自動告訴你：新使用者是否看得懂登入方式、權限要求是否合理、流程是否符合這次產品調整的目的。</p>
+<p>AI 特別容易放大這個差別。它很擅長依照明確規格產生程式碼與測試；但如果規格本身模糊，或團隊還沒辨認出真正的風險，AI 也會很有效率地把錯誤的假設固定下來。</p>
+<blockquote>
+<p>測試保護已知的規則；驗收檢查我們是否選對規則。</p>
+</blockquote>
+<h2 id="ai-到底改變了什麼">AI 到底改變了什麼</h2>
+<h3 id="第一測試案例不再稀缺">第一，測試案例不再稀缺</h3>
+<p>AI 可以很快補上 parameterized test、邊界值、fixture 和重複性高的測試骨架。真正稀缺的是能否辨認「哪個不變量值得保護」。金額不可為負、庫存不可超賣、退款後狀態不可回復為已出貨——這些不是 AI 自己能從空白專案可靠猜出的事。</p>
+<h3 id="第二改動成本下降回歸風險上升">第二，改動成本下降，回歸風險上升</h3>
+<p>當 agent 可以一口氣跨檔案重構時，好的測試該當成一張讓人敢於小步改動的安全網，而不是事後的檢查清單。測試要快到能放進 agent 的迴路裡，不能等到合併前才知道結果。</p>
+<h3 id="第三測試本身也要被審查">第三，測試本身也要被審查</h3>
+<p>AI 生成的測試可能只是在驗證實作細節，甚至直接重述被測程式的錯誤邏輯。審查時應先問：如果把實作換成另一種正確寫法，這個測試還有意義嗎？如果需求被誤解，這個測試抓得到嗎？這類把 AI review 與測試優先綁在一起的討論，Uncle Bob 最近也有談。 <a href="#ref-3">[3]</a></p>
+<h2 id="金字塔之外還需要一層橫切的驗證能力">金字塔之外，還需要一層橫切的驗證能力</h2>
+<p>金字塔定義了每一層驗什麼，但它沒有回答一件事：完成條件誰定義、證據誰來收、門檻誰來設。</p>
+<p>當 agent 開始參與需求分析、規格轉換、程式生成、測試生成、維運排查這整條流程時，驗證就不該只是最後一道 QA 關卡，而應該是一層獨立的工程能力，也就是我說的 Verification Engineering。</p>
+<h3 id="完成不能被它說沒問題定義">完成，不能被「它說沒問題」定義</h3>
+<p>如果今天一個 agent 跟你說「這個功能已完成」，那到底代表什麼？如果完成只是它自己說完成了、PR 看起來很完整、測試全部綠燈，那這個完成其實還很脆弱。</p>
+<p>我現在比較傾向把完成定義成三件事：</p>
 <ul>
 <li>有客觀證據支持，不是只有模型回報</li>
 <li>能被另一個人或另一套流程獨立驗證</li>
 <li>能重跑、能重現，而不是一次性的對話結果</li>
 </ul>
-<p>這三件事看起來很普通，但其實會直接改變團隊怎麼設計 AI workflow。</p>
-<p>因為一旦你接受這個定義，就很難再把驗收停留在「它說沒問題」這個層次。</p>
-<p>我會把這件事想成蓋房子。</p>
-<p>土木工程、泥作、灌漿，甚至部分結構施工，都可以交給不同的承包商。每家承包商使用的工法、工具和施工速度可能不同，能力也不會完全一樣。放到 AI 開發裡，這些承包商就像不同的 LLM provider 或 agent。</p>
-<p>但承包商可以換，驗收標準不能跟著換。地基要承受多少重量、結構要符合什麼規範、管線要怎麼測試，不能因為這次換了一家施工團隊，就改成「這家說可以，所以算完成」。</p>
-<p>AI 產物也是一樣。模型可以負責生成，provider 可以替換，施工方法可以不同，但完成條件、測試證據與上線門檻，仍然要由產品和工程團隊自己定義並驗收。</p>
-<h2 id="真正要驗的通常不是現在這段程式而是它背後的假設">真正要驗的，通常不是現在這段程式，而是它背後的假設</h2>
-<p>這也是我最近最有感的一個轉變。</p>
-<p>以前講驗證，我第一個想到的是 correctness。功能有沒有照需求跑、測試有沒有過、輸入輸出有沒有對。</p>
-<p>但 AI 產物最麻煩的地方，常常不是表面上跑不跑得動，而是它會偷偷把一堆沒講清楚的假設補進去。</p>
-<p>例如：</p>
+<p>我會把這件事想成蓋房子。土木工程、泥作、灌漿，甚至部分結構施工，都可以交給不同的承包商。每家承包商的工法、工具和速度可能不同，能力也不會完全一樣。放到 AI 開發裡，這些承包商就像不同的 LLM provider 或 agent。</p>
+<p>但承包商可以換，驗收標準不能跟著換。地基要承受多少重量、結構要符合什麼規範、管線要怎麼測試，不能因為這次換了一家施工團隊，就改成「這家說可以，所以算完成」。AI 產物也是一樣：模型可以負責生成，provider 可以替換，施工方法可以不同，但完成條件、測試證據與上線門檻，仍要由產品和工程團隊自己定義並驗收。</p>
+<h3 id="驗證的對象常常是實作背後的假設">驗證的對象，常常是實作背後的假設</h3>
+<p>以前講驗證，我第一個想到的是 correctness。功能有沒有照需求跑、測試有沒有過、輸入輸出有沒有對。但 AI 產物最麻煩的地方，往往在表面看不出來：它跑得動、也過得了測試，卻偷偷把一堆沒講清楚的假設補進去：</p>
 <ul>
 <li>它假設某個商業規則永遠成立</li>
 <li>它假設某個例外流程不重要</li>
 <li>它假設使用者行為會很單純</li>
 <li>它假設未來維護的人看得懂這段設計</li>
 </ul>
-<p>這些東西如果沒被挑出來，系統一開始可能真的能跑。但之後只要需求一變、資料一髒、流量一上來，問題就會開始冒出來。</p>
-<p>所以好的驗證，不只是檢查「有沒有寫對」，而是主動去問：</p>
-<ul>
-<li>哪些測試其實還沒寫？</li>
-<li>這個實作偷偷依賴了哪些前提？</li>
-<li>哪些情境是現在流程根本沒覆蓋到的？</li>
-<li>半年後別人接手時，最難理解的地方在哪？</li>
-</ul>
-<p>這些問題比單純檢查 syntax 或 style 更重要。因為它們處理的是風險外溢，不只是程式碼表面品質。</p>
-<p>這裡我也想到台灣長期推廣敏捷與測試的 David Ko 柯仁傑，最近幾場公開分享其實都在講很類似的事。 <a href="#ref-4">[4]</a> <a href="#ref-5">[5]</a></p>
-<p>他的切入點不是反對 GenAI 介入測試，而是反對把 GenAI 想成一台自動出題機。用他的說法，AI 產出的測試個案，真正的問題從來不是「生不生得出來」，而是：</p>
-<ul>
-<li>真的能照表操課去執行嗎？</li>
-<li>涵蓋率真的夠嗎？</li>
-<li>不懂測試的人，真的能只靠 prompt 就把它做好嗎？</li>
-</ul>
-<p>他在 WebConf Taiwan 2025 的議程介紹裡，也把自己的經驗與判斷說得很清楚：功能與系統測試若要在 GenAI 時代真正落地，背後還是要靠 <code>Specification by Example</code>、<code>Exploratory Testing</code> 和 test case design techniques 這些基本功，AI 只是把這些能力放大，不會憑空替代它們。<a href="#ref-5">[5]</a></p>
-<p>我覺得這個觀點很重要。因為它把「測試案例生成」和「驗證能力」切開了。前者是產出速度，後者才是產品信心。很多團隊會把這兩件事混在一起，以為 test cases 變多，就等於 verification 變強，但其實兩者差很遠。</p>
-<p>如果把視角拉到更國際的工程社群，Martin Fowler 最近幾篇談 AI coding agent 的文章，其實也在往同一個方向收斂。<a href="#ref-6">[6]</a> <a href="#ref-7">[7]</a> <a href="#ref-8">[8]</a> <a href="#ref-9">[9]</a> <a href="#ref-10">[10]</a></p>
-<p>他沒有把焦點放在「模型會不會越來越強」這件事，而是把焦點放在 harness、review loops 和 sensors。換句話說，真正能提升信任的，不是多喊幾次「請仔細檢查」，而是你有沒有把規格、檢查點、持續監測與回饋訊號包成一套外部結構，讓 agent 的輸出不是只能靠人類事後猜。</p>
-<p>這個角度我很認同。因為它提醒我們，verification 不該只是最後補救，而應該是整個 workflow 的一部分。</p>
-<h2 id="這也是為什麼我越來越在意-verification-engineering">這也是為什麼我越來越在意 Verification Engineering</h2>
-<p>如果只是把 AI 當輔助寫碼工具，也許還能把驗證視為開發後段的一個步驟。</p>
-<p>但如果團隊真的開始把 agent 放進需求分析、規格轉換、程式生成、測試生成、維運排查這整條流程裡，那驗證就不該只是最後一道 QA 關卡，而應該是一層獨立的工程能力。</p>
-<p>我自己會把它先粗分成幾個面向：</p>
-<ul>
-<li>完成條件要先被定義清楚，而不是事後解釋</li>
-<li>驗證要能獨立執行，不能完全依賴同一個生成脈絡</li>
-<li>測試不能只驗 happy path，還要刻意找邊界、例外與對抗情境</li>
-<li>決策、工具操作與驗證結果要留下紀錄，方便追溯與重跑</li>
-<li>高風險動作要有 gate，不是產物一生成就直接往下游送</li>
-</ul>
-<p>這件事一開始看起來像流程變重，但我後來覺得它比較像是把原本藏著的風險顯性化。</p>
-<p>因為沒有 verification 的高速交付，不是真的快，只是把錯誤更快送進系統裡。</p>
-<p>Fowler 提到的幾個概念，其實很適合拿來幫這件事命名。<a href="#ref-6">[6]</a> <a href="#ref-7">[7]</a> <a href="#ref-8">[8]</a></p>
-<p>像是 <code>generate-review loop</code>，本質上就是把「先做，再複核」變成顯式流程；<code>maintainability sensors</code> 則是在說，你不能只在 PR 那一刻看結果，而要讓 coverage、dependency、drift、runtime feedback 這些訊號持續存在，變成 agent 與團隊共同面對的約束。</p>
-<p>我會把這理解成：verification 不只是 QA 的工作，而是整個系統用來累積信心的感測層。</p>
-<p>如果把這件事再往敏捷和團隊協作的脈絡看，其實也說得通。</p>
-<p>敏捷從來不是比較快把東西做出來而已，而是比較早拿到回饋、比較快修正方向。放到 AI 開發也是一樣。真正符合敏捷精神的，不會是「agent 很快做完，所以我們快點 merge」，而是「我們有沒有更早把假設攤開、更早把風險驗掉、更早知道這個結果到底值不值得信」。</p>
-<p>這也是為什麼像 David Ko 這類長期做敏捷測試的人，會一直把重點放回需求共識、例子、探索與設計技法。因為這些東西本質上都不是在追求更多產出，而是在追求更早、更準確的回饋。換句話說，它們其實就是 verification 的前置工程。</p>
-<h2 id="不一定每件事都要逐行-review但一定要有能擋錯的結構">不一定每件事都要逐行 review，但一定要有能擋錯的結構</h2>
-<p>這裡還有一個很現實的問題。</p>
-<p>當 AI 產出越來越多之後，團隊不可能永遠靠人逐行把每一段都看完。這不只是效率問題，也是注意力問題。人類 review 本來就有極限，AI 只是在把那個極限更早推到你面前。</p>
-<p>所以我不會把答案理解成「那就更努力人工 review」。比較合理的方向反而是：把人力從逐行檢查，移到設計更好的驗證環境。</p>
-<p>Kent Beck 對這件事的描述也很到位。<a href="#ref-11">[11]</a> <a href="#ref-12">[12]</a> <a href="#ref-13">[13]</a> 他最近在談 code review 時就很直接承認，傳統 review 在 AI 加速之前其實就已經有點撐不住了，只是 AI 把這個問題徹底放大。PR 放著等、reviewer 沒時間、最後變成 <code>LGTM</code> 式橡皮圖章，這些都不是新問題，只是以前大家還勉強能忍。<a href="#ref-11">[11]</a></p>
-<p>一旦生成速度被拉高，這套做法就更不可能是主力。因為不是 reviewer 不努力，而是回饋迴路本身已經跟不上。</p>
-<p>他另外一個我很喜歡的觀點，是把多個 AI assistant 之間的不一致，當成一種 verification 訊號。也就是說，不要急著追求單一模型給出唯一答案，反而可以把不同工具的分歧拿來暴露假設、比較設計、逼自己做更有意識的判斷。<a href="#ref-12">[12]</a> <a href="#ref-13">[13]</a></p>
-<p>例如：</p>
-<ul>
-<li>哪些測試一定要先存在？</li>
-<li>哪些規格必須先文件化？</li>
-<li>哪些改動一定要經過獨立 gate？</li>
-<li>哪些結果要能被 replay？</li>
-<li>哪些權限不能直接交給 agent？</li>
-</ul>
-<p>換句話說，重點不是人到底有沒有看過每一行，而是錯的東西能不能被結構性地擋下來。</p>
-<p>這和傳統工程其實也一致。好的流程本來就不是靠英雄式檢查撐住，而是靠一套讓錯誤不容易溜過去的設計。</p>
-<h2 id="trade-off-也很現實">Trade-off 也很現實</h2>
-<p>當然，verification 不是一句話喊完就沒有代價。</p>
-<p>你把驗證做重，通常就會一起帶來幾個成本：</p>
-<ul>
-<li>前期要花更多時間定義完成條件</li>
-<li>測試與驗證腳本本身也需要維護</li>
-<li>團隊流程會變得比較慢，至少在短期內是這樣</li>
-<li>有些小型任務如果也套同樣強度，反而會過度設計</li>
-</ul>
-<p>所以這不是叫大家把所有 AI 任務都升級成高監管流程。</p>
-<p>比較務實的做法應該是分級。</p>
-<p>低風險、可逆的小任務，可以給比較輕的驗證；高風險、跨系統、不可逆、會直接影響使用者或資料的任務，就必須有更重的 verification gate。</p>
-<p>這裡真正困難的地方，不是工具怎麼選，而是團隊願不願意先把風險邊界講清楚。</p>
-<h2 id="結尾">結尾</h2>
-<p>我現在會把這件事理解成一個很實際的轉向。</p>
-<p>AI 讓生成變便宜了，所以工程價值自然會往更稀缺的地方移動。那個地方不是 prompt 寫得多漂亮，也不是 agent loop 跑得多花，而是我們能不能建立一套讓結果可被信任的交付方式。</p>
-<p>所以如果今天要問一個比較值得問的問題，我覺得不是「AI 能不能幫我做產品」，而是：</p>
-<ul>
-<li>它說做完了，我憑什麼相信？</li>
-<li>如果它漏了最重要的情境，誰會先知道？</li>
-<li>如果明天換一個人接手，這個結果還能不能被驗證回來？</li>
-</ul>
-<p>這些問題如果沒有被制度化回答，AI 帶來的效率，多半只是把風險更快擴散。</p>
-<p>但如果 verification 能夠被當成一層正式能力來設計，AI 才比較有機會真的從 demo 走進 production。</p>
+<p>這些東西如果沒被挑出來，系統一開始可能真的能跑。但之後只要需求一變、資料一髒、流量一上來，問題就會冒出來。所以好的驗證不只是檢查「有沒有寫對」，而是主動去問：哪些測試其實還沒寫？這個實作偷偷依賴了哪些前提？哪些情境是現在流程根本沒覆蓋到的？</p>
+<h3 id="這個方向不是我們獨自發明的">這個方向，不是我們獨自發明的</h3>
+<p>台灣長期推敏捷與測試的 David Ko 柯仁傑，最近幾場公開分享都在講很類似的事。 <a href="#ref-4">[4]</a> <a href="#ref-5">[5]</a> 他的切入點不反對 GenAI 介入測試，反對的是把 GenAI 想成一台自動出題機。AI 產出的測試個案，真正的問題從來不是「生不生得出來」，而是真的能照表操課執行嗎、涵蓋率真的夠嗎、不懂測試的人只靠 prompt 做得好嗎。背後還是要靠 <code>Specification by Example</code>、<code>Exploratory Testing</code> 和 test case design techniques 這些基本功，AI 只是把能力放大，不會憑空替代。 <a href="#ref-5">[5]</a></p>
+<p>Martin Fowler 最近幾篇談 AI coding agent 的文章，也在往同一個方向收斂。 <a href="#ref-6">[6]</a> <a href="#ref-7">[7]</a> <a href="#ref-8">[8]</a> <a href="#ref-9">[9]</a> <a href="#ref-10">[10]</a> 他沒有把焦點放在「模型會不會越來越強」，而是放在 harness、review loops 和 sensors。真正能提升信任的，是把規格、檢查點、持續監測與回饋訊號包成一套外部結構，讓 agent 的輸出不必只靠人類事後猜；多喊幾次「請仔細檢查」，其實沒什麼用。</p>
+<p>Kent Beck 對 code review 的描述也很直接。 <a href="#ref-11">[11]</a> 傳統 review 在 AI 加速之前其實就已經有點撐不住了，PR 放著等、reviewer 沒時間、最後變成 <code>LGTM</code> 式橡皮圖章。一旦生成速度被拉高，這套做法更不可能是主力——不是 reviewer 不努力，而是回饋迴路本身已經跟不上。他也提到一個我很喜歡的觀點：把多個 AI assistant 之間的不一致當成一種 verification 訊號，用分歧暴露假設、比較設計，逼自己做更有意識的判斷。 <a href="#ref-12">[12]</a> <a href="#ref-13">[13]</a></p>
+<h3 id="做重有代價所以要看風險分級">做重有代價，所以要看風險分級</h3>
+<p>當然，verification 不是一句話喊完就沒有代價。你把驗證做重，前期要花更多時間定義完成條件，測試與驗證腳本本身也需要維護，團隊流程短期內會變慢；有些小型任務如果也套同樣強度，反而會過度設計。</p>
+<p>所以這不是叫大家把所有 AI 任務都升級成高監管流程。比較務實的做法是分級：低風險、可逆的小任務，給比較輕的驗證；高風險、跨系統、不可逆、會直接影響使用者或資料的任務，就必須有更重的 gate。</p>
+<p>這裡真正困難的地方，不是工具怎麼選，而是團隊願不願意先把風險邊界講清楚。當 AI 產出越來越多之後，團隊也不可能永遠靠人逐行把每一段都看完。重點不是人有沒有看過每一行，而是錯的東西能不能被結構性地擋下來。</p>
+<h2 id="這個系列接下來怎麼走">這個系列接下來怎麼走</h2>
+<p>這篇是地圖，不是終點。測試與驗收真正的功力，在逐層的實務裡。接下來我會沿著金字塔從下往上寫：</p>
+<ol>
+<li><strong>Unit test：先把 domain rule 釘住</strong>，什麼該測、什麼不該 mock、如何讓測試替重構提供信心</li>
+<li><strong>整合測試：不要只測你以為的框架行為</strong>，資料庫、訊息系統、序列化與外部依賴該怎麼驗</li>
+<li><strong>契約測試：在服務邊界保護共同承諾</strong>，consumer-driven contract 適合什麼情境，又有哪些成本</li>
+<li><strong>E2E 測試：只保護最重要的旅程</strong>，如何避免把 E2E 寫成又慢又不可靠的大雜燴</li>
+<li><strong>驗收與 agent workflow：綠燈之後誰來判斷？</strong>，把驗收條件、人工探索與 AI agent 的交付流程接起來</li>
+</ol>
+<p>另外還打算補一篇橫切主題：如何把這些層次放進 CI/CD 與 agent loop，讓每一次變更先得到最快、最便宜的回饋，再逐步提高驗證強度。</p>
+<p>每一篇我都想回答同樣三個問題：這層到底驗證什麼、擋住哪種風險、AI 時代哪裡變了。</p>
+<p>如果金字塔每一層都能各自守住邊界，團隊才會同時得到兩件事：更快的改動速度，以及對改動仍然可信的理由。沒有這層信任結構，AI 帶來的效率，多半只是把風險更快擴散。</p>
 <h2 id="參考資料">參考資料</h2>
 <ul>
 <li><a id="ref-1"></a>[1] GitHub，〈AI made code easy. Trust is now the bottleneck.〉，2026-07-21<br>
