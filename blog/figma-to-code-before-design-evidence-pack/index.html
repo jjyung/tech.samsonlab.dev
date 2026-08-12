@@ -1,20 +1,18 @@
-<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><!-- Primary Meta Tags --><title>Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工</title><meta name="title" content="Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工"><meta name="description" content="比較 Figma、Figma MCP、Stitch、Claude Design 與 screenshot 的設計輸入，參考 Coinbase 的 AI Figma-to-Code workflow，再用 Design Evidence Pack 串起 SA、SD、前後端與 QA 的責任邊界。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><meta property="og:title" content="Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工"><meta property="og:description" content="比較 Figma、Figma MCP、Stitch、Claude Design 與 screenshot 的設計輸入，參考 Coinbase 的 AI Figma-to-Code workflow，再用 Design Evidence Pack 串起 SA、SD、前後端與 QA 的責任邊界。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><meta property="twitter:title" content="Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工"><meta property="twitter:description" content="比較 Figma、Figma MCP、Stitch、Claude Design 與 screenshot 的設計輸入，參考 Coinbase 的 AI Figma-to-Code workflow，再用 Design Evidence Pack 串起 SA、SD、前後端與 QA 的責任邊界。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工","description":"比較 Figma、Figma MCP、Stitch、Claude Design 與 screenshot 的設計輸入，參考 Coinbase 的 AI Figma-to-Code workflow，再用 Design Evidence Pack 串起 SA、SD、前後端與 QA 的責任邊界。","datePublished":"2026-08-12T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.CCNoaJUs.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><!-- Primary Meta Tags --><title>Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格</title><meta name="title" content="Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格"><meta name="description" content="Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><meta property="og:title" content="Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格"><meta property="og:description" content="Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/"><meta property="twitter:title" content="Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格"><meta property="twitter:description" content="Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格","description":"Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。","datePublished":"2026-08-12T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.wrKbywP1.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
 Skip to main content
-</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn_ZBJ3JR.webp" alt="Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-12T00:00:00.000Z"> Aug 12, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Figma </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> AI Agent </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Engineering Workflow </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <p>Figma-to-Code 真正難的地方，不是把畫面翻成 JSX，而是判斷畫面裡哪些內容可以直接實作，哪些內容還需要業務、系統和團隊補充。</p>
-<p>現在的設計輸入也不只是一份 Figma file。它可能是完整的 Figma frames，也可能是 Figma MCP／Code Connect 提供的 design context、Stitch 產生的 UI exploration、Claude Design 做出的 prototype，或一張 screenshot。</p>
-<p>這些輸入的完整度不同。它們都能提供線索，卻不會自動變成 business rule、API contract、資料權限和驗證條件。本文把這些線索整理成一個我稱為 <code>Design Evidence Pack</code> 的工作模型，再接到 SA、SD、前端、後端與 QA 的交付流程。</p>
-<p>Coinbase 的 Figma-to-Code 案例提供了另一個重要參考：AI 可以承擔大量重複的 translation work，但前提是團隊要準備 reference implementation、rules document 和 prompt templates，並把生成流程拆成可規劃、可驗證、可 review 的 slices<a href="#ref-1">[1]</a>。</p>
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/figma-to-code-before-design-evidence-pack.SVmF8gUn_ZBJ3JR.webp" alt="Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-12T00:00:00.000Z"> Aug 12, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Figma </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Requirements </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Traceability </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <p>從設計開始做功能時，輸入不一定是完整的 Figma file。</p>
+<p>可能是一組 Figma frames，也可能是 Stitch 產生的 UI、Claude 根據 prompt 做出的 prototype、一張 screenshot，甚至只是白板 wireframe。</p>
+<p>這些工具能加快 UI 探索，但輸出通常還不是一份可以直接交給團隊實作的規格。畫面能告訴我們元件怎麼排列，卻不一定能說明誰可以操作、資料從哪裡來、狀態怎麼轉換、API 如何定義，以及錯誤發生時系統要做什麼。</p>
+<p>Figma-to-Code 之前，需要先把 UI/UX 輸出整理成有來源、可追蹤的 <code>Design Evidence Pack</code>，再依不同角色轉換成可實作的規格：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[Multiple design inputs] --> B[Design Evidence Pack]</span></span>
+<span class="line"><span style="color:#E1E4E8">    A[UI/UX tool output] --> B[Design Evidence Pack]</span></span>
 <span class="line"><span style="color:#E1E4E8">    B --> C[SA: Business Requirements]</span></span>
 <span class="line"><span style="color:#E1E4E8">    C --> D[SD: Technical Design]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Frontend and Backend contracts]</span></span>
-<span class="line"><span style="color:#E1E4E8">    E --> F[Implementation and verification]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G[Reference implementation and rules] --> H[AI translation workflow]</span></span>
-<span class="line"><span style="color:#E1E4E8">    A --> H</span></span>
-<span class="line"><span style="color:#E1E4E8">    H --> E</span></span></code></pre>
-<h2 id="設計輸入不是同一種規格">設計輸入不是同一種規格</h2>
-<p>不同工具提供的資訊密度和可信度不一樣。先分清楚輸入能回答什麼，後面才知道要補哪些 evidence 和決策。</p>
+<span class="line"><span style="color:#E1E4E8">    D --> E[Frontend / Backend implementation contracts]</span></span>
+<span class="line"><span style="color:#E1E4E8">    E --> F[Implementation delivery and verification]</span></span></code></pre>
+<p>本文中的 SA 負責整理業務與行為資訊，SD 負責整理系統、API、資料與技術限制。SD 定義系統層級的技術決策與契約。前端和後端的 implementation contract，則是同一份 Technical Design 針對不同實作者整理出的角色視圖。</p>
+<h2 id="先理解-uiux-工具輸出缺少什麼">先理解 UI/UX 工具輸出缺少什麼</h2>
+<p>不同工具提供的訊息密度不一樣，但共同點是：它們能產生設計線索，不能自動補齊完整的 business semantics 與 production contract。</p>
 
 
 
@@ -50,65 +48,213 @@ Skip to main content
 
 
 
-<table><thead><tr><th>輸入</th><th>可以提供什麼</th><th>通常還缺少什麼</th></tr></thead><tbody><tr><td>Figma</td><td>frame、component、variant、token、layout、prototype link</td><td>business rule、API semantics、資料設計</td></tr><tr><td>Figma MCP／Code Connect<a href="#ref-3">[3]</a></td><td>design context、變數、元件與 code component mapping、可引用的節點資訊</td><td>domain decision、完整 production architecture</td></tr><tr><td>Stitch<a href="#ref-2">[2]</a></td><td>UI variant、layout exploration、初步 frontend code</td><td>approved design、domain model、backend contract</td></tr><tr><td>Claude Design 或其他 multimodal agent</td><td>prototype、flow draft、screen exploration、spec draft</td><td>source confidence、正式決策、production contract</td></tr><tr><td>screenshot／wireframe</td><td>視覺結構、layout、互動線索</td><td>元件語意、狀態、資料、權限與 responsive 規則</td></tr></tbody></table>
-<p>這張表不是用來選出唯一最好的工具。完整 Figma file 可能適合需要元件、變數和 prototype 關係的工作；MCP／Code Connect 可能適合需要節點引用和 code mapping 的流程；Stitch 或 Claude Design 適合快速探索；screenshot 則適合把一個畫面的視覺層次一次交給 agent。</p>
-<p>輸入越接近探索稿，越需要補來源、版本和 approved status。輸入越接近正式設計，也不代表 business semantics 和 technical contract 已經完成。設計輸入的完整度，和 production 規格的完整度，是兩件事。</p>
-<h2 id="coinbase-的-screenshot-選擇有用但不是答案">Coinbase 的 screenshot 選擇：有用，但不是答案</h2>
-<p>Coinbase 的案例值得參考，因為它沒有把「使用 AI」寫成一句口號，而是說明 agent 實際拿到什麼，以及怎麼從輸入一路產生 code。</p>
-<p>他們的 frontend workflow 會把每個 Figma tab 截成 screenshot，再交給 agent。Coinbase 選 screenshot 而不是 API-based design integration，是因為 screenshot 能一次保留頁面的 visual hierarchy 和 component relationship；他們也認為 structured design data 可能把視覺層次攤平，並增加上下文成本<a href="#ref-1">[1]</a>。</p>
-<p>這是 Coinbase 對自身工作流的取捨，不是「screenshot 比 Figma 完整」的結論。Screenshot 對視覺理解很直接，但它可能沒有 Figma 的 component metadata、variables、prototype semantics，也沒有 Code Connect 的 code component 對應。需要節點引用、變數或設計系統 mapping 時，Figma MCP／Code Connect 可能更合適；Stitch 或 Claude Design 則可能更適合早期探索，但要另外處理來源可信度、approved status 和 production constraints。</p>
-<p>所以，screenshot 是一種可行的 agent input，不是完整度最高的 input。它是視覺證據，不是 production specification。</p>
-<h2 id="design-evidence-pack把線索變成可交接的-evidence">Design Evidence Pack：把線索變成可交接的 evidence</h2>
-<p><code>Design Evidence Pack</code> 是本文提出的工作命名，不是 Figma、Coinbase 或業界標準。它也不是另一套設計工具，而是放在設計輸入和正式規格之間的一層整理方式。</p>
-<p>它要解決的問題很簡單：不同角色不要各自重新解讀原始設計，也不要讓 agent 把看見的內容、合理推測和尚未決定的事情混在一起。</p>
-<p>每筆 evidence 可以先用這個最小格式記錄：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>EVID-001</span></span>
-<span class="line"><span>source: Figma node URL, prototype, export, or screenshot</span></span>
-<span class="line"><span>source_type: Figma | MCP | Stitch | Claude Design | screenshot | wireframe</span></span>
-<span class="line"><span>observed: 設計上明確看得到的內容</span></span>
-<span class="line"><span>inferred: 從視覺或互動合理推測的內容</span></span>
-<span class="line"><span>unknown: 從目前輸入無法判斷的事情</span></span>
-<span class="line"><span>confidence: high | medium | low</span></span>
-<span class="line"><span>related_nodes: 相關 frame、component 或 prototype flow</span></span></code></pre>
-<p>不同輸入留下的資料不必一樣：</p>
+<table><thead><tr><th>輸入</th><th>最適合提供的資訊</th><th>通常還缺少什麼</th></tr></thead><tbody><tr><td>Figma</td><td>frame、component、variant、token、layout、prototype link</td><td>完整 business rule、API semantics、DB design</td></tr><tr><td>Figma MCP／Code Connect<a href="#ref-3">[3]</a></td><td>design context、變數、元件與 code component mapping</td><td>domain decision、完整 production architecture</td></tr><tr><td>Stitch<a href="#ref-2">[2]</a></td><td>UI variant、layout exploration、初步 frontend code</td><td>approved design、domain model、backend contract</td></tr><tr><td>Claude 或其他 multimodal agent</td><td>screenshot interpretation、flow draft、spec draft</td><td>source confidence、正式決策、技術契約</td></tr><tr><td>純 screenshot／wireframe</td><td>視覺結構與互動線索</td><td>元件語意、狀態、資料、權限與 responsive 規則</td></tr></tbody></table>
+<p>因此，對需要進入正式開發流程的功能，第一個產物應該是 <code>Design Evidence Pack</code>，code 留到後面。工具可以產生候選畫面，agent 可以協助解析畫面，但最後仍要把「看得到的內容」和「推測出來的內容」分開。</p>
+<h2 id="coinbase-如何讓-ai-參與實作">Coinbase 如何讓 AI 參與實作</h2>
+<p>Coinbase 的案例補充了一個重要細節：AI 不只是根據畫面產生 code，還需要一組能限制輸出方向的上下文與工作流程<a href="#ref-1">[1]</a>。</p>
+<h3 id="screenshot-是視覺輸入不是完整規格">Screenshot 是視覺輸入，不是完整規格</h3>
+<p>Coinbase 的 frontend workflow 會把每個 Figma tab 截成 screenshot，再交給 agent。他們選 screenshot，是因為它能一次保留頁面的 visual hierarchy 和 component relationship；相較之下，structured design data 可能把視覺關係拆成較零散的資訊，也會增加上下文成本<a href="#ref-1">[1]</a>。</p>
+<p>這是 Coinbase 對自身 workflow 的取捨，不是 screenshot 比 Figma、Figma MCP、Code Connect、Stitch 或 Claude 更完整。Screenshot 能提供視覺線索，但不一定包含 component metadata、variables、prototype semantics、code mapping、domain decision 或 production contract。輸入方式應依任務、工具成熟度、上下文成本和團隊流程選擇。</p>
+<h3 id="reference-implementationrules-documentprompt-templates">Reference implementation、rules document、prompt templates</h3>
+<p>Coinbase 將三種既有資產組合成 agent 的工作上下文：</p>
 <ul>
-<li>Figma 可以附 frame、node、component、variant 和 token。</li>
-<li>Figma MCP／Code Connect 可以附 design context、變數和 code mapping。</li>
-<li>Stitch／Claude Design 可以附 prototype、prompt、版本和產出來源。</li>
-<li>screenshot 可以附 viewport、截圖時間和原始畫面來源。</li>
+<li><strong>Reference implementation</strong>：讓 agent 參考既有 component、route、data fetching、命名、測試、permission 和註冊方式，理解團隊希望複製的結構與慣例。</li>
+<li><strong>Rules document</strong>：把 page structure、component pattern、data fetching、permission、validation、error handling、audit logging、service registration，以及 lint、type check、tests 和 coverage gates 寫清楚。</li>
+<li><strong>Prompt templates</strong>：固定 product、route、endpoint、設計輸入、reference implementation 和 rules 等欄位，讓每次 feature context 都能用一致格式組合。</li>
 </ul>
-<p>例如，畫面上有一個 <code>Create</code> 按鈕：</p>
+<p>這三項不是取代 Figma 或其他設計輸入，而是讓 agent 能把不同輸入轉成符合團隊慣例的 code。Prompt 也不是品質保證；如果設計來源不明、reference 不適用，或規則沒有定義清楚，agent 只會更快產出錯的方向。</p>
+<h3 id="planscaffoldslice讓產出可以-review">Plan、scaffold、slice，讓產出可以 review</h3>
+<p>Coinbase 一開始讓 agent 一次生成完整 frontend page，得到過 85 個檔案、超過 6,300 行新增內容；backend 版本則是 19 個檔案、超過 14,000 行新增內容。程式可以運作，卻大到難以進行有效的人工 review<a href="#ref-1">[1]</a>。</p>
+<p>後來他們使用 orchestrator pattern：先由 agent 產生 component-by-component plan，等待工程師確認；再建立 folder structure、routing、permissions、空 stub 和 validation gates；最後由平行 worker 依 tab 或 upstream service group 實作，開出較小的 draft PR。重新執行 frontend generation 後，原本一個 85-file PR 被拆成 7 個較小的 PR<a href="#ref-1">[1]</a>。</p>
+<p>這裡的重點不是讓 AI 取代 SA、SD、前後端或 QA，而是讓 agent 負責較規則化的 translation work；角色分工仍負責補上 business meaning、technical contract 和 verification conditions。</p>
+<h2 id="design-evidence-pack所有角色共用的中間層">Design Evidence Pack：所有角色共用的中間層</h2>
+<p>Design Evidence Pack 不負責決定業務或技術方案，只負責把設計材料整理成可引用的 evidence。它讓 SA、SD、前端和後端使用同一份有來源的輸入，不必各自重新解讀原始設計檔。</p>
+<h3 id="先盤點三類-evidence">先盤點三類 evidence</h3>
+<ul>
+<li><strong>畫面與結構</strong>：screen、route、tab、modal、drawer、navigation、component、variant、props、token 與 asset。</li>
+<li><strong>行為與狀態</strong>：loading、empty、error、success、disabled、read-only、permission denied、validation、confirmation、retry、undo 與 duplicate submission。</li>
+<li><strong>跨裝置與可用性</strong>：responsive viewport、breakpoint、long text、large number、overflow、keyboard、focus、accessible name 與 contrast。</li>
+</ul>
+<p>每個 observation 都要附來源，例如 Figma node URL、Stitch export、screenshot 或 prototype link。</p>
+<h3 id="把觀察與推測分開">把觀察與推測分開</h3>
+<p>每筆 evidence 使用三種標記：</p>
+<ul>
+<li><code>observed</code>：設計上明確看得到</li>
+<li><code>inferred</code>：從視覺或互動合理推測</li>
+<li><code>unknown</code>：從目前輸入無法判斷，或尚未完成決策</li>
+</ul>
+<p>例如，畫面上有一個 <code>Create</code> 按鈕，可以記錄：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>observed: 畫面上有 Create button</span></span>
 <span class="line"><span>inferred: 點擊後可能建立一個 resource</span></span>
 <span class="line"><span>unknown: 是否需要二次確認、誰可以操作、失敗後是否可重試</span></span></code></pre>
-<p><code>Create</code> 是設計 evidence；它對應哪個 business operation，仍要由後續分析決定。這個區分可以讓 agent 先整理問題，而不是把推測直接寫成需求或技術決策。</p>
-<h2 id="coinbase-如何讓-ai-參與實作">Coinbase 如何讓 AI 參與實作</h2>
-<p>Coinbase 的三個 input 並不神奇，很多團隊原本就有類似的文件和程式碼。值得參考的是，他們把這些資產整理成 agent 可以重複使用的 translation workflow。</p>
-<h3 id="reference-implementation讓-agent-讀懂團隊慣例">Reference implementation：讓 agent 讀懂團隊慣例</h3>
-<p>Reference implementation 是一個完整、已經符合團隊做法的實際 feature。它讓 agent 看到的不只是單一元件，而是 component、route、data fetching、命名、測試、permission 和註冊方式如何一起運作。</p>
-<p>Coinbase 的觀察是，輸出品質會跟 reference implementation 的品質一起變化。只給一個視覺相似、但架構和資料流完全不同的頁面，agent 學到的可能只是表面樣式；真正有用的參考實作，必須能代表團隊希望複製的結構與慣例<a href="#ref-1">[1]</a>。</p>
-<h3 id="rules-document把-review-標準前移">Rules document：把 review 標準前移</h3>
-<p>Rules document 把原本散落在 code review、文件和資深工程師習慣裡的要求寫清楚，例如：</p>
+<p><code>Create</code> 是設計 evidence；它對應哪個 business operation，則需要後續分析。這個區分也能避免 agent 把推測直接寫成需求或技術決策。</p>
+<h3 id="design-evidence-pack-的最小格式">Design Evidence Pack 的最小格式</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>EVID-001</span></span>
+<span class="line"><span>source: Figma node URL</span></span>
+<span class="line"><span>type: screen | component | interaction | token | asset</span></span>
+<span class="line"><span>observed: 畫面上實際看得到的內容</span></span>
+<span class="line"><span>inferred: 從設計合理推測的內容</span></span>
+<span class="line"><span>unknown: 從目前輸入無法判斷，或尚未完成決策的事情</span></span>
+<span class="line"><span>confidence: high | medium | low</span></span>
+<span class="line"><span>related_nodes: 相關 frame 或 component</span></span></code></pre>
+<p>完成這一層後，所有由設計衍生的需求、API 與測試，都能回指原始設計線索；其他技術或業務決策則回指對應的決策來源，避免只留下「這是設計師或 agent 說的」這種無法追蹤的描述。</p>
+<h2 id="從-evidence-轉成角色專用規格">從 evidence 轉成角色專用規格</h2>
+<p>同一筆 evidence 會被不同角色轉換成不同資訊。SA 關心它代表什麼業務行為；SD 關心系統如何提供這個能力；前後端則需要可以直接實作和整合的 contract。</p>
+<h3 id="sa定義業務行為與語意">SA：定義業務行為與語意</h3>
+<p>SA 的文件重點在整理畫面背後的業務與行為，同時回答四件事：</p>
 <ul>
-<li>page structure、component pattern、naming 和 data fetching。</li>
-<li>permission、validation、error handling、audit logging 和 service registration。</li>
-<li>lint、type check、format、query compilation、tests 與 coverage gates。</li>
+<li>這個功能服務什麼 problem、goal、actor 與 user role？</li>
+<li>它提供哪個 use case 或 business capability？</li>
+<li>有哪些 business rule、business state、scope 與 out-of-scope？</li>
+<li>欄位代表什麼業務資料，以及什麼結果算符合目的，也就是 <code>acceptance intent</code>？</li>
 </ul>
-<p>它的作用不是替團隊決定 business rule，而是降低 agent 在已知 convention 上的自由發揮。規則寫得越清楚，越多機械性錯誤可以在生成前被限制，review 才能把時間留給需要上下文的判斷。</p>
-<h3 id="prompt-templates把-feature-context-組合成任務">Prompt templates：把 feature context 組合成任務</h3>
-<p>Prompt template 把每次都要重新整理的欄位固定下來，例如 product name、route、endpoint list、設計輸入、reference implementation 和 rules。工程師只需要填入這次 feature 的變數，就能以一致格式啟動 agent。</p>
-<p>Prompt 不是品質保證。它只是讓輸入可重複組合的入口；如果設計來源不明、reference 不適用，或規則本身沒有定義清楚，prompt 寫得再漂亮也只會讓 agent 更快產出錯的方向。</p>
-<h3 id="planscaffoldslice控制產出和-review-的大小">Plan、scaffold、slice：控制產出和 review 的大小</h3>
-<p>Coinbase 一開始讓 agent 一次生成完整 frontend page，得到過 85 個檔案、超過 6,300 行新增內容；backend 版本則是 19 個檔案、超過 14,000 行新增內容。程式可以運作，卻大到沒有人能仔細 review<a href="#ref-1">[1]</a>。</p>
-<p>後來他們使用 orchestrator pattern：</p>
-<ol>
-<li><strong>Plan</strong>：agent 先讀取設計並產生 component-by-component plan，等待工程師確認。</li>
-<li><strong>Scaffold</strong>：建立 folder structure、routing、permissions、空 stub 和 validation gates。</li>
-<li><strong>Parallel workers</strong>：每個 tab 或 upstream service group 各自實作，開出小型 draft PR。</li>
-</ol>
-<p>重新執行 frontend generation 後，原本一個 85-file PR 被拆成 7 個較小的 PR，review cycle 和 git history 都更容易管理<a href="#ref-1">[1]</a>。這是流程設計的價值，不是單純換一個模型就會得到的結果。</p>
-<h2 id="角色分工仍然是-production-邊界">角色分工仍然是 production 邊界</h2>
-<p>AI 可以把 translation work 做得更快，但設計輸入沒有表達的內容，還是需要有人負責。原本的分工可以保留，只要把它放進 AI workflow 的交接點來看。</p>
+<p>例如，從前面的 <code>Create</code> button，SA 需要補出：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Use case: 建立 resource</span></span>
+<span class="line"><span>Actor: 具備 resource:create 權限的使用者</span></span>
+<span class="line"><span>Precondition: 必填欄位合法，且使用者屬於可操作的組織</span></span>
+<span class="line"><span>Main flow:</span></span>
+<span class="line"><span>1. 使用者填寫欄位</span></span>
+<span class="line"><span>2. 系統驗證輸入</span></span>
+<span class="line"><span>3. 系統建立 resource</span></span>
+<span class="line"><span>4. 系統顯示成功結果並導向 detail</span></span>
+<span class="line"><span>Business rule:</span></span>
+<span class="line"><span>- 同一個 external reference 不可重複建立</span></span>
+<span class="line"><span>- 建立失敗時不得產生半完成資料</span></span>
+<span class="line"><span>Acceptance intent:</span></span>
+<span class="line"><span>- 合法輸入可成功建立</span></span>
+<span class="line"><span>- 重複 reference 顯示可理解的錯誤</span></span>
+<span class="line"><span>- request 重送不會重複建立 resource</span></span></code></pre>
+<p>這份資料描述「系統要提供什麼行為」；API 和資料庫設計留到後續的 SD 階段。</p>
+<p>SA 也需要定義欄位的業務意義：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>業務意義</th><th>必填</th><th>合法值</th><th>真實來源</th><th>敏感性</th></tr></thead><tbody><tr><td>resource status</td><td>resource 目前所處的業務狀態</td><td>是</td><td>draft／active／archived</td><td>Resource service</td><td>internal</td></tr></tbody></table>
+<p>這一層要先回答：<code>archived</code> 能不能回到 <code>active</code>？使用者看到的是本系統狀態，還是 upstream 狀態？哪些角色可以改變狀態？哪些欄位不能被使用者直接修改？這些是 business semantics，應該先被定義，技術設計才有穩定的輸入。</p>
+<h3 id="sd把業務能力轉成系統契約">SD：把業務能力轉成系統契約</h3>
+<p>SD 的文件負責把業務能力轉成系統可以實作的邊界與契約，主要分成四組：</p>
+<ul>
+<li><strong>邊界與介面</strong>：service boundary、API resource、operation、request／response schema。</li>
+<li><strong>安全與錯誤</strong>：authentication、authorization、permission、error model、retryability、idempotency。</li>
+<li><strong>資料與執行</strong>：database schema、constraint、index、query pattern、transaction、concurrency。</li>
+<li><strong>非功能需求</strong>：performance、audit、observability、migration、rollback 與 compatibility。</li>
+</ul>
+<p>例如，SA 定義「可以依狀態與日期範圍查詢自己組織的 resource」，SD 再設計 API：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="http"><code><span class="line"><span style="color:#F97583">GET</span><span style="color:#E1E4E8"> /resources?status=active&#x26;from=2026-01-01&#x26;to=2026-01-31&#x26;cursor=...&#x26;limit=50</span></span></code></pre>
+<p>這份 contract 還需要明確說明：</p>
+<ul>
+<li>organization scope 由 server-side authorization 決定，不信任 client 傳入的 organization id。</li>
+<li>status 和日期範圍的 filter semantics 要寫進 contract。</li>
+<li>大量資料採用 cursor pagination，index 要對應實際 query pattern。</li>
+<li>response schema、error code、retryability、timeout 和 rate limit 都要明確。</li>
+</ul>
+<p>API 要提供穩定的 business capability interface，不必逐一暴露畫面上的欄位。</p>
+<p>API contract 可以用 OpenAPI<a href="#ref-4">[4]</a> 固化，讓 request、response 與 error schema 有共同格式。</p>
+<p>Technical data dictionary 則處理 API 與資料庫的實際表示：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Business field</th><th>API type</th><th>DB type</th><th>Nullable</th><th>Constraint</th><th>Index</th><th>Transform</th></tr></thead><tbody><tr><td>resource status</td><td>enum string</td><td>varchar(32)</td><td>No</td><td>status enum</td><td>composite index</td><td>direct mapping</td></tr></tbody></table>
+<p>SD 還需要決定 primary key、foreign key、unique constraint、normalization 或 denormalization、transaction boundary、locking、concurrency、retention 與 migration。業務資料字典定義語意，技術資料字典定義實作，兩者不應混在一起。</p>
+<h3 id="前端取得畫面與互動的-implementation-contract">前端：取得畫面與互動的 implementation contract</h3>
+<p>前端需要一份與畫面和互動直接相關的角色視圖。這份視圖不必包含整份原始 Figma，也不能只丟一段沒有上下文的 API spec；至少要交代：</p>
+<ul>
+<li>route、navigation entry、route guard、screen structure、component、variant 與 code component mapping。</li>
+<li>API query、mutation、cache、refetch、pagination、form schema、validation timing 與 unsaved changes。</li>
+<li>loading、empty、error、permission、disabled、success、retry、duplicate submission、optimistic update 或 rollback。</li>
+<li>responsive、keyboard、focus、semantic HTML、accessible name，以及 visual acceptance 的 viewport、reference screenshot 與允許差異；accessibility checks 可對照 WCAG 2<a href="#ref-5">[5]</a>。</li>
+</ul>
+<p>前端需要一張可以直接對照的 mapping：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>UI action</th><th>Business capability</th><th>API ID</th><th>Permission</th><th>Loading／error behavior</th><th>Verification ID</th></tr></thead><tbody><tr><td>Create button</td><td>建立 resource</td><td>API-001</td><td>resource:create</td><td>disable submit、顯示 field error</td><td>AC-001</td></tr><tr><td>Status filter</td><td>查詢 resource</td><td>API-002</td><td>resource:read</td><td>loading state、保留 filter</td><td>AC-002</td></tr></tbody></table>
+<p>這張表讓前端知道每個互動背後的 business operation、API 和預期狀態，不必從畫面自行猜測。</p>
+<h3 id="後端取得-api資料與執行的-implementation-contract">後端：取得 API、資料與執行的 implementation contract</h3>
+<p>後端規格要描述表格背後的查詢能力、資料來源、權限與效能要求，不能只記錄「這個畫面有一個表格」。至少要交代：</p>
+<ul>
+<li>API operation、handler／use case mapping、request validation、business validation、response schema 與 field source。</li>
+<li>authorization、resource scope、error model、error forwarding、retry behavior 與 negative path。</li>
+<li>repository、upstream client、transaction boundary、query pattern、expected scale、index 與 latency target。</li>
+<li>audit event、correlation id、metrics、logs、traces，以及 unit、integration、contract、permission 與 performance tests。</li>
+</ul>
+<p>例如，前端的 status filter 轉到後端後，至少要能回答：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>API: GET /resources</span></span>
+<span class="line"><span>Query: status, from, to, cursor, limit</span></span>
+<span class="line"><span>Permission: resource:read</span></span>
+<span class="line"><span>Scope: current user's organization</span></span>
+<span class="line"><span>Data source: resource service database</span></span>
+<span class="line"><span>Pagination: cursor-based</span></span>
+<span class="line"><span>Error: invalid date range → 400</span></span>
+<span class="line"><span>Performance target: p95 &#x3C; agreed threshold</span></span>
+<span class="line"><span>Verification: API contract + permission + query plan test</span></span></code></pre>
+<p>畫面只顯示結果；後端規格要說清楚結果怎麼被正確、有效率且安全地取得。</p>
+<h2 id="角色與交付如何接起來">角色與交付如何接起來</h2>
+<p>交付要讓每個產出都有明確 owner、交付對象，以及下一階段可以直接使用的內容。</p>
 
 
 
@@ -149,29 +295,34 @@ Skip to main content
 
 
 
-<table><thead><tr><th>角色</th><th>主要承接內容</th><th>不應由 AI 自行決定</th></tr></thead><tbody><tr><td>Design / UX</td><td>approved design、states、responsive、component intent</td><td>design intent 與視覺取捨</td></tr><tr><td>SA</td><td>actor、use case、business rule、scope、acceptance intent</td><td>business meaning 與需求邊界</td></tr><tr><td>SD</td><td>service boundary、API、data、permission、NFR</td><td>technical contract 與系統限制</td></tr><tr><td>Frontend</td><td>route、component、client state、visual acceptance</td><td>UI implementation 的取捨與可用性</td></tr><tr><td>Backend</td><td>operation、schema、validation、persistence、query</td><td>domain logic、資料一致性與安全邊界</td></tr><tr><td>QA</td><td>verification IDs、test strategy、quality gates</td><td>覆蓋範圍與 release evidence</td></tr></tbody></table>
-<p>Design / UX 先確認畫面、互動狀態與 responsive intent。SA 從 evidence 補出 actor、use case、business rule 和 acceptance intent。SD 再把業務能力轉成 service boundary、API、資料、權限和非功能需求。前端與後端拿到的是可以直接實作的角色視圖，QA 則把前面的意圖和契約轉成 verification evidence。</p>
-<p>這裡的責任不是把 AI 排除在流程外，而是讓每個角色知道 agent 可以加速哪一段，以及哪些判斷不能只靠畫面或生成結果決定。</p>
-<h2 id="從設計輸入到實作交付">從設計輸入到實作交付</h2>
-<p>可以把整個流程收斂成五個交接點：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>多種設計輸入</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Design Evidence Pack</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>SA：Business Requirements</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>SD：Technical Design</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Frontend / Backend implementation contracts</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Implementation + Verification</span></span></code></pre>
-<h3 id="固定輸入與版本">固定輸入與版本</h3>
-<p>先記錄 feature id、設計來源、版本、approved viewport、design system、reference implementation、repo、已知 route 和 upstream API。只有 screenshot 的功能可以先標成 <code>prototype</code>，不要直接標成 <code>ready for implementation</code>。</p>
-<h3 id="先產生-evidence再形成規格">先產生 evidence，再形成規格</h3>
-<p>Agent 可以協助整理 screens、components、states、tokens 和 assets，並標記 <code>observed</code>、<code>inferred</code>、<code>unknown</code>。SA 接著決定系統要支援什麼行為；SD 再決定系統要用什麼契約支援這些行為。</p>
-<h3 id="先-plan再切-implementation-slices">先 plan，再切 implementation slices</h3>
-<p>不要一開始要求 agent 生成整頁。先檢查 component、screen、service 或 upstream group 的 plan，再建立 route、permission、API、migration 和 test skeleton，最後切成可以獨立 review 的 slices。</p>
-<p>每個 slice 至少要有 requirement ID、API ID、tests、owner 和 reviewer。這樣 UI action 才能追到 business rule、API、資料效果和 verification：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>角色</th><th>主要負責工作</th><th>主要交付物</th><th>交付對象</th><th>交付重點</th></tr></thead><tbody><tr><td>Design / UX</td><td>視覺、互動與元件整理</td><td>approved frames、prototype、state inventory</td><td>SA、SD、Frontend</td><td>視覺、互動、狀態、responsive</td></tr><tr><td>SA</td><td>業務目標、actor、use case、business rule</td><td>Business Requirements、business state、business data dictionary</td><td>SD、前後端、QA</td><td>業務語意、scope、規則、acceptance intent</td></tr><tr><td>SD</td><td>系統邊界、API、DB、效能與安全設計</td><td>Technical Design、API contract、DB design、NFR</td><td>前後端、QA、Security／DBA</td><td>契約、資料、效能、安全限制</td></tr><tr><td>Frontend</td><td>畫面、互動與 client state 實作</td><td>frontend code、visual diff、UI tests</td><td>Design、SA、SD、QA</td><td>畫面、互動、狀態、accessibility、API</td></tr><tr><td>Backend</td><td>API、domain logic、persistence 與整合實作</td><td>backend code、migration、API／contract tests</td><td>SD、Frontend、QA</td><td>API、權限、資料、錯誤、監控</td></tr><tr><td>QA</td><td>verification 執行與結果整理</td><td>test result、verification report、defect report</td><td>SA、SD、Release owner</td><td>覆蓋率、結果、回歸、發布證據</td></tr></tbody></table>
+<p>本文不把驗收當成另一個與交付並列的角色流程。<code>acceptance intent</code> 是 SA 對預期業務結果的描述；<code>visual acceptance</code> 是前端 contract 中的設計基準；<code>AC／Verification ID</code> 是可執行、可追蹤的驗證案例；<code>verification</code> 則是 QA 和工程團隊交付的測試結果。它們分別存在於不同交付物中，再透過 ID 串起來。</p>
+<h2 id="從規格到實作用-traceability-串起交付">從規格到實作：用 traceability 串起交付</h2>
+<p>文件拆分與索引方式可依團隊現有的工具和協作習慣決定；以下先聚焦在分工與流程。</p>
+<h3 id="1-固定輸入與版本">1. 固定輸入與版本</h3>
+<p>先建立 feature intake，固定 feature id、設計來源和版本。輸入可包含 Figma node links、Stitch 或 Claude export、approved viewport、design system、reference implementation、repo、已知的 route 或 upstream API。</p>
+<p>如果目前只有 screenshot，先標成 <code>prototype</code>，不要直接標成 <code>ready for implementation</code>。</p>
+<p>同時記錄 actor、目標、scope 和限制。</p>
+<h3 id="2-產生-evidence再形成業務與技術規格">2. 產生 evidence，再形成業務與技術規格</h3>
+<p>由 agent 協助整理 screens、components、states、tokens 和 assets，並標記 <code>observed</code>、<code>inferred</code>、<code>unknown</code>。接著由 SA 形成 Business Requirements，再由 SD 形成 Technical Design。</p>
+<p>這兩個階段的完成條件不同：SA 階段要讓團隊知道系統要支援什麼行為；SD 階段要讓前後端知道依賴什麼 contract，以及系統如何支援主要 query 和 state transition。</p>
+<h3 id="3-產生角色視圖與-traceability">3. 產生角色視圖與 traceability</h3>
+<p>同一份 feature spec 可以依角色輸出不同 view，不需要每個人閱讀所有內容。至少維護一張 mapping：</p>
+<p>前一張 mapping 是給前端直接實作的 view；這一張則補上 requirement、business rule 與 data effect，作為跨角色追蹤用的 view。</p>
 
 
 
@@ -194,9 +345,11 @@ Skip to main content
 
 
 <table><thead><tr><th>UI action</th><th>Requirement</th><th>Business rule</th><th>API ID</th><th>Data effect</th><th>Verification ID</th></tr></thead><tbody><tr><td>Create</td><td>FE-001</td><td>BR-001</td><td>API-001</td><td>insert resource</td><td>AC-001</td></tr></tbody></table>
-<p>如果一個 UI action 沒有對應的 business rule、API 或 verification，通常代表規格還缺一段。這裡的 ID 是工作模型，不是任何工具的固定格式。</p>
-<h3 id="分層驗證與回寫">分層驗證與回寫</h3>
-<p>驗證至少要分成四層：</p>
+<p>如果一個 UI action 沒有對應的 business rule、API 或 verification，通常代表規格還缺一段。這裡以 <code>AC-001</code> 作為可執行驗證案例的 ID；團隊也可以依既有慣例改用 <code>TEST-001</code>。<code>requirement ID</code>、<code>API ID</code> 和 <code>Verification ID</code> 讓交付物與後續驗證可以互相追蹤。</p>
+<h3 id="4-slice驗證與回寫">4. Slice、驗證與回寫</h3>
+<p>先輸出 component、screen、service 或 upstream group 的 plan，再建立 route、permission、API、migration 和 test skeleton，最後切成可以獨立 review 的 slices。</p>
+<p>這和前述 Coinbase 的做法一致：不要把整個頁面一次塞成巨大 PR。讓每個 slice 都有自己的 requirement IDs、API IDs、tests、owner 和 reviewer，審查才跟得上產出速度<a href="#ref-1">[1]</a>。</p>
+<p>最後分層產生 verification evidence。若要延伸閱讀測試與驗收如何建立信任系統，可參考<a href="/blog/when-ai-says-done-verification-before-production/">這篇自動化測試與驗收文章</a>：</p>
 
 
 
@@ -223,14 +376,17 @@ Skip to main content
 
 
 <table><thead><tr><th>驗證層</th><th>主要問題</th></tr></thead><tbody><tr><td>Business</td><td>功能是否符合 use case 和 business rule？</td></tr><tr><td>Visual／Interaction</td><td>畫面、狀態與互動是否符合 approved design？</td></tr><tr><td>API／Data</td><td>contract、schema、query 和 error behavior 是否正確？</td></tr><tr><td>Security／Operations</td><td>權限、audit、效能、監控與 rollback 是否可用？安全檢查可參考 OWASP ASVS<a href="#ref-6">[6]</a>。</td></tr></tbody></table>
-<p>前端還要檢查 responsive、keyboard、focus、semantic HTML、accessible name 和 visual diff；accessibility checks 可對照 WCAG 2<a href="#ref-5">[5]</a>。後端則要檢查 permission、transaction、query plan、audit 和 upstream error behavior。</p>
-<p>這也延續另一個實作原則：不要把「程式能跑」當成「功能已完成」，而要把驗收條件和可重現的 verification 一起交付；可參考<a href="/blog/when-ai-says-done-verification-before-production/">自動化測試與上線前驗證的整理</a>。</p>
-<p>實作過程出現變更時，回寫到正確層次：技術細節更新 Technical Design，API 改變更新 contract，business semantics 改變則回到 Business Requirements 做決策。這些變更也要同步更新 agent 使用的 rules 和 prompt，否則下一次生成會重新帶入舊假設。</p>
-<h2 id="這套模型目前能說到哪裡">這套模型目前能說到哪裡</h2>
-<p>Coinbase 的公開案例已經展示幾件事：AI 可以加速重複性的 design-to-code translation；好的 reference implementation 會影響輸出品質；一次生成巨大 PR 會讓 review 變成瓶頸；plan、scaffold 和平行 slices 可以讓產出更容易被審查；AI 對 convention-following code 的表現，通常比需要 domain judgment 的部分穩定<a href="#ref-1">[1]</a>。</p>
-<p>但本文的 <code>Design Evidence Pack</code> 和角色分工，是把這個案例放回一般團隊流程後提出的工作模型。它還沒有證明：不同團隊都能因此降低返工、不同設計輸入都能得到同樣品質，或 <code>observed／inferred／unknown</code> 一定能降低 AI 產生錯誤需求。</p>
-<p>比較準確的結論是：不同設計工具提供不同 evidence，先整理來源和未知事項；AI 的產出品質取決於設計輸入、reference implementation、rules 與 prompt 的組合；分工則讓 business meaning、technical contract 和 verification responsibility 都有明確 owner。</p>
-<p><code>Design Evidence Pack</code> 的價值，不在於宣稱哪個工具最好，而在於接住多種設計輸入，讓角色能沿著同一份 evidence 往下做決策。它是否真的能降低返工，還是要靠團隊自己的 pilot 和結果確認。</p>
+<p>實作過程出現變更時，也要回寫到正確層次：技術細節更新 Technical Design，API 改變更新 contract，business semantics 改變則回到 Business Requirements 做決策。</p>
+<h2 id="先整理-evidence再交付可追蹤規格">先整理 evidence，再交付可追蹤規格</h2>
+<p>UI/UX 工具的價值，是縮短探索與表達介面的時間；它們不必承擔完整需求規格的責任。</p>
+<p>做法是把工具輸出先轉成有來源、有 confidence、有 unknown 的 Design Evidence Pack，再依角色轉換：</p>
+<ul>
+<li>SA 取得 actor、use case、business rule、state 和 acceptance intent。</li>
+<li>SD 取得 service boundary、API、DB、query、security 和 operational constraints。</li>
+<li>前端取得 route、component、state、API mapping 和 visual acceptance。</li>
+<li>後端取得 operation、schema、validation、persistence、query 和 test requirements。</li>
+</ul>
+<p>這樣不論輸入來自 Figma、Stitch、Claude 或一張 screenshot，後面的規格流程都可以維持一致。AI 負責加速擷取、整理和轉換，團隊仍要決定 business meaning、technical contract 和 verification conditions。要先對齊的，是每個角色交付什麼、下一個角色依據什麼往下做，以及變更發生時要回寫到哪一層。</p>
 <h2 id="參考資料">參考資料</h2>
 <ul>
 <li><a id="ref-1"></a>[1] Coinbase，<a href="https://www.coinbase.com/blog/automating-figma-to-code-at-coinbase"><code>Automating Figma-to-Code at Coinbase</code></a></li>

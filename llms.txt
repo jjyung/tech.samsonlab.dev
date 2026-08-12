@@ -48,9 +48,9 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### Figma-to-Code 之前：用 Design Evidence Pack 接住 AI 與團隊分工
+### Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格
 
-**Description:** 比較 Figma、Figma MCP、Stitch、Claude Design 與 screenshot 的設計輸入，參考 Coinbase 的 AI Figma-to-Code workflow，再用 Design Evidence Pack 串起 SA、SD、前後端與 QA 的責任邊界。
+**Description:** Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。
 
 **URL:** https://tech.samsonlab.dev//blog/figma-to-code-before-design-evidence-pack/
 
@@ -132,4 +132,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-12T07:41:34.644Z
+Last updated: 2026-08-12T08:29:47.091Z
