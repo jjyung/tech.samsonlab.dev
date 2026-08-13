@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test/"><!-- Primary Meta Tags --><title>Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）</title><meta name="title" content="Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）"><meta name="description" content="AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test/"><meta property="og:title" content="Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）"><meta property="og:description" content="AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test.pJxor8tB.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test/"><meta property="twitter:title" content="Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）"><meta property="twitter:description" content="AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test.pJxor8tB.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）","description":"AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。","datePublished":"2026-08-13T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test.pJxor8tB.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.wrKbywP1.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/ai-era-testing-and-acceptance-unit-test.pJxor8tB_Z1jqTBR.webp" alt="Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-13T00:00:00.000Z"> Aug 13, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Unit Test </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> AI Engineering </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> Unit Test 在保護什麼？AI 時代自動化測試與驗收（二） </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>系列定位：延續<a href="/blog/when-ai-says-done-verification-before-production/">第一篇對測試金字塔與信任系統的重定義</a>，這篇聚焦 unit test 的定義、範圍、測試對象、mock 的取捨，以及 AI 時代最常見的測試陷阱。</p>
+</blockquote>
+<h2 id="這篇要回答什麼">這篇要回答什麼</h2>
+<p>在 AI 可以快速補測試之後，unit test 最容易被誤用成兩件事：把 coverage 拉高，讓 CI 保持綠燈。</p>
+<p>系列第一篇講過，AI 時代真正稀缺的已經不是「生不生成得出來」，而是「哪個不變量值得保護」。這件事在 unit test 這層最明顯。agent 幾秒鐘就能補一百個測試，生成測試不再是難題；難的是判斷這些測試到底有沒有保護到重要規則。</p>
+<p>因此，本文聚焦四個問題：</p>
+<ul>
+<li>unit test 到底是什麼？範圍到哪？這題比你想的還模糊。</li>
+<li>unit test 在保護什麼？</li>
+<li>什麼該測、什麼不該 mock？</li>
+<li>它有什麼缺點，什麼時候不值得寫？</li>
+</ul>
+<h2 id="先搞清楚unit-test到底是什麼">先搞清楚：「unit test」到底是什麼</h2>
+<p>先講一件比較反直覺的事：unit test 這個詞，定義一直很模糊。</p>
+<p>Martin Fowler 在 UnitTest 這篇 bliki 裡講得很坦白，連測試培訓課程都能列出一堆不同定義。但他整理出幾個「共通元素」：低層級、聚焦在系統的一小塊；開發者自己寫，用平常的工具加一個測試框架就是全部；要夠快，快到願意頻繁執行。<a href="#ref-1">[1]</a></p>
+<p>所以在團隊裡談 unit test 之前，通常要先對齊「unit 到底多大」。Fowler 把兩種主流叫法講得很清楚：</p>
+<ul>
+<li><strong>Solitary（孤獨式）</strong>：測的單元盡量隔離，collaborator 全部用替身。壞在 customer class 的 bug，不會波及 order 的測試，失敗訊號很乾淨。</li>
+<li><strong>Sociable（社交式）</strong>：直接用真實的 collaborator，一次測一叢行為。壞了再往下追，但一個 bug 可能引起一串測試失敗。</li>
+</ul>
+<p>這不是誰對誰錯，是取捨。solitary 訊號乾淨、好定位，但很容易鎖住實作細節；sociable 比較像真實行為、比較少用替身，但需要更大的 fixture。Fowler 自己是 classic 派，偏好 sociable。<a href="#ref-1">[1]</a></p>
+<p>另外 Vladimir Khorikov 在《Unit Testing Principles, Practices, and Patterns》裡給了一個更適合本文的現代定義：unit 不是「一個方法」，而是「單一行為單元」（unit of behavior）。測試單位可以是一個方法、一組協作物件、甚至一個服務，重點是它代表「一個可以被獨立驗證的行為」。<a href="#ref-2">[2]</a> 他同時給了 unit test 三個性質：自動執行、可重複、夠快。<a href="#ref-2">[2]</a></p>
+<p>Roy Osherove 的經典定義則特別強調 isolation：測的是「被隔離出來的一個 unit」，也因此 mock/stub 的用法會直接影響這條界線在哪。<a href="#ref-7">[7]</a></p>
+<p>這裡特別要釐清「unit 等於方法」這個誤解，因為它正是 AI 生成一堆「測方法、不測行為」的測試的根源。把 unit 想成行為，之後的每一段才講得通。</p>
+<h2 id="方法會換規則要留下">方法會換，規則要留下</h2>
+<p>unit test 真正值得保護的，不是某個方法現在能不能執行，而是業務規則能不能在重構之後仍然成立。方法會換，規則要留下。</p>
+<p>金融或交易系統尤其容易看出這件事。程式能跑很簡單，但金額不能為負、庫存不能超賣、退款後狀態不能再回到已出貨、利率計算的捨入規則要固定。這些規則一旦被改壞，業務就會出事，而且常常不是當下就爆，而是幾筆交易之後才看出來。</p>
+<p>這些就是不變量（invariant）。unit test 的任務，是把不變量釘住。</p>
+<p>判斷方式很直接：如果這條規則被改錯，哪個業務會受害？測試就該保護那個。反過來，如果一個測試刪掉也不痛、改壞了也抓不到任何業務問題，那它保護的就不是不變量，只是一個 coverage 數字。</p>
+<h2 id="改動變便宜之後unit-test-變成安全網">改動變便宜之後，unit test 變成安全網</h2>
+<p>第一篇提過，agent 可以一口氣跨檔案重構。當改動變便宜，回歸風險反而上升。</p>
+<p>這時候，unit test 的角色不是檢查清單，而是安全網。它讓開發者或 agent 敢在小步改動時往前走，不必每一步都猜「這次會不會把別的地方弄壞」。Kent Beck 在《Test-Driven Development: By Example》裡講的回饋迴路，本質上就是這件事：越小的改動配越快的測試，壞了才知道是哪一步造成的。<a href="#ref-6">[6]</a></p>
+<p>這裡的關鍵是速度。Fowler 建議把測試套件分成兩層：compile suite，每次想編譯就跑的，要秒級；commit suite，提交前跑的，Kent Beck 的準則是十分鐘內要跑完。<a href="#ref-1">[1]</a> 重點不是精確門檻，而是測試要快到團隊不會懶得跑。如果 unit test 跑一次要好幾分鐘，agent 根本不會等它，測試就會被繞過去。速度是 unit test 能不能活在 AI workflow 裡的條件，不是優化選項。</p>
+<h2 id="什麼該測什麼不該-mock">什麼該測、什麼不該 mock</h2>
+<p>一個很實用的判斷：如果 unit test 需要 mock 資料庫、HTTP、message queue，通常不是測試的問題，是設計的問題。domain 邏輯跟基礎設施纏在一起了。</p>
+<p>六角形或 clean architecture 的價值在這裡最清楚。把規則放進不依賴框架的純邏輯，unit test 根本不需要 mock。mock 用得越多，越像在測 mock 的行為，而不是測真實的行為。</p>
+<p>不過有些依賴確實值得替換，像是時間、亂數、外部 client 的回傳。這裡要分清楚兩種東西：</p>
+<ul>
+<li>測「依賴回傳 X 時，受測邏輯有沒有做對的決策」：給一個固定的假答案，這是對的。替換的是外部世界。</li>
+<li>測「某個 method 被呼叫幾次、照什麼順序」：這是在鎖定實作細節，重構一下就全碎。</li>
+</ul>
+<p>要講清楚這條線，Meszaros 的 xUnit Test Patterns 是經典。他用「Test Double」當總稱，再細分成五種：Dummy、Fake、Stub、Spy、Mock。<a href="#ref-3">[3]</a> <a href="#ref-5">[5]</a> 重點在最後一組：Stub 給固定答案，通常配 state verification，測「結果對不對」；Mock 則預先設定期望的呼叫，配 behavior verification，測「有沒有照預先假設的方式呼叫」。<a href="#ref-4">[4]</a></p>
+<p>Fowler 在 Mocks Aren’t Stubs 裡把這條線再往上拉一層：classical 與 mockist 兩種 TDD 風格。classical 能用真物件就用真物件，只有不好用的依賴才換掉；mockist 則對每個有行為的 collaborator 都用 mock。<a href="#ref-4">[4]</a> 這不是小事，它直接影響測試跟實作的耦合度：mockist 的測試比較容易鎖死呼叫方式，一改互動方式測試就碎，這對重構很傷。<a href="#ref-4">[4]</a></p>
+<p>一個實用的預設，是先採 classical：能用 Fake 或 Stub 給固定答案、用 state verification 驗結果，就優先這樣做。Mock 留給真的難搞的邊界，像是 cache 這種看不到狀態的地方。</p>
+<p>更直接的警訊是：如果 unit test 需要 mock 受測 class 自己的另一個 method，或需要 mock 團隊自己寫的 repository，那多半是該重構的信號，不是該補 mock 的信號。</p>
+<h2 id="ai-生成測試最常踩的三個坑">AI 生成測試最常踩的三個坑</h2>
+<p>第一種，鏡射實作。AI 照著實作寫測試，assert 的是當時寫法的細節，不是行為。一旦換成另一種正確寫法，測試就全碎。</p>
+<p>第二種，重述錯誤邏輯。AI 照著 buggy 的實作寫測試，測試把 bug 固定成「正確」。之後誰都不敢改，因為改了測試就紅，但其實是測試在維護錯誤。</p>
+<p>第三種，全 happy path。補的都是「輸入正常、輸出正常」，真正的邊界、異常、非法狀態沒人測。coverage 數字很漂亮，出事的情境全在漏網。</p>
+<p>這三種坑，對應三個審查問題，可以直接拿去問 AI 生成的測試：</p>
+<ul>
+<li>把實作換成另一種正確寫法，這個測試還過嗎？不過，代表它在測實作，不在測行為。</li>
+<li>如果需求被誤解，這個測試抓得到嗎？抓不到，代表它在測細節，不在測規則。</li>
+<li>這個測試唯一會紅的理由，是不是只有「有人改了它的實作」？</li>
+</ul>
+<p>這其實呼應第一篇講的「測試本身也要被審查」。AI 時代 unit test 的產能從來不是問題，審查才是。</p>
+<h2 id="一個可行的分工人定義不變量ai-補案例">一個可行的分工：人定義不變量，AI 補案例</h2>
+<p>一個可行的 workflow 是這樣：</p>
+<ol>
+<li>人先把 domain 不變量和關鍵邊界列出來。這是「哪些規則值得保護」的判斷，AI 從空白專案猜不準。</li>
+<li>AI 依著不變量補 parameterized cases、邊界值、異常與非法狀態。</li>
+<li>人再 review 一遍，用上面三個問題過篩，把鎖實作的測試刪掉或改寫。</li>
+</ol>
+<p>這樣 unit test 就是「人的判斷加上 AI 的產能」，不是讓 AI 自己決定該測什麼。</p>
+<p>而且，把不變量寫清楚這個動作本身，就會逼團隊把規則講明白。這個效果有時比測試本身更有價值，因為很多團隊的問題不是測試少，而是規則根本沒被寫出來。</p>
+<h2 id="unit-test-的缺點與取捨">unit test 的缺點與取捨</h2>
+<p>unit test 不是越多越好，也不是零成本。</p>
+<p>第一個缺點，測試可能鎖死實作。behavior verification 用得越細，測試越貼著實作走，重構時就要連測試一起改。Fowler 在 Mocks Aren’t Stubs 裡明說：mockist 測試與實作耦合，改動互動方式就會弄壞測試。<a href="#ref-4">[4]</a> 團隊一旦養成這個習慣，AI 生成測試時問題會加倍，因為 AI 最擅長複製現有 pattern。</p>
+<p>第二個缺點，假安全感。coverage 是無效指標，100% 也可能全在測垃圾。tautology 測試把 bug 固定成正確，之後誰都不敢改；即使 coverage 維持 100%，重要的邊界仍然可能完全沒有被驗證。</p>
+<p>第三個缺點，維護成本。測試是資產也是負債。鎖定低價值行為的測試，重構時反而要一起改、一起刪，變成額外負擔。Khorikov 的書花了不少篇幅在講「哪些測試該刪」，這件事在業界常常被忽略。<a href="#ref-2">[2]</a></p>
+<p>第四個缺點，它救不了粗粒度的錯誤。unit test 只驗單一規則，元件接在一起、跨系統契約、使用者旅程都不是它的責任。把信心全押在 unit test，等於假設 bug 只會發生在單一方法裡，這在整合系統幾乎不成立。</p>
+<p>所以務實的取捨是：對純計算、domain 規則、狀態轉換這些東西，值得寫重一點，parameterized test 用力套。但對 CRUD、簡單的傳遞層，unit test 的價值很低，硬補是過度設計。那層的風險在整合跟契約，不在單一規則。金字塔的意義，是每一層保護適合自己的風險，unit test 只負責把最底層釘住，讓上面幾層不用替它收拾殘局。</p>
+<h2 id="結論">結論</h2>
+<p>unit test 的價值，在於把真正不能改壞的規則留下來。AI 可以快速補齊案例，卻不能替團隊決定哪些規則值得保護；這個判斷仍然要回到 domain、不變量和實際風險。</p>
+<p>因此，好的 unit test 不一定很多，也不一定追求最高 coverage。它應該讓重要規則容易驗證，讓重構有安全網，也讓團隊知道哪些行為一旦改變，就必須重新討論。寫測試之前，先問清楚「我們要保護什麼」，通常比先問「這個方法要怎麼測」更重要。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] Martin Fowler，〈Unit Test〉<br>
+<a href="https://martinfowler.com/bliki/UnitTest.html">https://martinfowler.com/bliki/UnitTest.html</a></li>
+<li><a id="ref-2"></a>[2] Vladimir Khorikov，《Unit Testing Principles, Practices, and Patterns》（Manning，2020）<br>
+<a href="https://www.manning.com/books/unit-testing">https://www.manning.com/books/unit-testing</a></li>
+<li><a id="ref-3"></a>[3] Gerard Meszaros，《xUnit Test Patterns》（Addison-Wesley，2007）<br>
+<a href="http://xunitpatterns.com/">http://xunitpatterns.com/</a></li>
+<li><a id="ref-4"></a>[4] Martin Fowler，〈Mocks Aren’t Stubs〉<br>
+<a href="https://martinfowler.com/articles/mocksArentStubs.html">https://martinfowler.com/articles/mocksArentStubs.html</a></li>
+<li><a id="ref-5"></a>[5] Martin Fowler，〈Test Double〉<br>
+<a href="https://martinfowler.com/bliki/TestDouble.html">https://martinfowler.com/bliki/TestDouble.html</a></li>
+<li><a id="ref-6"></a>[6] Kent Beck，《Test-Driven Development: By Example》（Addison-Wesley，2002）<br>
+<a href="https://www.informit.com/store/test-driven-development-by-example-9780321146533">https://www.informit.com/store/test-driven-development-by-example-9780321146533</a></li>
+<li><a id="ref-7"></a>[7] Roy Osherove，《The Art of Unit Testing》（Manning）<br>
+<a href="https://www.manning.com/books/the-art-of-unit-testing-second-edition">https://www.manning.com/books/the-art-of-unit-testing-second-edition</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

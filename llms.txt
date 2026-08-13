@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Unit Test 在保護什麼？AI 時代自動化測試與驗收（二）
+
+**Description:** AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。
+
+**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-unit-test/
+
+---
+
 ### CLI for Agents: Rewrite or Augment?
 
 **Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
@@ -132,4 +140,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-12T08:29:47.091Z
+Last updated: 2026-08-13T08:51:10.630Z
