@@ -382,12 +382,12 @@ Skip to main content
 <span class="line"><span>1 failed, 4 passed in 0.05s</span></span></code></pre>
 <p>line coverage 量的是「哪些行被執行過」，不是「哪些規則被驗證過」。happy path 全走過，所以每行都執行到了，但 <code>rate > 1</code> 這個不變量從頭到尾沒人問過。在 Java 或 C++ 裡也會看到一模一樣的洞，只是失敗訊號不同：pytest 說 <code>DID NOT RAISE</code>，JUnit 的 <code>assertThrows</code> 會回報預期例外沒有發生，而 C++ 的手寫 try/catch 則必須自己設定失敗訊息與 exit code。</p>
 <p>因此，coverage 比較適合當作「找漏測區域」的導航，不適合當作品質的終點。至少要同時看三件事：重要規則是否都有 case、分支是否真的走過、測試在故意改壞實作時會不會失敗。第三件事就是 mutation testing 的核心。</p>
-<h2 id="用-mutation-testing-檢查測試是不是有牙齒">用 mutation testing 檢查測試是不是有牙齒</h2>
+<h2 id="用-mutation-testing-檢查測試能不能抓出錯誤">用 mutation testing 檢查測試能不能抓出錯誤</h2>
 <p>最簡單的 mutation 不需要工具。把實作中的上限判斷故意改壞：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> or</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">>=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">:  </span><span style="color:#6A737D"># 把合法的 rate = 1.0 誤判成非法</span></span>
 <span class="line"><span style="color:#F97583">    raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">)</span></span></code></pre>
 <p>再跑原本的測試，<code>全額</code> case 應該立刻失敗。如果把 <code>rate > 1</code> 這段驗證整段刪掉，<code>折扣超上限</code> case 也應該失敗。只要其中任一個故意製造的錯誤沒有讓測試失敗，就代表測試雖然可能有很高的 line coverage，卻沒有真的保護輸入契約。</p>
-<p>在團隊流程裡，可以再用 mutation testing 工具自動做同樣的事：工具會暫時修改比較運算子、刪掉分支或替換回傳值，再觀察測試是否把 mutation 殺掉。mutation score 不必盲目追求 100%，但重要 domain 規則的 mutation 不應該存活；存活的 mutation 通常就是下一個該補的 case。反過來，如果上述任一故意製造的錯誤沒有讓測試失敗，就代表測試沒有真的保護那條規則。</p>
+<p>在團隊流程裡，可以再用 mutation testing 工具自動做同樣的事：工具會暫時修改比較運算子、刪掉分支或替換回傳值，再觀察測試是否失敗。mutation score 不必盲目追求 100%，但重要 domain 規則被改壞時，測試應該要失敗；如果沒有，這就是下一個該補的 case。</p>
 <h2 id="該替換什麼不該-mock-什麼java-實作">該替換什麼、不該 mock 什麼（Java 實作）</h2>
 <p>上一篇講了理論，這裡給一段實際的。假設折扣要套匯率，<code>PriceService</code> 依賴一個外部 <code>RateProvider</code>：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> RateProvider</span><span style="color:#E1E4E8"> {</span></span>
