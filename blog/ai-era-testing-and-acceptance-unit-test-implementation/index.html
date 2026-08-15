@@ -1,0 +1,482 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test-implementation/"><!-- Primary Meta Tags --><title>AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？</title><meta name="title" content="AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？"><meta name="description" content="用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test-implementation/"><meta property="og:title" content="AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？"><meta property="og:description" content="用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test-implementation.COXJjtrs.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test-implementation/"><meta property="twitter:title" content="AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？"><meta property="twitter:description" content="用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test-implementation.COXJjtrs.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？","description":"用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。","datePublished":"2026-08-14T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-unit-test-implementation.COXJjtrs.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.wrKbywP1.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/ai-era-testing-and-acceptance-unit-test-implementation.COXJjtrs_1hjCLf.webp" alt="AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-14T00:00:00.000Z"> Aug 14, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> UnitTest </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> AIEngineering </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？ </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>系列定位：上一篇講完 unit test 的概念（定義、不變量、mock 紀律、取捨）。這篇先用同一組測試替換 <code>discount_price</code> 的實作，確認測試保護的是行為而不是寫法；再補充同一組 case 在 Python、Java、C++ 裡的多元寫法，也看「100% line coverage 仍然漏掉邊界」這件事怎麼發生。本文的核心範例都實際跑過，跑測命令與輸出一併附上。</p>
+</blockquote>
+<blockquote>
+<p><a href="/blog/ai-era-testing-and-acceptance-unit-test/">上一篇：Unit test 到底在保護什麼？</a></p>
+</blockquote>
+<h2 id="這篇想回答什麼">這篇想回答什麼</h2>
+<p>上一篇的結論可以濃縮成一句：unit test 在釘不變量，而且 AI 時代稀缺的是「判斷哪些不變量值得保護」，不是「生不生成得出來」。</p>
+<p>這篇不談新概念，把同一句話用程式碼落地。想回答的問題是：</p>
+<ul>
+<li>如果只替換成另一種正確實作，同一組 unit test 是否仍然通過？</li>
+<li>怎麼判斷測試保護的是行為，而不是目前的寫法？</li>
+<li>parameterized test 和 table-driven 到底是同一個東西，還是不同東西？</li>
+<li>為什麼 line coverage 到 100%，規則還是可能漏掉？</li>
+<li>「該替換什麼、不該 mock 什麼」寫成 Java 是什麼樣子？</li>
+</ul>
+<h2 id="共同範例discount_price-的規則">共同範例：discount_price 的規則</h2>
+<p>這一集的範例很簡單，一個折扣計算函式：</p>
+<ul>
+<li><code>price</code> 必須大於等於 0</li>
+<li><code>rate</code> 必須在 0 到 1 之間</li>
+<li>回傳 <code>price × rate</code>，依 half-up（四捨五入）規則取到小數點第二位</li>
+</ul>
+<p>這條規則的不變量，可以拆成兩類：</p>
+<ul>
+<li>計算規則：給定合法輸入，結果要等於期望值</li>
+<li>輸入約束：非法輸入要被拒絕，不能默默算出一個奇怪數字</li>
+</ul>
+<p>對應的 case 表長這樣：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>名稱</th><th>price</th><th>rate</th><th>期望</th></tr></thead><tbody><tr><td>零折扣</td><td>100.0</td><td>0.0</td><td>0.0</td></tr><tr><td>全額</td><td>100.0</td><td>1.0</td><td>100.0</td></tr><tr><td>半價</td><td>100.0</td><td>0.5</td><td>50.0</td></tr><tr><td>四分之一</td><td>100.0</td><td>0.25</td><td>25.0</td></tr><tr><td>捨入</td><td>10.0</td><td>0.333333</td><td>3.33</td></tr><tr><td>五入（半數）</td><td>1.0</td><td>0.005</td><td>0.01</td></tr><tr><td>零價格</td><td>0.0</td><td>0.5</td><td>0.0</td></tr><tr><td>負價格（應拒絕）</td><td>-1.0</td><td>0.5</td><td>拋錯</td></tr><tr><td>折扣超上限（應拒絕）</td><td>100.0</td><td>1.01</td><td>拋錯</td></tr><tr><td>負折扣（應拒絕）</td><td>100.0</td><td>-0.1</td><td>拋錯</td></tr></tbody></table>
+<p>先記住這個表。後面會先用 Python 示範測試與實作的替換，再補充 Java、C++ 如何表列同一組 case。這也是實作時最重要的分界：先決定規則和期望值，再決定測試框架怎麼表達；不要先讓 AI 讀著函式內容，自動猜一組看起來合理的 assert。</p>
+<h2 id="先把規則拆成可執行的測試契約">先把規則拆成可執行的測試契約</h2>
+<p>在開始寫測試前，先把每條規則寫成「前置條件、動作、結果」。這一步看起來像文件工作，實際上是在避免測試被實作牽著走。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>規則</th><th>測試輸入</th><th>驗證方式</th></tr></thead><tbody><tr><td>合法價格可以計算</td><td><code>price >= 0</code>、<code>0 &#x3C;= rate &#x3C;= 1</code></td><td>比對固定的期望金額</td></tr><tr><td>捨入規則固定</td><td><code>10.0</code>、<code>0.333333</code></td><td>期望值直接寫成 <code>3.33</code></td></tr><tr><td>負價格不合法</td><td><code>price = -1.0</code></td><td>驗證拋出指定例外</td></tr><tr><td>折扣率超出上限不合法</td><td><code>rate = 1.01</code></td><td>驗證拋出指定例外</td></tr><tr><td>折扣率低於下限不合法</td><td><code>rate = -0.1</code></td><td>驗證拋出指定例外</td></tr></tbody></table>
+<p>每一列都應該能回答：「這個 case 如果失敗，代表哪條業務規則被破壞？」答不出來的 case，不要因為 AI 生成了就保留。</p>
+<p>這個例子使用 <code>double</code>／<code>float</code> 是為了讓三種語言的差異容易看懂。正式的金額邏輯要先決定精度和捨入政策，再選 <code>Decimal</code>、<code>BigDecimal</code>、整數最小貨幣單位，或團隊定義好的 money type；不能因為測試通過，就把二進位浮點數當成金額模型。測試也要驗證這個政策，而不是只驗證某次浮點運算的結果。</p>
+<h2 id="第一個實作python-的-pytestmarkparametrize">第一個實作：Python 的 <code>@pytest.mark.parametrize</code></h2>
+<p>pytest 的做法最直覺：用 <code>@pytest.mark.parametrize</code> 把 case 直接列在測試函式上。<a href="#ref-1">[1]</a></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># discount.py</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> decimal </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Decimal, </span><span style="color:#79B8FF">ROUND_HALF_UP</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> discount_price</span><span style="color:#E1E4E8">(price, rate):</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> price </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> or</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    result </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Decimal(</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(price)) </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> Decimal(</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(rate))</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(result.quantize(Decimal(</span><span style="color:#9ECBFF">"0.01"</span><span style="color:#E1E4E8">), </span><span style="color:#FFAB70">rounding</span><span style="color:#F97583">=</span><span style="color:#79B8FF">ROUND_HALF_UP</span><span style="color:#E1E4E8">))</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># test_discount.py</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> pytest</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> discount </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> discount_price</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@pytest.mark.parametrize</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price,rate,expected"</span><span style="color:#E1E4E8">, [</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">),       </span><span style="color:#6A737D"># 零折扣</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">),     </span><span style="color:#6A737D"># 全額</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">50.0</span><span style="color:#E1E4E8">),      </span><span style="color:#6A737D"># 半價</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.25</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">25.0</span><span style="color:#E1E4E8">),     </span><span style="color:#6A737D"># 四分之一</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.333333</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3.33</span><span style="color:#E1E4E8">),  </span><span style="color:#6A737D"># 捨入</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.005</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.01</span><span style="color:#E1E4E8">),      </span><span style="color:#6A737D"># 五入（半數）</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">),         </span><span style="color:#6A737D"># 零價格</span></span>
+<span class="line"><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> test_discount_price</span><span style="color:#E1E4E8">(price, rate, expected):</span></span>
+<span class="line"><span style="color:#F97583">    assert</span><span style="color:#E1E4E8"> discount_price(price, rate) </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> expected</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">@pytest.mark.parametrize</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price,rate"</span><span style="color:#E1E4E8">, [</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">),   </span><span style="color:#6A737D"># 負價格</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.01</span><span style="color:#E1E4E8">), </span><span style="color:#6A737D"># 折扣超上限</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">0.1</span><span style="color:#E1E4E8">), </span><span style="color:#6A737D"># 負折扣</span></span>
+<span class="line"><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> test_invalid_input</span><span style="color:#E1E4E8">(price, rate):</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> pytest.raises(</span><span style="color:#79B8FF">ValueError</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        discount_price(price, rate)</span></span></code></pre>
+<p>跑測結果：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ pytest -q</span></span>
+<span class="line"><span>..........   [100%]</span></span>
+<span class="line"><span>10 passed in 0.03s</span></span></code></pre>
+<p>pytest 的特點：case 就是一張 list，加一行等於加一個 case；<code>-q</code> 安靜模式只給總數，失敗時會完整列出是哪一組參數。對 AI workflow 來說這很好用，agent 要補 case，就是往這張表裡加 row。</p>
+<p>最小可用的執行流程如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ python -m venv .venv</span></span>
+<span class="line"><span>$ .venv/bin/python -m pip install pytest pytest-cov</span></span>
+<span class="line"><span>$ .venv/bin/python -m pytest -q</span></span></code></pre>
+<p>Windows PowerShell 可把最後兩行改成：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="powershell"><code><span class="line"><span style="color:#E1E4E8">PS</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> .\.venv\Scripts\python </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">m pip install pytest pytest</span><span style="color:#F97583">-</span><span style="color:#E1E4E8">cov</span></span>
+<span class="line"><span style="color:#E1E4E8">PS</span><span style="color:#F97583">></span><span style="color:#E1E4E8"> .\.venv\Scripts\python </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">m pytest </span><span style="color:#F97583">-</span><span style="color:#E1E4E8">q</span></span></code></pre>
+<p>文章中的 <code>discount.py</code> 和 <code>test_discount.py</code> 放在同一個目錄即可。實際專案則應把測試放在 <code>tests/</code>，用 <code>python -m pytest</code> 執行，避免直接呼叫環境裡不確定是哪一份的 <code>pytest</code>。</p>
+<h2 id="換一種實作測試還能留下嗎">換一種實作，測試還能留下嗎？</h2>
+<p>前面的 <code>test_discount.py</code> 先不要改。現在只替換 <code>discount.py</code> 裡的實作，改用「先換算成 cents，再做 half-up rounding」的寫法：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#6A737D"># discount.py（替換版本）</span></span>
+<span class="line"><span style="color:#F97583">from</span><span style="color:#E1E4E8"> decimal </span><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Decimal, </span><span style="color:#79B8FF">ROUND_FLOOR</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> discount_price</span><span style="color:#E1E4E8">(price, rate):</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> price </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> or</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#F97583">        raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E1E4E8">    amount_in_cents </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> Decimal(</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(price)) </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> Decimal(</span><span style="color:#79B8FF">str</span><span style="color:#E1E4E8">(rate)) </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 100</span></span>
+<span class="line"><span style="color:#E1E4E8">    cents </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> (amount_in_cents </span><span style="color:#F97583">+</span><span style="color:#E1E4E8"> Decimal(</span><span style="color:#9ECBFF">"0.5"</span><span style="color:#E1E4E8">)).to_integral_value(</span><span style="color:#FFAB70">rounding</span><span style="color:#F97583">=</span><span style="color:#79B8FF">ROUND_FLOOR</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> float</span><span style="color:#E1E4E8">(cents </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 100</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>測試檔案完全不動，再跑一次：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ pytest -q</span></span>
+<span class="line"><span>..........   [100%]</span></span>
+<span class="line"><span>10 passed in 0.03s</span></span></code></pre>
+<p>這個結果才是 unit test 值得提供的信心：實作的結構變了，既有測試仍然通過。它沒有證明所有可能的實作都正確，但至少表示測試沒有把目前這組寫法當成唯一答案。</p>
+<h2 id="多元實作方式java-的-parameterizedtest">多元實作方式：Java 的 <code>@ParameterizedTest</code></h2>
+<p>Java 端用 JUnit 5（Jupiter）的 <code>@ParameterizedTest</code>。有兩段：被測的 domain 類別，跟測試類別。<a href="#ref-2">[2]</a></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// Discount.java</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> java.math.BigDecimal;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> java.math.RoundingMode;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">public</span><span style="color:#F97583"> final</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> Discount</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#B392F0"> Discount</span><span style="color:#E1E4E8">() {}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    public</span><span style="color:#F97583"> static</span><span style="color:#F97583"> double</span><span style="color:#B392F0"> price</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">double</span><span style="color:#FFAB70"> price</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">double</span><span style="color:#FFAB70"> rate</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (price </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> IllegalArgumentException</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> IllegalArgumentException</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> BigDecimal.</span><span style="color:#B392F0">valueOf</span><span style="color:#E1E4E8">(price)</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">multiply</span><span style="color:#E1E4E8">(BigDecimal.</span><span style="color:#B392F0">valueOf</span><span style="color:#E1E4E8">(rate))</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">setScale</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, RoundingMode.HALF_UP)</span></span>
+<span class="line"><span style="color:#E1E4E8">            .</span><span style="color:#B392F0">doubleValue</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#6A737D">// DiscountTest.java</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> org.junit.jupiter.api.Assertions.assertEquals;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> org.junit.jupiter.api.Assertions.assertThrows;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> java.util.stream.Stream;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.junit.jupiter.api.Test;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.junit.jupiter.params.ParameterizedTest;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.junit.jupiter.params.provider.Arguments;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.junit.jupiter.params.provider.CsvSource;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> org.junit.jupiter.params.provider.MethodSource;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> DiscountTest</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">ParameterizedTest</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">CsvSource</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#9ECBFF">        "100.0, 0.0, 0.0"</span><span style="color:#E1E4E8">,       </span><span style="color:#6A737D">// 零折扣</span></span>
+<span class="line"><span style="color:#9ECBFF">        "100.0, 1.0, 100.0"</span><span style="color:#E1E4E8">,     </span><span style="color:#6A737D">// 全額</span></span>
+<span class="line"><span style="color:#9ECBFF">        "100.0, 0.5, 50.0"</span><span style="color:#E1E4E8">,      </span><span style="color:#6A737D">// 半價</span></span>
+<span class="line"><span style="color:#9ECBFF">        "100.0, 0.25, 25.0"</span><span style="color:#E1E4E8">,     </span><span style="color:#6A737D">// 四分之一</span></span>
+<span class="line"><span style="color:#9ECBFF">        "10.0, 0.333333, 3.33"</span><span style="color:#E1E4E8">,  </span><span style="color:#6A737D">// 捨入</span></span>
+<span class="line"><span style="color:#9ECBFF">        "1.0, 0.005, 0.01"</span><span style="color:#E1E4E8">,      </span><span style="color:#6A737D">// 五入（半數）</span></span>
+<span class="line"><span style="color:#9ECBFF">        "0.0, 0.5, 0.0"</span><span style="color:#6A737D">          // 零價格</span></span>
+<span class="line"><span style="color:#E1E4E8">    })</span></span>
+<span class="line"><span style="color:#F97583">    void</span><span style="color:#B392F0"> discountComputes</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">double</span><span style="color:#FFAB70"> price</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">double</span><span style="color:#FFAB70"> rate</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">double</span><span style="color:#FFAB70"> expected</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">        assertEquals</span><span style="color:#E1E4E8">(expected, Discount.</span><span style="color:#B392F0">price</span><span style="color:#E1E4E8">(price, rate), </span><span style="color:#79B8FF">0.0001</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">ParameterizedTest</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">MethodSource</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"invalidInputs"</span><span style="color:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#F97583">    void</span><span style="color:#B392F0"> rejectsInvalidInput</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">double</span><span style="color:#FFAB70"> price</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">double</span><span style="color:#FFAB70"> rate</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">        assertThrows</span><span style="color:#E1E4E8">(IllegalArgumentException.class, () </span><span style="color:#F97583">-></span><span style="color:#E1E4E8"> Discount.</span><span style="color:#B392F0">price</span><span style="color:#E1E4E8">(price, rate));</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    static</span><span style="color:#E1E4E8"> Stream&#x3C;</span><span style="color:#F97583">Arguments</span><span style="color:#E1E4E8">> </span><span style="color:#B392F0">invalidInputs</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">        return</span><span style="color:#E1E4E8"> Stream.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">            Arguments.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">-</span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">),    </span><span style="color:#6A737D">// 負價格</span></span>
+<span class="line"><span style="color:#E1E4E8">            Arguments.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.01</span><span style="color:#E1E4E8">),  </span><span style="color:#6A737D">// 折扣超上限</span></span>
+<span class="line"><span style="color:#E1E4E8">            Arguments.</span><span style="color:#B392F0">of</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">0.1</span><span style="color:#E1E4E8">)   </span><span style="color:#6A737D">// 負折扣</span></span>
+<span class="line"><span style="color:#E1E4E8">        );</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>用 JUnit Platform Console Launcher 跑（<code>--select-class</code> 指定測試類別）：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>[        10 tests found           ]</span></span>
+<span class="line"><span>[        10 tests successful      ]</span></span>
+<span class="line"><span>[         0 tests failed          ]</span></span></code></pre>
+<p>Java 的習慣跟 Python 不太一樣：case 通常用 <code>@CsvSource</code>（字串表格）或 <code>@MethodSource</code>（回傳 <code>Stream&#x3C;Arguments></code>）給。<code>@CsvSource</code> 對簡單純值最省，但參數一複雜、要帶物件或運算式，就會換成 <code>@MethodSource</code>，這也代表 case 可以程式化產生，AI 補 case 時兩邊都很好用。</p>
+<p>如果使用 Maven，最小的執行入口是：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ mvn -q test</span></span></code></pre>
+<p><code>junit-jupiter</code> 的 dependency 和 Surefire plugin 應放在專案的 <code>pom.xml</code>，不要把下載 jar、classpath 和測試命令散落在文章或 CI script 裡。這裡只展示測試本身，所以省略完整的 build descriptor；真正放進 repository 時，測試命令應該是新成員拿到專案後可以直接複製執行的命令。</p>
+<h2 id="多元實作方式c-的手寫-table-loop">多元實作方式：C++ 的手寫 table loop</h2>
+<p>C++ 標準函式庫沒有內建的參數化測試。最常見的慣例，是把 case 列成一個 struct 陣列，再用迴圈跑，壞了就印出 case 名稱並失敗。<a href="#ref-4">[4]</a></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="cpp"><code><span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;cmath></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;cstdlib></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;iostream></span></span>
+<span class="line"><span style="color:#F97583">#include</span><span style="color:#9ECBFF"> &#x3C;stdexcept></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">double</span><span style="color:#B392F0"> discountPrice</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">double</span><span style="color:#FFAB70"> price</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">double</span><span style="color:#FFAB70"> rate</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (price </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throw</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">invalid_argument</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ||</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">throw</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">invalid_argument</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#6A737D">    // price 與 rate 都是非負數，因此 std::round 在這裡等同 half-up。</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">round</span><span style="color:#E1E4E8">(price </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 100.0</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 100.0</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">namespace</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> testDiscountPrice</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    struct</span><span style="color:#B392F0"> Case</span><span style="color:#E1E4E8"> { </span><span style="color:#F97583">const</span><span style="color:#F97583"> char*</span><span style="color:#E1E4E8"> name; </span><span style="color:#F97583">double</span><span style="color:#E1E4E8"> price; </span><span style="color:#F97583">double</span><span style="color:#E1E4E8"> rate; </span><span style="color:#F97583">double</span><span style="color:#E1E4E8"> expected; };</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#E1E4E8"> Case cases[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"零折扣"</span><span style="color:#E1E4E8">,   </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">,      </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"全額"</span><span style="color:#E1E4E8">,     </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">,      </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"半價"</span><span style="color:#E1E4E8">,     </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">,      </span><span style="color:#79B8FF">50.0</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"四分之一"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.25</span><span style="color:#E1E4E8">,     </span><span style="color:#79B8FF">25.0</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"捨入"</span><span style="color:#E1E4E8">,     </span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">,  </span><span style="color:#79B8FF">0.333333</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3.33</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"五入（半數）"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.005</span><span style="color:#E1E4E8">,  </span><span style="color:#79B8FF">0.01</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"零價格"</span><span style="color:#E1E4E8">,   </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">,   </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">,      </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">const</span><span style="color:#F97583"> auto&#x26;</span><span style="color:#E1E4E8"> c : cases) {</span></span>
+<span class="line"><span style="color:#F97583">        const</span><span style="color:#F97583"> double</span><span style="color:#E1E4E8"> got </span><span style="color:#F97583">=</span><span style="color:#B392F0"> discountPrice</span><span style="color:#E1E4E8">(c.price, c.rate);</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (</span><span style="color:#B392F0">std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">abs</span><span style="color:#E1E4E8">(got </span><span style="color:#F97583">-</span><span style="color:#E1E4E8"> c.expected) </span><span style="color:#F97583">></span><span style="color:#79B8FF"> 1</span><span style="color:#F97583">e-</span><span style="color:#79B8FF">9</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#B392F0">            std</span><span style="color:#E1E4E8">::cerr </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> c.name </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> ": expected "</span><span style="color:#F97583"> &#x3C;&#x3C;</span><span style="color:#E1E4E8"> c.expected </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> ", got "</span><span style="color:#F97583"> &#x3C;&#x3C;</span><span style="color:#E1E4E8"> got </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> "</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">            std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">exit</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> testRejectsInvalid</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    struct</span><span style="color:#B392F0"> Case</span><span style="color:#E1E4E8"> { </span><span style="color:#F97583">const</span><span style="color:#F97583"> char*</span><span style="color:#E1E4E8"> name; </span><span style="color:#F97583">double</span><span style="color:#E1E4E8"> price; </span><span style="color:#F97583">double</span><span style="color:#E1E4E8"> rate; };</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#E1E4E8"> Case cases[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"負價格"</span><span style="color:#E1E4E8">,       </span><span style="color:#F97583">-</span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"折扣超上限"</span><span style="color:#E1E4E8">,  </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.01</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#9ECBFF">"負折扣"</span><span style="color:#E1E4E8">,      </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">-</span><span style="color:#79B8FF">0.1</span><span style="color:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#F97583">    for</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">const</span><span style="color:#F97583"> auto&#x26;</span><span style="color:#E1E4E8"> c : cases) {</span></span>
+<span class="line"><span style="color:#F97583">        bool</span><span style="color:#E1E4E8"> threw </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">        try</span><span style="color:#E1E4E8"> { </span><span style="color:#B392F0">discountPrice</span><span style="color:#E1E4E8">(c.price, c.rate); }</span></span>
+<span class="line"><span style="color:#F97583">        catch</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">const</span><span style="color:#B392F0"> std</span><span style="color:#E1E4E8">::invalid_argument</span><span style="color:#F97583">&#x26;</span><span style="color:#E1E4E8">) { threw </span><span style="color:#F97583">=</span><span style="color:#79B8FF"> true</span><span style="color:#E1E4E8">; }</span></span>
+<span class="line"><span style="color:#F97583">        if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">threw) {</span></span>
+<span class="line"><span style="color:#B392F0">            std</span><span style="color:#E1E4E8">::cerr </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#E1E4E8"> c.name </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> ": expected invalid_argument</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#B392F0">            std</span><span style="color:#E1E4E8">::</span><span style="color:#B392F0">exit</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">        }</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">int</span><span style="color:#B392F0"> main</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#B392F0">    testDiscountPrice</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#B392F0">    testRejectsInvalid</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#B392F0">    std</span><span style="color:#E1E4E8">::cout </span><span style="color:#F97583">&#x3C;&#x3C;</span><span style="color:#9ECBFF"> "all 10 cases pass</span><span style="color:#79B8FF">\n</span><span style="color:#9ECBFF">"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ clang++ -std=c++17 -O1 -Wall -Wextra -o discount discount.cpp &#x26;&#x26; ./discount</span></span>
+<span class="line"><span>all 10 cases pass</span></span></code></pre>
+<p>為什麼值得為 C++ 多寫一段？因為它點出一個其他語言不會問你的問題：參數化不是框架內建的，得自己捲。這正是「table-driven」這個概念的原始形態，case 表自己維護，壞了自己印訊息。如果你真的要上 GoogleTest，它有 <code>INSTANTIATE_TEST_SUITE_P</code> 可以做正式的參數化，<a href="#ref-3">[3]</a> 但原理跟這個手寫迴圈一樣：一張 case 表，配一個 runner。</p>
+<p>手寫 runner 適合展示原理，不一定適合長期維護。正式專案通常讓測試框架負責：</p>
+<ul>
+<li>產生每個 case 的名稱，讓 CI 能指出是哪一列失敗。</li>
+<li>統一 assertion、timeout、fixture 和報告格式。</li>
+<li>把測試掛進既有的 build system，而不是讓 <code>main()</code> 自己決定成功或失敗。</li>
+</ul>
+<p>選框架不是目的；只要失敗訊息能指回「哪個不變量、哪個輸入」就夠了。</p>
+<h2 id="同一個教訓100-line-coverage-仍然漏掉邊界">同一個教訓：100% line coverage 仍然漏掉邊界</h2>
+<p>Dave Cheney 那篇經典的〈Prefer table driven tests〉，示範的就是這個教訓：line coverage 到 100%，不代表邊界被測過。<a href="#ref-4">[4]</a> 我在 Python 裡重現一次給你看。</p>
+<p>假設實作漏了輸入驗證：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> discount_price</span><span style="color:#E1E4E8">(price, rate):</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> round</span><span style="color:#E1E4E8">(price </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> 100</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 100</span></span></code></pre>
+<p>測試只列 happy path（零折扣、全額、半價、四分之一）：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#B392F0">@pytest.mark.parametrize</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price,rate,expected"</span><span style="color:#E1E4E8">, [</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.0</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.5</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">50.0</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.25</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">25.0</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> test_happy</span><span style="color:#E1E4E8">(price, rate, expected):</span></span>
+<span class="line"><span style="color:#F97583">    assert</span><span style="color:#E1E4E8"> discount_price(price, rate) </span><span style="color:#F97583">==</span><span style="color:#E1E4E8"> expected</span></span></code></pre>
+<p>結果：全綠，而且 line coverage 100%。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ pytest test_naive.py::test_happy -q --cov=naive --cov-report=term-missing</span></span>
+<span class="line"><span>....  [100%]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Name       Stmts   Miss  Cover</span></span>
+<span class="line"><span>naive.py       2      0   100%</span></span>
+<span class="line"><span>TOTAL          2      0   100%</span></span>
+<span class="line"><span>4 passed in 0.05s</span></span></code></pre>
+<p>但這張表沒驗 <code>rate</code> 的上限。把 <code>rate = 1.01</code> 當作拒絕 case 加進去：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#B392F0">@pytest.mark.parametrize</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"price,rate"</span><span style="color:#E1E4E8">, [</span></span>
+<span class="line"><span style="color:#E1E4E8">    (</span><span style="color:#79B8FF">100.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">1.01</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> test_rate_ceiling</span><span style="color:#E1E4E8">(price, rate):</span></span>
+<span class="line"><span style="color:#F97583">    with</span><span style="color:#E1E4E8"> pytest.raises(</span><span style="color:#79B8FF">ValueError</span><span style="color:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#E1E4E8">        discount_price(price, rate)</span></span></code></pre>
+<p>立刻爆炸：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>$ pytest test_naive.py -q</span></span>
+<span class="line"><span>....F  [100%]</span></span>
+<span class="line"><span>_________________________ test_rate_ceiling[100.0-1.01] _________________________</span></span>
+<span class="line"><span>>       with pytest.raises(ValueError):</span></span>
+<span class="line"><span>E       Failed: DID NOT RAISE &#x3C;class 'ValueError'></span></span>
+<span class="line"><span>1 failed, 4 passed in 0.05s</span></span></code></pre>
+<p>line coverage 量的是「哪些行被執行過」，不是「哪些規則被驗證過」。happy path 全走過，所以每行都執行到了，但 <code>rate > 1</code> 這個不變量從頭到尾沒人問過。在 Java 或 C++ 裡也會看到一模一樣的洞，只是失敗訊號不同：pytest 說 <code>DID NOT RAISE</code>，JUnit 的 <code>assertThrows</code> 會回報預期例外沒有發生，而 C++ 的手寫 try/catch 則必須自己設定失敗訊息與 exit code。</p>
+<p>因此，coverage 比較適合當作「找漏測區域」的導航，不適合當作品質的終點。至少要同時看三件事：重要規則是否都有 case、分支是否真的走過、測試在故意改壞實作時會不會失敗。第三件事就是 mutation testing 的核心。</p>
+<h2 id="用-mutation-testing-檢查測試是不是有牙齒">用 mutation testing 檢查測試是不是有牙齒</h2>
+<p>最簡單的 mutation 不需要工具。把實作中的上限判斷故意改壞：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">if</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">&#x3C;</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> or</span><span style="color:#E1E4E8"> rate </span><span style="color:#F97583">>=</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">:  </span><span style="color:#6A737D"># 把合法的 rate = 1.0 誤判成非法</span></span>
+<span class="line"><span style="color:#F97583">    raise</span><span style="color:#79B8FF"> ValueError</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rate"</span><span style="color:#E1E4E8">)</span></span></code></pre>
+<p>再跑原本的測試，<code>全額</code> case 應該立刻失敗。如果把 <code>rate > 1</code> 這段驗證整段刪掉，<code>折扣超上限</code> case 也應該失敗。只要其中任一個故意製造的錯誤沒有讓測試失敗，就代表測試雖然可能有很高的 line coverage，卻沒有真的保護輸入契約。</p>
+<p>在團隊流程裡，可以再用 mutation testing 工具自動做同樣的事：工具會暫時修改比較運算子、刪掉分支或替換回傳值，再觀察測試是否把 mutation 殺掉。mutation score 不必盲目追求 100%，但重要 domain 規則的 mutation 不應該存活；存活的 mutation 通常就是下一個該補的 case。反過來，如果上述任一故意製造的錯誤沒有讓測試失敗，就代表測試沒有真的保護那條規則。</p>
+<h2 id="該替換什麼不該-mock-什麼java-實作">該替換什麼、不該 mock 什麼（Java 實作）</h2>
+<p>上一篇講了理論，這裡給一段實際的。假設折扣要套匯率，<code>PriceService</code> 依賴一個外部 <code>RateProvider</code>：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">interface</span><span style="color:#B392F0"> RateProvider</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    double</span><span style="color:#B392F0"> rate</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">from</span><span style="color:#E1E4E8">, String </span><span style="color:#FFAB70">to</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">// Fake：固定答案，測「邏輯在匯率 = 30 時算得對不對」</span></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> FixedRateProvider</span><span style="color:#F97583"> implements</span><span style="color:#B392F0"> RateProvider</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Override</span><span style="color:#F97583"> public</span><span style="color:#F97583"> double</span><span style="color:#B392F0"> rate</span><span style="color:#E1E4E8">(String </span><span style="color:#FFAB70">from</span><span style="color:#E1E4E8">, String </span><span style="color:#FFAB70">to</span><span style="color:#E1E4E8">) { </span><span style="color:#F97583">return</span><span style="color:#79B8FF"> 30.0</span><span style="color:#E1E4E8">; }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> PriceService</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    private</span><span style="color:#F97583"> final</span><span style="color:#E1E4E8"> RateProvider rates;</span></span>
+<span class="line"><span style="color:#B392F0">    PriceService</span><span style="color:#E1E4E8">(RateProvider </span><span style="color:#FFAB70">rates</span><span style="color:#E1E4E8">) { </span><span style="color:#79B8FF">this</span><span style="color:#E1E4E8">.rates </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> rates; }</span></span>
+<span class="line"><span style="color:#F97583">    double</span><span style="color:#B392F0"> priceInTwd</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">double</span><span style="color:#FFAB70"> usd</span><span style="color:#E1E4E8">) { </span><span style="color:#F97583">return</span><span style="color:#E1E4E8"> usd </span><span style="color:#F97583">*</span><span style="color:#E1E4E8"> rates.</span><span style="color:#B392F0">rate</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"USD"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"TWD"</span><span style="color:#E1E4E8">); }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">class</span><span style="color:#B392F0"> PriceServiceTest</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    @</span><span style="color:#F97583">Test</span></span>
+<span class="line"><span style="color:#F97583">    void</span><span style="color:#B392F0"> priceUsesFixedRate</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">        PriceService svc </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> PriceService</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> FixedRateProvider</span><span style="color:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#B392F0">        assertEquals</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">9_000.0</span><span style="color:#E1E4E8">, svc.</span><span style="color:#B392F0">priceInTwd</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">300.0</span><span style="color:#E1E4E8">), </span><span style="color:#79B8FF">0.0001</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>這個 Fake 是替換「外部世界」：匯率是我們控制不了的，給它一個固定值，測的是我們自己的邏輯在匯率 30 時算得對不對。這叫 state verification，Meszaros 和 Fowler 都歸類在 Stub/Fake 這側。<a href="#ref-5">[5]</a></p>
+<p>對照組是過度 mock。如果改用 Mockito 寫成「驗證有沒有呼叫」：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="java"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> org.mockito.Mockito.mock;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> org.mockito.Mockito.verify;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> static</span><span style="color:#E1E4E8"> org.mockito.Mockito.when;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">@</span><span style="color:#F97583">Test</span></span>
+<span class="line"><span style="color:#F97583">void</span><span style="color:#B392F0"> priceCallsRateProvider</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#E1E4E8">    RateProvider mock </span><span style="color:#F97583">=</span><span style="color:#B392F0"> mock</span><span style="color:#E1E4E8">(RateProvider.class);</span></span>
+<span class="line"><span style="color:#B392F0">    when</span><span style="color:#E1E4E8">(mock.</span><span style="color:#B392F0">rate</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"USD"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"TWD"</span><span style="color:#E1E4E8">)).</span><span style="color:#B392F0">thenReturn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">30.0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    PriceService svc </span><span style="color:#F97583">=</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> PriceService</span><span style="color:#E1E4E8">(mock);</span></span>
+<span class="line"><span style="color:#E1E4E8">    svc.</span><span style="color:#B392F0">priceInTwd</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">300.0</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#B392F0">    verify</span><span style="color:#E1E4E8">(mock).</span><span style="color:#B392F0">rate</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"USD"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"TWD"</span><span style="color:#E1E4E8">);   </span><span style="color:#6A737D">// 在測「有沒有呼叫」，不是在測結果</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>差別在最後那行 <code>verify</code>：它在鎖「呼叫方式」，不在鎖「行為結果」。實作改成把 <code>rates</code> 快取起來、換個介面方法名，這個測試就會失敗，但業務行為完全沒變。當然，如果「呼叫一次外部服務」本身就是對外可觀察的業務承諾，interaction verification 仍然可能是合理的；這裡要避免的是把所有內部協作都鎖成契約。Fowler 在 Mocks Aren’t Stubs 裡明講，mockist 測試跟實作耦合，會妨礙重構。<a href="#ref-6">[6]</a></p>
+<p>這段不代表 <code>verify</code> 永遠不能用。若真正的規則是「付款成功後必須送出一則不可重複的事件」，那麼送事件本身就是可觀察行為，驗證它可能是必要的。判斷標準不是「看到 mock 就刪掉」，而是先問：被驗證的互動是不是需求的一部分？如果只是目前實作選擇的呼叫順序或內部 method，就不值得寫進 unit test。</p>
+<h2 id="用同一個範例識破-ai-生成的鏡射測試">用同一個範例識破 AI 生成的鏡射測試</h2>
+<p>上一篇的三個審查問題，套到這個範例上看最清楚。</p>
+<p>AI 很容易生成這種「鏡射實作」的測試：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><code><span class="line"><span style="color:#F97583">def</span><span style="color:#B392F0"> test_discount_price_uses_round</span><span style="color:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#6A737D">    # 這在測實作細節：用了 round、乘了 100，不是測規則</span></span>
+<span class="line"><span style="color:#F97583">    assert</span><span style="color:#E1E4E8"> discount_price(</span><span style="color:#79B8FF">10.0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">0.333333</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">==</span><span style="color:#79B8FF"> round</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">10.0</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 0.333333</span><span style="color:#F97583"> *</span><span style="color:#79B8FF"> 100</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">/</span><span style="color:#79B8FF"> 100</span></span></code></pre>
+<p>第一個問題就問倒它：「把實作換成另一種正確寫法，這個測試還過嗎？」如果正確寫法改用 <code>Decimal</code> 或整數分，測試照樣過，那這個測試就是多餘的；如果正確寫法一改測試就失敗，它就是在鎖實作，不是鎖規則。</p>
+<p>反過來，好的測試長這樣：case 有名稱、有邊界、有非法輸入，而且期望值是寫死的數字，不是從實作算回來的。就像前面那張 discount_price 的表，<code>3.33</code> 是規則的期望，不是 <code>round(0.333333 * 10 * 100) / 100</code> 的結果。審查時直接問：「期望值是不是抄自實作？」是，就重寫。</p>
+<h2 id="給-ai-的實作指令先給規格再給程式碼">給 AI 的實作指令：先給規格，再給程式碼</h2>
+<p>如果讓 AI 直接讀 production code 再要求「補 unit test」，它很容易複製實作路徑。比較穩定的做法，是先把不變量和 case 表放進 prompt，並明確要求不要從 production code 推導期望值：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>請根據以下業務規則產生 parameterized unit tests。</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>規則：</span></span>
+<span class="line"><span>1. price 必須 >= 0。</span></span>
+<span class="line"><span>2. rate 必須介於 0 和 1，包含兩端。</span></span>
+<span class="line"><span>3. 合法輸入的結果四捨五入到小數點後兩位。</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>要求：</span></span>
+<span class="line"><span>- 先列出 happy path、邊界、非法輸入各有哪些 case。</span></span>
+<span class="line"><span>- 每個 expected value 必須是根據規格人工計算的固定值，不能呼叫 production code 推導。</span></span>
+<span class="line"><span>- 每個 case 說明它保護哪條規則。</span></span>
+<span class="line"><span>- 最後才產生 pytest／JUnit／GoogleTest 的測試碼。</span></span>
+<span class="line"><span>- 不要驗證 private method、內部呼叫順序或目前使用的演算法名稱。</span></span></code></pre>
+<p>接著把 AI 產生的 case 表交給人 review，再讓它轉成不同語言。這樣跨語言搬移的是規格，不是某個框架的測試寫法；未來換語言或重構 production code，測試仍然有同一個判準。</p>
+<h2 id="放進-ci快測試先擋完整檢查再補">放進 CI：快測試先擋，完整檢查再補</h2>
+<p>unit test 要能配合 agent 的短迴圈，也要能在 CI 留下較完整的證據。可以分成兩個命令：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span># 本機與 agent 每次改動後</span></span>
+<span class="line"><span>python -m pytest -q</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># CI 的完整檢查</span></span>
+<span class="line"><span>python -m pytest -q --cov=discount --cov-branch --cov-report=term-missing</span></span></code></pre>
+<p>Java 以 <code>mvn -q test</code>，C++ 則交給既有的 CMake／CTest 或 GoogleTest runner。不要把 <code>--cov-fail-under=100</code> 當成唯一門檻；如果團隊把數字設成硬門檻，開發者和 AI 都可能為了補行數而新增低價值測試。比較好的 gate 是：測試必須全綠、關鍵模組不能退步、重要 mutation 不可存活，coverage 只用來提醒哪裡可能漏測。</p>
+<h2 id="結尾">結尾</h2>
+<p>Python、Java、C++ 的段落，主要是在展示同一張 case table 如何落到不同語言與工具裡。它們本身不能證明 unit test 寫得好，因為測試的寫法也跟著換了。</p>
+<p>真正值得看的證據，是前面把 <code>discount_price</code> 換成另一種正確實作後，原本的 Python 測試沒有修改，仍然全部通過。測試保護的是輸入約束、計算結果與 rounding 規則，而不是 <code>Decimal</code>、<code>round</code> 或某個 method 的呼叫順序。</p>
+<p>也記得 coverage 不替規則背書。綠燈只代表「表上列了的人都通過」，不代表「表上沒有的人也安全」。AI 時代補測試很快，但把該列進表的邊界補齊，那個判斷仍然是人做的。</p>
+<p>下一篇往上走一層：整合測試。unit test 可以讓單一規則在實作替換後仍然有回饋，但元件接在一起時，資料庫、訊息系統、序列化這些真實依賴會怎麼背叛你，是另一套故事。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] pytest，〈How to parametrize fixtures and test functions〉
+<a href="https://docs.pytest.org/en/stable/how-to/parametrize.html">https://docs.pytest.org/en/stable/how-to/parametrize.html</a></li>
+<li><a id="ref-2"></a>[2] JUnit 5 User Guide，〈Parameterized Tests〉
+<a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests">https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests</a></li>
+<li><a id="ref-3"></a>[3] GoogleTest，〈GoogleTest Primer〉與 <code>INSTANTIATE_TEST_SUITE_P</code>
+<a href="https://google.github.io/googletest/">https://google.github.io/googletest/</a></li>
+<li><a id="ref-4"></a>[4] Dave Cheney，〈Prefer table driven tests〉
+<a href="https://dave.cheney.net/2019/05/07/prefer-table-driven-tests">https://dave.cheney.net/2019/05/07/prefer-table-driven-tests</a></li>
+<li><a id="ref-5"></a>[5] Martin Fowler，〈Test Double〉
+<a href="https://martinfowler.com/bliki/TestDouble.html">https://martinfowler.com/bliki/TestDouble.html</a></li>
+<li><a id="ref-6"></a>[6] Martin Fowler，〈Mocks Aren’t Stubs〉
+<a href="https://martinfowler.com/articles/mocksArentStubs.html">https://martinfowler.com/articles/mocksArentStubs.html</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

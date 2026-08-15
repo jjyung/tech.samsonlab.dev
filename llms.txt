@@ -40,6 +40,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？
+
+**Description:** 用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。
+
+**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-unit-test-implementation/
+
+---
+
 ### CLI for Agents: Rewrite or Augment?
 
 **Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
@@ -140,4 +148,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-13T08:51:10.630Z
+Last updated: 2026-08-15T03:25:39.356Z
