@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/conferences/coscup-2025/"><!-- Primary Meta Tags --><title>COSCUP 2025</title><meta name="title" content="COSCUP 2025"><meta name="description" content="在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/conferences/coscup-2025/"><meta property="og:title" content="COSCUP 2025"><meta property="og:description" content="在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/coscup-2025.xxKZg335.jpg"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/conferences/coscup-2025/"><meta property="twitter:title" content="COSCUP 2025"><meta property="twitter:description" content="在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/coscup-2025.xxKZg335.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"COSCUP 2025","description":"在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。","datePublished":"2025-08-10T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/coscup-2025.xxKZg335.jpg","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/coscup-2025.xxKZg335_2oov0.webp" alt="COSCUP 2025" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2025-08-10T00:00:00.000Z"> Aug 10, 2025 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> conference </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> spring-cloud-contract </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> contract-testing </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> COSCUP 2025 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>演講題目：使用 Spring Cloud Contract 實踐事件驅動的微服務契約測試</p>
+</blockquote>
+<h2 id="基本資料">基本資料</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>內容</th></tr></thead><tbody><tr><td>Conference</td><td>COSCUP</td></tr><tr><td>年份</td><td>2025</td></tr><tr><td>日期</td><td>2025-08-10</td></tr><tr><td>時間</td><td>11:00–11:30</td></tr><tr><td>地點</td><td>國立台灣科技大學</td></tr><tr><td>演講題目</td><td>使用 Spring Cloud Contract 實踐事件驅動的微服務契約測試</td></tr><tr><td>講者</td><td>Samson，助理架構師</td></tr><tr><td>狀態</td><td><code>delivered</code></td></tr><tr><td>官方連結</td><td><a href="https://coscup.org/2025/sessions/7TK88M">COSCUP 2025 議程頁</a></td></tr><tr><td>簡報連結</td><td><a href="https://drive.google.com/file/d/1EtTghcPDL_7GvnmjgqC-eW4_FocDYlIj/view?usp=sharing">Google Drive</a></td></tr><tr><td>錄影連結</td><td><a href="https://www.youtube.com/watch?v=Y8aQyzopp4k">YouTube</a></td></tr></tbody></table>
+<h2 id="演講摘要">演講摘要</h2>
+<p>這場分享從事件驅動架構與微服務整合的實際問題出發，介紹如何使用 Spring Cloud Contract 定義並驗證服務之間的事件契約。內容涵蓋 Producer 與 Consumer 的測試流程、REST 與 Kafka 契約測試的差異，以及如何透過自動產生測試與 Stub，提早發現事件格式或服務互動的不相容問題。</p>
+<h2 id="演講內容">演講內容</h2>
+<h3 id="大綱">大綱</h3>
+<ol>
+<li><strong>問題場景與現況</strong>：為什麼微服務間的整合測試複雜、昂貴又容易脆弱。</li>
+<li><strong>概念導入</strong>：事件驅動架構、契約測試與 Consumer-Driven Contract（CDC）。</li>
+<li><strong>Spring Cloud Contract</strong>：Producer、Consumer、契約 DSL 與 Stub 的基本概念。</li>
+<li><strong>實作展示</strong>：以 Food Ordering System 為例，比較 REST 與 Kafka 契約測試流程。</li>
+<li><strong>架構與流程</strong>：契約定義、Producer 驗證、Consumer 觸發事件與結果確認。</li>
+<li><strong>常見錯誤與排除</strong>：測試環境、Stub JAR、Kafka 訊息驗證與 Consumer 收訊問題。</li>
+<li><strong>契約文化與展望</strong>：如何把契約測試納入團隊協作與 CI/CD 流程。</li>
+<li><strong>Q&#x26;A 與補充資源</strong>。</li>
+</ol>
+<h3 id="演講重點">演講重點</h3>
+<ol>
+<li><strong>微服務解耦後，團隊需要更清楚的溝通契約</strong>：事件驅動架構讓服務可以獨立部署與演進，但也把 API 或事件格式的責任邊界變得更重要。若 Producer 與 Consumer 對欄位、事件名稱或資料格式的理解不同，問題通常要到執行時才會被發現。</li>
+<li><strong>契約測試補上單元測試與整合測試之間的空隙</strong>：不需要每次都啟動完整的微服務環境，就能驗證服務之間約定的輸入與輸出，降低大型整合測試的成本與不穩定性。</li>
+<li><strong>Producer 與 Consumer 各自驗證不同責任</strong>：Producer 確認自己發布的 API 或事件符合契約；Consumer 則使用契約產生的 Stub，確認自己的服務能正確處理符合契約的輸入。</li>
+<li><strong>Kafka 事件測試不能直接套用 REST 測試思維</strong>：HTTP 有明確的請求與回應，Kafka 則需要處理事件發布、訊息攔截、Topic、Consumer Group 與非同步處理等問題。</li>
+<li><strong>契約要進入日常開發流程</strong>：契約不應該只是一份測試設定，而是 Producer 與 Consumer 共同討論介面、審查變更，並在 CI/CD 中持續驗證的協作邊界。</li>
+</ol>
+<h3 id="內容整理">內容整理</h3>
+<p>這場分享以一個 Food Ordering System 為例，說明 Order Service 建立訂單後發布 <code>OrderCreated</code> 事件，Payment Service 再消費這個事件的完整測試流程。</p>
+<p>Producer 端先使用 Spring Cloud Contract 的 DSL 定義事件契約，包括 Topic、事件內容、標頭與欄位格式。執行建置時，框架會根據契約產生測試，觸發 Order Service 發布事件，再驗證實際訊息是否符合約定。由於 Kafka 不是傳統的 HTTP 服務，測試環境還需要準備訊息驗證機制，攔截並提供事件給 Contract Verifier 比對。</p>
+<p>Consumer 端則載入 Producer 產生的 Stub JAR，透過契約中設定的觸發標籤送出測試事件，讓 Payment Service 在測試環境中接收。測試最後確認 Consumer 是否完成預期處理，例如建立付款資料或執行相應的業務邏輯。</p>
+<h3 id="實作時的注意事項">實作時的注意事項</h3>
+<ul>
+<li>Producer 與 Consumer 使用的 Topic、事件名稱與欄位格式必須保持一致。</li>
+<li>Stub 觸發時使用的 label 必須和契約定義完全相同，包含大小寫。</li>
+<li>Kafka 測試環境可以使用 Testcontainers 或 Embedded Kafka，但 Consumer Group 與 offset 需要隔離，避免測試互相影響。</li>
+<li>契約不能寫得過度寬鬆，否則測不到真正的相容性問題；也不能把時間戳等動態值硬編碼，造成不必要的失敗。</li>
+<li>Spring Cloud Contract 可以降低服務整合風險，但仍需要團隊共同維護契約，並把測試納入 CI/CD 品質門檻。</li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
