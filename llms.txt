@@ -138,6 +138,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Lucky Draw System
+
+**Description:** 以 Java 21 與 Spring Boot 3 打造的高可用、分散式轉盤抽獎平台，透過 Redis 預扣、資料庫條件扣減與 RabbitMQ 事件處理，確保高併發下不重複抽獎、不超發庫存。
+
+**URL:** https://tech.samsonlab.dev//projects/lucky-draw-system/
+
+---
+
 ## Conferences
 
 ### COSCUP 2025
@@ -174,4 +182,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-16T11:24:31.117Z
+Last updated: 2026-08-16T16:41:07.079Z
