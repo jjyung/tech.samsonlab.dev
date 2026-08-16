@@ -148,6 +148,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化
+
+**Description:** 在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。
+
+**URL:** https://tech.samsonlab.dev//conferences/coscup-2026/
+
+---
+
 ### JCConf 2025
 
 **Description:** 在 JCConf 2025 分享如何使用 Spring AI 與 OpenAPI，把既有 API 包裝成 Agent 可以理解與呼叫的工具。
@@ -166,4 +174,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-16T10:38:32.884Z
+Last updated: 2026-08-16T11:24:31.117Z

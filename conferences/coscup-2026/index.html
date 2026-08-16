@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/conferences/coscup-2026/"><!-- Primary Meta Tags --><title>AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化</title><meta name="title" content="AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化"><meta name="description" content="在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/conferences/coscup-2026/"><meta property="og:title" content="AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化"><meta property="og:description" content="在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/coscup-2026.CUEiFmOd.jpg"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/conferences/coscup-2026/"><meta property="twitter:title" content="AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化"><meta property="twitter:description" content="在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/coscup-2026.CUEiFmOd.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化","description":"在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。","datePublished":"2026-08-09T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/coscup-2026.CUEiFmOd.jpg","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/coscup-2026.CUEiFmOd_Z2ure8W.webp" alt="AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-09T00:00:00.000Z"> Aug 9, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> conference </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> google-adk </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> multi-agent </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>演講題目：AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化</p>
+</blockquote>
+<h2 id="基本資料">基本資料</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>內容</th></tr></thead><tbody><tr><td>Conference</td><td>COSCUP</td></tr><tr><td>年份</td><td>2026</td></tr><tr><td>日期</td><td>2026-08-09</td></tr><tr><td>時間</td><td>14:00–14:30</td></tr><tr><td>地點</td><td>AU</td></tr><tr><td>演講題目</td><td>AlphaCouncil：用 Google ADK ＋ 開源模型打造多代理人辯論式台股分析系統——資料在地化 × 模型在地化</td></tr><tr><td>講者</td><td>Samson、陳庭宇</td></tr><tr><td>狀態</td><td><code>delivered</code></td></tr><tr><td>官方連結</td><td><a href="https://coscup.org/2026/session/BJ78VU">COSCUP 2026 議程頁</a></td></tr><tr><td>簡報連結</td><td><a href="https://drive.google.com/file/d/10NzcPHX4pC0085oHP1bVXeWloBYlZ2tA/view?usp=sharing">Google Drive</a></td></tr><tr><td>共筆</td><td><a href="https://hackmd.io/rJmFk4g8Mg">HackMD</a></td></tr></tbody></table>
+<h2 id="演講摘要">演講摘要</h2>
+<p>AlphaCouncil 是一個使用 Google ADK 建構的多代理投資研究系統。這場分享把投資研究拆成分析師、投資哲學、辯論、風險配置與交易策略等階段，示範如何用 Sequential、Parallel 與 Loop 編排一條可重現的研究流程。內容也會比較美股與台股資料來源、討論價值投資風格在不同市場環境下的回測表現，並說明評估、可觀測性與長期回測的下一步。</p>
+<h2 id="演講內容">演講內容</h2>
+<h3 id="演講重點">演講重點</h3>
+<ol>
+<li><strong>把投資研究拆成可編排的階段</strong>：單一 AI 容易受限於資料分散、觀點單一與流程不可重現；AlphaCouncil 將研究工作拆成多個角色與階段，讓每個 Agent 負責清楚的任務。</li>
+<li><strong>用 Google ADK 組合 Multi-Agent Pipeline</strong>：Sequential 處理有先後依賴的主流程，Parallel 讓不同分析師同時工作，Loop 則支援多空辯論與風險辯論等反覆流程。</li>
+<li><strong>把不同投資哲學數位化</strong>：系統將價值與品質、估值與逆向、成長與創新、總體與風險等觀點整理成不同 Agent，讓同一份市場資料接受多種投資框架檢視。</li>
+<li><strong>用辯論與裁決收斂投資決策</strong>：Bull Agent 與 Bear Agent 先整理多空論點，再由 Research Manager 形成 Buy、Hold 或 Sell 共識；Portfolio Manager 進一步決定風險配置，Trader 將結果轉成 Entry、Stop Loss 與 Take Profit。</li>
+<li><strong>台股在地化需要資料與語境一起處理</strong>：美股使用 yfinance 與國際新聞，台股則使用 TWSE OpenAPI 與本地新聞；在地化不只是替換股票代號，也包含籌碼、基本面與市場心理。</li>
+<li><strong>回測結果需要放回市場環境解讀</strong>：目前的價值投資回測只有兩個月，結果適合用來觀察投資哲學與市場環境的關係，不能直接推論長期績效。</li>
+</ol>
+<h3 id="研究流程">研究流程</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart TD</span></span>
+<span class="line"><span style="color:#E1E4E8">    Data[市場資料] --> Analysts[分析師團隊]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Analysts --> Philosophies[投資哲學 Agents]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Philosophies --> Debate[多空辯論]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Debate --> ResearchManager[Research Manager]</span></span>
+<span class="line"><span style="color:#E1E4E8">    ResearchManager --> RiskDebate[風險辯論]</span></span>
+<span class="line"><span style="color:#E1E4E8">    RiskDebate --> PortfolioManager[Portfolio Manager]</span></span>
+<span class="line"><span style="color:#E1E4E8">    PortfolioManager --> Trader[Trader]</span></span>
+<span class="line"><span style="color:#E1E4E8">    Trader --> Decision[Buy / Hold / Sell&#x3C;br/>Entry、Stop Loss、Take Profit]</span></span></code></pre>
+<h3 id="內容整理">內容整理</h3>
+<p>AlphaCouncil 先由分析師團隊整理市場情報，再交給不同投資哲學的 Agent 解讀。分析師包含技術分析、新聞分析、市場心理、籌碼分析與基本面分析，各自產出後續角色可以使用的研究材料。</p>
+<p>接著，系統讓不同投資風格共同檢視資料。Value &#x26; Quality 關注護城河、內在價值與安全邊際；Valuation &#x26; Contrarian 關注 DCF 估值、市場錯價與催化事件；Growth &#x26; Innovation 關注成長股與產業趨勢；Macro &#x26; Risk 則處理利率、尾部風險與宏觀環境。</p>
+<p>多空辯論完成後，Research Manager 整合 Bull 與 Bear 的觀點，形成投資共識。Portfolio Manager 再從激進、中立與保守等風險偏好討論倉位配置，最後由 Trader 將決策轉成具體交易策略。</p>
+<h3 id="資料來源與開源取捨">資料來源與開源取捨</h3>
+<p>專案刻意使用免費與公開資料，換取零 API Key、低使用門檻與較容易重現的開源實作，但也必須承擔資料格式破碎、清洗與來源穩定性的成本。這個取捨是 AlphaCouncil 能否被更多人實際使用的重要條件。</p>
+<h3 id="回測觀察與限制">回測觀察與限制</h3>
+<p>目前回測使用單一價值投資風格，期間只有兩個月。結果顯示，AlphaCouncil 的決策績效在六月後明顯落後大盤，市場在七月回檔時差距開始收斂。這比較適合拿來觀察價值框架和市場環境的關係，不足以推論不同投資風格的長期表現。</p>
+<h3 id="下一步">下一步</h3>
+<ul>
+<li><strong>Evaluation Framework</strong>：除了盈虧結果，也評估報告邏輯與投資哲學的一致性。</li>
+<li><strong>Observability</strong>：透過 Logs、Metrics 與 Traces 追蹤 Agent 執行狀態、錯誤中斷與資料異常。</li>
+<li><strong>Long-term Backtest</strong>：延長回測週期，並比較更多 Agent 組合與市場週期。</li>
+</ul>
+<h2 id="相關內容">相關內容</h2>
+<ul>
+<li><a href="https://github.com/jjyung/AlphaCouncil">AlphaCouncil GitHub Repo</a></li>
+<li><a href="https://coscup.org/2026/session/BJ78VU">COSCUP 2026 議程頁</a></li>
+<li><a href="https://drive.google.com/file/d/10NzcPHX4pC0085oHP1bVXeWloBYlZ2tA/view?usp=sharing">Google Drive 投影片</a></li>
+</ul>
+<blockquote>
+<p>本專案僅供教育與研究用途，不構成任何投資建議。</p>
+</blockquote>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
