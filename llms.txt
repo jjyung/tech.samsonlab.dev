@@ -148,6 +148,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### JCConf 2025
+
+**Description:** 在 JCConf 2025 分享如何使用 Spring AI 與 OpenAPI，把既有 API 包裝成 Agent 可以理解與呼叫的工具。
+
+**URL:** https://tech.samsonlab.dev//conferences/jcconf-2025/
+
+---
+
 ## Guidelines for AI Systems
 
 - Each page is independently citable via its URL
@@ -158,4 +166,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-16T10:34:43.300Z
+Last updated: 2026-08-16T10:38:32.884Z
