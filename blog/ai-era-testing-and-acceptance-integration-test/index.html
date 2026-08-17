@@ -1,0 +1,419 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><!-- Primary Meta Tags --><title>整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</title><meta name="title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta name="description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="og:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="og:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="twitter:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="twitter:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？","description":"Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。","datePublished":"2026-08-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4_Z1gzj0d.webp" alt="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-15T00:00:00.000Z"> Aug 15, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> IntegrationTest </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> AIEngineering </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？ </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>系列定位：上一篇用同一張 case table，把 unit test 落到 Python、Java、C++。這一篇往上一層，處理 unit test 通常不負責驗證的系統邊界：HTTP、資料庫、交易、序列化和事件。重點在驗證兩個元件接起來後，仍然遵守同一份契約，不必把所有服務一起啟動。</p>
+</blockquote>
+<p>本系列同時談測試與驗收；本篇只處理自動化測試中的 integration test。驗收會留到後續文章，因為它要回答的是「這次交付是否解決了要解的問題」，不是「元件接起來後是否依照既定規則運作」。</p>
+<blockquote>
+<p><a href="/blog/ai-era-testing-and-acceptance-unit-test-implementation/">上一篇：AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？</a></p>
+</blockquote>
+<p>unit test 能證明單一規則成立，卻無法證明這條規則真的接得上系統。資料庫欄位名稱可能和 ORM mapping 不一致，API 的 JSON 欄位可能和 domain model 對不起來，交易可能只包住一半的寫入，事件 payload 也可能和 consumer 的期待不同。每一個元件單獨測都能綠燈，接起來卻照樣失敗。</p>
+<h2 id="整合測試不是把全部服務跑起來">整合測試不是「把全部服務跑起來」</h2>
+<p>整合測試的核心在於測試「元件之間的整合點」，不在於範圍有多大。</p>
+<p>Fowler 對 integration test 的描述很實用：它測試多個元件如何彼此合作，或者測試程式如何和外部服務溝通。這個定義沒有要求一定要跨整個系統，也沒有要求一定要連上 production 依賴。<a href="#ref-1">[1]</a></p>
+<p>可以用被驗證的邊界來分：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試種類</th><th>主要問題</th><th>常見依賴</th></tr></thead><tbody><tr><td>Unit test</td><td>單一行為規則對不對？</td><td>純函式、domain object、少量 fake</td></tr><tr><td>Integration test</td><td>目標整合點接起來後，資料和協議對不對？</td><td>依風險選擇真實依賴或 faithful test double</td></tr><tr><td>End-to-end test</td><td>使用者旅程從頭到尾能不能完成？</td><td>多個服務與完整流程；依環境選擇真實或替代依賴</td></tr></tbody></table>
+<p>所以，一個只啟動 OrderService 和 PostgreSQL 的測試，可以是整合測試；一個把所有服務都啟動、卻只 mock 掉真正的資料庫，也不會因為範圍很大就自動變成高價值測試。</p>
+<p>判斷標準是測試是否真的穿過目標整合點，而不是啟動了多少服務。若測試要驗證 PostgreSQL 的 dialect、constraint 或 transaction，卻換成 SQLite，就沒有覆蓋這些風險；若測試要驗證 HTTP client 的協議，則可以使用能重現協議的 fake server。替換依賴本身沒有問題，沒有驗證到目標邊界才是問題。</p>
+<p>這裡先把三種測試的責任分開：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>保護的風險</th></tr></thead><tbody><tr><td>Integration test</td><td>目標整合點接起來後能不能運作</td></tr><tr><td>Contract test</td><td>Consumer 和 Provider 的 API 或事件約定是否相容</td></tr><tr><td>End-to-end test</td><td>完整部署拓撲與使用者流程是否成立</td></tr></tbody></table>
+<p>契約測試不一定要同時啟動 Consumer 和 Provider；它可以讓雙方分別驗證同一份 API 或事件契約。整合測試則要確認選定的 runtime wiring、資料庫、交易或 broker 連線能運作。這些依賴不必全部是真實服務，但 test double 必須忠實重現測試要保護的協議。兩者可能使用相同的案例，但保護的風險不同。</p>
+<p>第一篇用資料庫、queue、框架設定和實際序列化概括 integration test 的風險。本篇沿用這個分類，再把依賴選擇拆開：資料庫 dialect、migration 和 transaction 用 production 同款引擎；第三方 HTTP 則保留真實 client 與 serializer，接上可控制的 fake server。這是測試不同風險，不是和前篇改用另一套定義。</p>
+<h2 id="先定義元件接起來後的觀察結果">先定義元件接起來後的觀察結果</h2>
+<p>整合測試不應該從 controller 或 repository 的程式碼倒推案例。先從使用者或其他服務看得到的結果，寫出整合場景的觀察結果。</p>
+<p>以下用一個簡化的下單流程示範：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>POST /orders</span></span>
+<span class="line"><span>    |</span></span>
+<span class="line"><span>    v</span></span>
+<span class="line"><span>Order API -> OrderService -> PostgreSQL</span></span>
+<span class="line"><span>                         |</span></span>
+<span class="line"><span>                         +-> outbox_events</span></span></code></pre>
+<p>需求看的是：</p>
+<ol>
+<li>合法訂單會回傳 201 Created 和訂單編號。</li>
+<li>orders 會留下正確的金額與狀態。</li>
+<li>同一個 Idempotency-Key 重送，不會產生第二筆訂單。</li>
+<li>訂單和 outbox event 要一起提交，不能只成功一半。</li>
+<li>非法輸入不會留下半成品資料。</li>
+</ol>
+<p>把它整理成 case 表：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Case</th><th>輸入</th><th>觀察結果</th></tr></thead><tbody><tr><td>建立訂單</td><td>合法商品與數量</td><td>HTTP 201、資料庫有一筆 pending 訂單</td></tr><tr><td>重複請求</td><td>相同 Idempotency-Key</td><td>回傳同一個訂單，不新增資料</td></tr><tr><td>不存在商品</td><td>product_id 不存在</td><td>HTTP 404，資料庫沒有訂單</td></tr><tr><td>非法數量</td><td>quantity = 0</td><td>HTTP 400，資料庫沒有訂單</td></tr><tr><td>事件同步寫入</td><td>合法訂單</td><td>orders 與 outbox_events 各有一筆且使用同一交易</td></tr></tbody></table>
+<p>這張表就是整合測試的規格。API status code、資料庫狀態和事件 payload 都是可觀察行為；repository 使用哪個 ORM method 則不是。這裡的「契約」是一般意義的業務與技術約定，不等於下一篇要談的 Contract Testing workflow。</p>
+<h2 id="測資料庫整合時優先使用-production-同款引擎">測資料庫整合時，優先使用 production 同款引擎</h2>
+<p>整合測試最常見的捷徑，是用記憶體資料庫或假的 repository 取代正式資料庫。這樣測試很快，但也可能把最重要的差異藏起來：</p>
+<ul>
+<li>SQL dialect 不同，production 的 PostgreSQL 能執行的查詢，SQLite 不一定能執行。</li>
+<li>constraint、foreign key、unique index 或 transaction isolation 在假的資料庫裡可能沒有同樣的行為。</li>
+<li>migration 沒有真的跑，欄位預設值和索引問題會等到部署才出現。</li>
+<li>ORM mapping 看起來正確，但實際讀寫型別或 nullable 行為不一致。</li>
+</ul>
+<p>因此，當測試目標包含 SQL dialect、schema、migration、constraint 或 transaction 行為時，應優先使用和 production 相同的資料庫引擎。資料量不需要大，重點是讓真正的 schema、migration、constraint 和 transaction 參與測試。</p>
+<p>測試資料庫不代表要共用開發者本機的一個長駐資料庫。比較穩定的選擇是每次測試工作建立隔離的 PostgreSQL container，測試結束後銷毀。Testcontainers 的用途就是用程式管理這類短生命週期的真實依賴；Java、Python 和其他語言都有對應支援。<a href="#ref-2">[2]</a></p>
+<h2 id="python用-pytest-fixture-啟動-postgresql">Python：用 pytest fixture 啟動 PostgreSQL</h2>
+<p>pytest fixture 適合管理整合測試的環境。fixture 可以把 container、schema、client 和清理動作組合起來，也能用不同 scope 控制資源要共用多久。pytest 官方文件也把 fixture 定位成可擴展的測試上下文，從簡單 unit test 一直到複雜的功能測試都適用。<a href="#ref-3">[3]</a></p>
+<p>下面保留一段 Python 示意碼，目的是展示 fixture lifecycle 和「從 API 進入、從資料庫觀察」的測試形狀，不是可以直接複製執行的完整專案。真正專案仍要把 create_app、migration runner、database adapter 和 reset_database 換成自己的實作；其中 reset_database 代表清理測試資料或建立隔離 schema：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># tests/integration/conftest.py</span></span>
+<span class="line"><span>import pytest</span></span>
+<span class="line"><span>from testcontainers.postgres import PostgresContainer</span></span>
+<span class="line"><span>from fastapi.testclient import TestClient</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>from app import create_app</span></span>
+<span class="line"><span>from app.db import open_connection, run_migrations</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture(scope="session")</span></span>
+<span class="line"><span>def postgres():</span></span>
+<span class="line"><span>    with PostgresContainer("postgres:16-alpine") as container:</span></span>
+<span class="line"><span>        yield container</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture(scope="session")</span></span>
+<span class="line"><span>def database_url(postgres):</span></span>
+<span class="line"><span>    return postgres.get_connection_url()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture(scope="session")</span></span>
+<span class="line"><span>def app(database_url):</span></span>
+<span class="line"><span>    run_migrations(database_url)</span></span>
+<span class="line"><span>    return create_app(database_url=database_url)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture</span></span>
+<span class="line"><span>def client(app):</span></span>
+<span class="line"><span>    with TestClient(app) as test_client:</span></span>
+<span class="line"><span>        yield test_client</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture</span></span>
+<span class="line"><span>def db(database_url):</span></span>
+<span class="line"><span>    connection = open_connection(database_url)</span></span>
+<span class="line"><span>    try:</span></span>
+<span class="line"><span>        yield connection</span></span>
+<span class="line"><span>    finally:</span></span>
+<span class="line"><span>        connection.close()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>@pytest.fixture(autouse=True)</span></span>
+<span class="line"><span>def isolated_database(db):</span></span>
+<span class="line"><span>    reset_database(db)</span></span>
+<span class="line"><span>    yield</span></span>
+<span class="line"><span>    reset_database(db)</span></span></code></pre>
+<p>這裡的 postgres 用 session scope，整個測試 session 只啟動一個 container；client 和 db 則是每個測試重新建立。isolated_database 代表每個測試前後都清理資料，實際專案也可以改成唯一 namespace 或獨立 schema。scope 不是越大越快越好：共用越多，測試越容易互相污染；隔離越細，啟動和清理成本越高。</p>
+<p>測試本身應該從 API 進入，再從資料庫觀察結果：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># tests/integration/test_orders.py</span></span>
+<span class="line"><span>import pytest</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>pytestmark = pytest.mark.integration</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>def test_create_order_persists_order_and_outbox(client, db):</span></span>
+<span class="line"><span>    response = client.post(</span></span>
+<span class="line"><span>        "/orders",</span></span>
+<span class="line"><span>        headers={"Idempotency-Key": "order-001"},</span></span>
+<span class="line"><span>        json={</span></span>
+<span class="line"><span>            "customer_id": "customer-001",</span></span>
+<span class="line"><span>            "items": [</span></span>
+<span class="line"><span>                {"product_id": "book-001", "quantity": 2, "unit_price": 100}</span></span>
+<span class="line"><span>            ],</span></span>
+<span class="line"><span>        },</span></span>
+<span class="line"><span>    )</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    assert response.status_code == 201</span></span>
+<span class="line"><span>    order_id = response.json()["order_id"]</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    order = db.fetch_one(</span></span>
+<span class="line"><span>        """</span></span>
+<span class="line"><span>        SELECT customer_id, status, total_amount</span></span>
+<span class="line"><span>        FROM orders</span></span>
+<span class="line"><span>        WHERE id = %s</span></span>
+<span class="line"><span>        """,</span></span>
+<span class="line"><span>        (order_id,),</span></span>
+<span class="line"><span>    )</span></span>
+<span class="line"><span>    assert order == {</span></span>
+<span class="line"><span>        "customer_id": "customer-001",</span></span>
+<span class="line"><span>        "status": "pending",</span></span>
+<span class="line"><span>        "total_amount": 200,</span></span>
+<span class="line"><span>    }</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    event = db.fetch_one(</span></span>
+<span class="line"><span>        """</span></span>
+<span class="line"><span>        SELECT event_type, aggregate_id, payload</span></span>
+<span class="line"><span>        FROM outbox_events</span></span>
+<span class="line"><span>        WHERE aggregate_id = %s</span></span>
+<span class="line"><span>        """,</span></span>
+<span class="line"><span>        (order_id,),</span></span>
+<span class="line"><span>    )</span></span>
+<span class="line"><span>    assert event["event_type"] == "OrderCreated"</span></span>
+<span class="line"><span>    assert event["aggregate_id"] == order_id</span></span></code></pre>
+<p>這個測試沒有驗證 OrderService 呼叫了哪個 method，也沒有 mock repository。它讓 HTTP routing、JSON parsing、service、SQL、migration、資料庫 constraint 和 outbox mapping 一起工作，最後只檢查外部看得到的結果。</p>
+<h2 id="需要一致性的流程要驗-transaction-邊界">需要一致性的流程，要驗 transaction 邊界</h2>
+<p>下單流程最危險的錯誤，是只提交了一半，而不是回傳錯一個欄位：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>orders INSERT 成功</span></span>
+<span class="line"><span>outbox_events INSERT 失敗</span></span>
+<span class="line"><span>transaction 沒有 rollback</span></span></code></pre>
+<p>此時 API 可能回傳 500，但資料庫已經留下沒有事件的訂單。之後沒有 worker 會處理這筆訂單，系統就進入半完成狀態。</p>
+<p>如果訂單和事件必須同時成立，程式應該把兩次寫入放在同一個 transaction。整合測試可以用故障注入讓第二次寫入失敗，再驗證：</p>
+<ul>
+<li>API 回傳產品契約定義的錯誤狀態。</li>
+<li>使用這個 Idempotency-Key 的訂單不存在。</li>
+<li>對應的 outbox event 也不存在。</li>
+</ul>
+<p>這裡不再放完整測試碼，因為故障注入點和 <code>OutboxRepository.insert</code> 的參數會依專案實作不同；重點是驗證兩筆資料是否一起提交或一起 rollback。</p>
+<p>這裡的替換不是在 mock 受測邏輯，也不是驗證 repository 的呼叫次數；它是刻意製造一個可重現的故障，觀察 transaction boundary 是否真的涵蓋兩個寫入。整合測試仍然使用真實資料庫，只有故障來源被控制。範例假設 API 將這個未處理的 persistence failure 映射成 500；若產品契約採用其他 status code，測試應以契約為準。</p>
+<p>測試交易時要注意一個常見誤區：如果測試用自己的 transaction 包住 API 呼叫，但 API 使用另一條 connection，測試外層的 rollback 不一定能撤銷 API 已提交的資料。尤其是 HTTP server、背景 worker 或非同步任務，通常會使用不同 connection。不要把「測試最後 rollback」當成萬用清理策略；要確認 transaction 的生命週期和 connection ownership。</p>
+<h2 id="idempotency-是整合行為不只是-if-判斷">Idempotency 是整合行為，不只是 if 判斷</h2>
+<p>上一篇的 unit test 可以測：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>如果 key 已存在，就回傳既有結果。</span></span></code></pre>
+<p>但它測不到兩個 request 同時抵達時，資料庫 unique constraint 和 transaction 是否真的擋住重複資料。這是整合測試該保護的邊界。</p>
+<p>可以先驗證最基本的重送情境：第一次 request 成功後，第二次帶著相同的 Idempotency-Key 和相同 payload 重送；測試應確認兩次 response 的訂單編號相同，資料庫只有一筆對應資料。這裡的 status code 要依產品契約決定，不要把 201 當成所有系統的固定答案。</p>
+<p>若要測競爭條件，則需要讓兩個 request 真正並行，並確認資料庫有 unique index。這種測試可能受執行環境影響，應把它和一般 deterministic integration test 分開，避免每次 PR 都被不穩定的 thread timing 綁架。重要的是，競爭安全最後要由資料庫 constraint 和 transaction 提供保證，不能只靠 application-level 的「先查再新增」。</p>
+<p>此外，還要定義相同 Idempotency-Key 搭配不同 payload 的行為。常見做法是回傳 409，並保留第一次請求的結果；這個案例也應該獨立測試，避免第二次 request 意外修改原本的訂單。</p>
+<h2 id="serializermigration-和資料庫-schema-都是契約">Serializer、migration 和資料庫 schema 都是契約</h2>
+<p>很多整合錯誤發生在「資料看起來一樣」的地方：</p>
+<ul>
+<li>API 接受的是 unitPrice，domain object 讀的是 unit_price。</li>
+<li>JSON 沒有 total_amount，程式卻默默使用 0。</li>
+<li>migration 新增欄位，但 production 的舊資料沒有正確 default。</li>
+<li>Python 的 datetime 帶 timezone，資料庫欄位卻用 naive timestamp。</li>
+<li>金額在 API 是 decimal string，資料庫讀回來變成 binary float。</li>
+</ul>
+<p>這些問題不應該只靠 unit test 驗證 serializer 函式。整合測試至少要走一次真實的 request 和 response，並使用正式 migration 建立 schema。</p>
+<p>一個有價值的 migration test，不會只重複檢查每個欄位名稱；它會從空資料庫跑完整 migration，再執行一個最小業務流程：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>建立空 PostgreSQL</span></span>
+<span class="line"><span>  -> 執行全部 migration</span></span>
+<span class="line"><span>  -> 啟動 application</span></span>
+<span class="line"><span>  -> 建立一筆訂單</span></span>
+<span class="line"><span>  -> 讀回訂單與事件</span></span></code></pre>
+<p>如果 migration 沒有跑、schema 版本不對或 mapping 錯誤，這條路徑就應該失敗。整合測試的價值正是把「各自看起來合理」的零件，放回它們實際工作的組合裡。</p>
+<h2 id="外部服務真實協議假的世界">外部服務：真實協議，假的世界</h2>
+<p>整合測試不等於把 payment provider、物流服務或第三方 API 真的打出去。那會帶來費用、速度、網路不穩定和不可控資料，而且測試失敗時很難判斷是自己的程式還是外部服務出了問題。這裡的 fake server 用可控制的替代依賴保留 HTTP 協議這個整合點，沒有把整合拿掉。</p>
+<p>比較好的分界是：</p>
+<ul>
+<li>自己的 HTTP client、request serializer、retry policy：使用真實程式碼。</li>
+<li>第三方 API 的回應：用可控制的 fake server 或 stub server。</li>
+<li>第三方服務本身的 availability 和實際付款結果：交給 sandbox smoke test 或 end-to-end test。</li>
+</ul>
+<p>例如 payment adapter 的整合測試可以驗證：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PaymentClient</span></span>
+<span class="line"><span>  -> HTTP method 是 POST</span></span>
+<span class="line"><span>  -> path 是 /payments</span></span>
+<span class="line"><span>  -> JSON 欄位名稱正確</span></span>
+<span class="line"><span>  -> timeout 和 retry 行為符合規則</span></span>
+<span class="line"><span>  -> 200、409、500、timeout 各自轉成正確的 domain 結果</span></span></code></pre>
+<p>這和上一篇批評的「mock 某個 method 有沒有被呼叫」不同。這裡保護的是對外 HTTP 協議：method、path、header、payload 和錯誤分類都是整合測試要觀察的結果。實作可以從 requests 換成另一個 HTTP library，只要對外協議不變，測試就不應該跟著碎。</p>
+<p>這裡仍然要和契約測試分開。整合測試驗證我們的 HTTP client、serializer 和 fake server 接起來後能不能運作；契約測試則驗證 Consumer 和 Provider 是否各自遵守同一份 API 契約，通常不需要把雙方同時啟動。</p>
+<h2 id="message-broker-和-outbox-要拆成三種測試">Message broker 和 outbox 要拆成三種測試</h2>
+<p>事件系統通常有三個不同的風險，不要混成一個巨大測試：</p>
+<ol>
+<li>Application 和 database 的整合：訂單資料和 outbox event 是否在同一交易寫入。</li>
+<li>Publisher 和 broker 的整合：outbox worker 是否能正確序列化、發布、處理 ack 和 retry。</li>
+<li>Event contract 的相容性：Producer 發出的事件是否符合 Consumer 依賴的 schema 和欄位語意。</li>
+</ol>
+<p>第一類可以在每次 PR 跑，使用真實資料庫但不一定啟動 broker。第二類則可使用短生命週期的 broker container，或在較慢的 CI job 執行。</p>
+<p>第三類屬於契約測試，不應該硬塞進每一個 database integration test。它可以用 Spring Cloud Contract、Pact 或其他 schema／contract tooling，讓 Producer 和 Consumer 分別驗證事件格式；是否真的需要導入，要看服務是否獨立演化、跨團隊協作和事件相容性風險。</p>
+<p>outbox worker 的測試應該觀察可重試行為：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>讀取 pending event</span></span>
+<span class="line"><span>  -> 發布成功</span></span>
+<span class="line"><span>  -> 收到 broker ack</span></span>
+<span class="line"><span>  -> 將 event 標記 published</span></span></code></pre>
+<p>還要有失敗 case：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>發布失敗</span></span>
+<span class="line"><span>  -> event 仍然是 pending</span></span>
+<span class="line"><span>  -> retry_count 增加</span></span>
+<span class="line"><span>  -> next_attempt_at 被設定</span></span></code></pre>
+<p>不要在測試裡用 sleep(5) 等待背景 worker。這通常代表測試沒有掌握系統的同步點。改用可觀察的 polling with timeout、注入 clock，或直接把 worker 的一次處理動作暴露成可呼叫的 application operation。非同步系統需要等待，但等待應該有明確條件，不是任意延遲。</p>
+<h2 id="測試資料隔離速度和可信度的取捨">測試資料隔離：速度和可信度的取捨</h2>
+<p>整合測試最容易變 flaky 的地方，通常不是 assertion，而是資料互相污染。</p>
+<p>常見做法有三種：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>做法</th><th>優點</th><th>代價</th></tr></thead><tbody><tr><td>每個測試重建 container</td><td>隔離最乾淨</td><td>慢</td></tr><tr><td>共用 container、每個測試清資料</td><td>速度較快</td><td>清理不完整會互相影響</td></tr><tr><td>共用 schema、每個測試 transaction rollback</td><td>快</td><td>無法涵蓋跨 connection 或已提交的背景工作</td></tr></tbody></table>
+<p>實務上可以採混合策略：container 以 session scope 共用，migration 只跑一次；每個測試使用唯一的 tenant 或 namespace，測試後清理自己的資料；需要驗證 transaction、worker 或 connection pool 的案例，再使用獨立 schema 或獨立 database。</p>
+<p>清理方式也要有失敗安全性。pytest fixture 的 teardown 不只是整理檔案；它還負責關閉 connection、停止 container 和釋放 port。測試在 setup 失敗時，也要能把已建立的資源清掉。<a href="#ref-3">[3]</a></p>
+<p>另外，Docker Compose 只保證服務依照依賴順序啟動，不代表資料庫已經 ready。若用 Compose 啟動整合環境，應配置 database healthcheck，並讓 application 依賴 service_healthy；Docker 官方文件明確區分了「container 正在執行」和「服務已經可以接受請求」。<a href="#ref-4">[4]</a></p>
+<h2 id="整合測試最常見的五個假象">整合測試最常見的五個假象</h2>
+<p>第一個，SQLite 綠燈、PostgreSQL 紅燈。測試使用不同資料庫，實際上沒有覆蓋 production dialect 和 constraint。</p>
+<p>第二個，只測 HTTP status。201 不代表資料真的提交，也不代表 event payload 正確。至少要檢查一個真實持久化結果和一個重要協議欄位。</p>
+<p>第三個，所有 collaborator 都被 mock。測試名稱叫 integration，實際上只測 controller 把參數傳給 service。</p>
+<p>第四個，共用固定測試資料。單獨跑會綠，整個 suite 或平行執行就互相污染。</p>
+<p>第五個，用任意 sleep 等非同步結果。CI 變慢時可能不夠等，CI 變快時又浪費時間；測試仍然沒有真正知道系統何時完成。</p>
+<p>這些問題的共同點是：測試看起來有跨元件，卻沒有真的把最有風險的邊界納入驗證。</p>
+<h2 id="ai-可以補測試但不能猜環境契約">AI 可以補測試，但不能猜環境契約</h2>
+<p>AI 很適合協助整合測試的機械工作：</p>
+<ul>
+<li>依照 case 表產生 request payload 和 fixture。</li>
+<li>把既有 unit case 轉成 API-level scenario。</li>
+<li>產生成功、validation error、conflict、timeout 的測試骨架。</li>
+<li>根據 migration 找出可能缺少的欄位或 constraint case。</li>
+</ul>
+<p>但有三件事不能讓 AI 自己猜：</p>
+<ul>
+<li>production 使用哪個資料庫和 transaction isolation。</li>
+<li>哪些事件或 API 欄位是跨服務契約。</li>
+<li>失敗時哪些資料必須存在、哪些資料絕對不能存在。</li>
+</ul>
+<p>給 AI 的 prompt 應該先提供環境契約，再要求它產生測試：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>請為 POST /orders 設計 integration tests。</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>真實依賴：</span></span>
+<span class="line"><span>- PostgreSQL 16</span></span>
+<span class="line"><span>- repository 使用正式 migration 建立 schema</span></span>
+<span class="line"><span>- orders 與 outbox_events 必須在同一 transaction</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>可替換依賴：</span></span>
+<span class="line"><span>- payment provider 使用 fake HTTP server</span></span>
+<span class="line"><span>- clock 使用固定時間</span></span>
+<span class="line"><span>- broker 不在這組測試啟動，改驗證 outbox row</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>必須驗證：</span></span>
+<span class="line"><span>- 合法 request 回傳 201 且資料庫有正確訂單</span></span>
+<span class="line"><span>- 相同 Idempotency-Key 不會產生第二筆訂單</span></span>
+<span class="line"><span>- 非法 request 不留下資料</span></span>
+<span class="line"><span>- outbox event 和 order 一起提交或一起 rollback</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>不要驗證：</span></span>
+<span class="line"><span>- service 內部 method 呼叫次數</span></span>
+<span class="line"><span>- ORM 使用哪個 method</span></span>
+<span class="line"><span>- private method 名稱</span></span></code></pre>
+<p>這種 prompt 的順序很重要：先說哪些整合點要用真實依賴，再說哪些可以替換，最後才要求產生測試。否則 AI 很容易把 integration test 寫成一堆 mock interaction test。</p>
+<h2 id="放進-ci按風險分層不要每次都跑全部">放進 CI：按風險分層，不要每次都跑全部</h2>
+<p>整合測試比 unit test 慢，反而更需要把執行層級設計清楚：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>每次儲存檔案：</span></span>
+<span class="line"><span>  unit test</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>每次 pull request：</span></span>
+<span class="line"><span>  unit test</span></span>
+<span class="line"><span>  database integration test</span></span>
+<span class="line"><span>  API adapter integration test</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>合併後或 nightly：</span></span>
+<span class="line"><span>  message broker integration test</span></span>
+<span class="line"><span>  多服務 end-to-end test</span></span>
+<span class="line"><span>  sandbox smoke test</span></span></code></pre>
+<p>本機可以先用 pytest -m unit，需要真實依賴時用 pytest -m integration。這些命令的前提是測試檔已加上對應 marker；例如整合測試檔可以在模組層級寫 <code>pytestmark = pytest.mark.integration</code>，unit test 則使用 <code>pytest.mark.unit</code>。同時要在 pytest 設定中註冊 marker，避免拼錯名稱卻沒有收到警告：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span># pyproject.toml</span></span>
+<span class="line"><span>[tool.pytest.ini_options]</span></span>
+<span class="line"><span>markers = [</span></span>
+<span class="line"><span>    "unit: fast tests without external services",</span></span>
+<span class="line"><span>    "integration: tests with real or faithful external boundaries",</span></span>
+<span class="line"><span>]</span></span></code></pre>
+<p>命令如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>$ python -m pytest -m unit -q</span></span>
+<span class="line"><span>$ python -m pytest -m integration -q</span></span></code></pre>
+<p>整合測試若依賴 Docker，CI runner 必須明確提供 Docker；不能只在開發者本機驗證過，就假設 pipeline 也有同樣環境。若採 Docker Compose，將 healthcheck、migration 和 startup timeout 寫進可版本控制的設定；不要靠人工先啟動資料庫。</p>
+<p>CI gate 至少要檢查：</p>
+<ul>
+<li>測試是否真的使用 production 同款資料庫。</li>
+<li>migration 是否從空資料庫成功執行。</li>
+<li>測試資料是否能平行執行而不互相污染。</li>
+<li>失敗時是否能指出是 schema、協議、transaction 還是環境問題。</li>
+</ul>
+<h2 id="結論">結論</h2>
+<p>unit test 保護單一規則，整合測試保護規則穿過邊界之後仍然成立。</p>
+<p>它不需要把整個 production 搬進 CI，也不該用 mock 把所有整合點拿掉。好的整合測試會依風險選擇依賴：資料庫 dialect、正式 migration 和 transaction 使用同款資料庫；HTTP client 則保留真實 serializer、retry 與協議，接上可控制的 fake server；昂貴、不可控的第三方服務再用 sandbox 測試補上。</p>
+<p>AI 可以很快把 case 表翻成 fixture、request 和 assertion，但它不能替團隊決定「失敗時資料庫應該長什麼樣子」。這個判斷仍然來自業務流程、資料一致性和跨服務契約。</p>
+<p>下一篇轉向另一種跨服務邊界測試：契約測試。它和整合測試的責任不同，用來驗證 Consumer 和 Provider 的 API 或事件約定是否相容。當服務數量增加、團隊開始獨立演化時，這種驗證可以避免每次都把所有 Consumer 和 Provider 一起啟動。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] Martin Fowler，〈IntegrationTest〉 <a href="https://martinfowler.com/bliki/IntegrationTest.html">https://martinfowler.com/bliki/IntegrationTest.html</a></li>
+<li><a id="ref-2"></a>[2] Testcontainers，〈<a href="https://testcontainers.com/guides/getting-started-with-testcontainers/">Getting started with Testcontainers for Python</a>〉</li>
+<li><a id="ref-3"></a>[3] pytest，〈About fixtures〉 <a href="https://docs.pytest.org/en/latest/explanation/fixtures.html">https://docs.pytest.org/en/latest/explanation/fixtures.html</a></li>
+<li><a id="ref-4"></a>[4] Docker，〈Control startup and shutdown order in Compose〉 <a href="https://docs.docker.com/compose/how-tos/startup-order/">https://docs.docker.com/compose/how-tos/startup-order/</a></li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？
+
+**Description:** Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。
+
+**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-integration-test/
+
+---
+
 ### AI 時代的自動化測試與驗收（二）：Unit Test（上）在保護什麼？
 
 **Description:** AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。
@@ -182,4 +190,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-16T16:45:10.518Z
+Last updated: 2026-08-17T01:46:37.565Z
