@@ -156,7 +156,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ## Conferences
 
-### COSCUP 2025
+### 使用 Spring Cloud Contract 實踐事件驅動的微服務契約測試
 
 **Description:** 在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。
 
@@ -172,7 +172,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### JCConf 2025
+### 用 Spring AI ＋ OpenAPI 擴充 Agent 能力：讓你的 API 接上自然語言
 
 **Description:** 在 JCConf 2025 分享如何使用 Spring AI 與 OpenAPI，把既有 API 包裝成 Agent 可以理解與呼叫的工具。
 
@@ -190,4 +190,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-17T01:46:37.565Z
+Last updated: 2026-08-17T02:40:54.320Z
