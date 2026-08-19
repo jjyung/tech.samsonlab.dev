@@ -1,0 +1,376 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><!-- Primary Meta Tags --><title>契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</title><meta name="title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta name="description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="og:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="og:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="twitter:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="twitter:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾","description":"契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。","datePublished":"2026-08-19T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1_Z1H8PzJ.webp" alt="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-19T00:00:00.000Z"> Aug 19, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> ContractTesting </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> AIEngineering </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p>系列定位：前一篇從資料庫、交易、序列化、外部 HTTP 和 outbox 拆解 integration test。這一篇再往跨服務邊界走一步：當 Consumer 和 Provider 分開開發、分開部署時，怎麼確認雙方對同一個 API 或事件仍然有相同理解？</p>
+</blockquote>
+<blockquote>
+<p><a href="/blog/ai-era-testing-and-acceptance-integration-test/">上一篇：整合測試到底在接什麼？</a></p>
+</blockquote>
+<p>unit test 綠燈，代表單一規則還成立。integration test 綠燈，代表某個服務和資料庫、HTTP client 或訊息系統接得起來。</p>
+<p>如果 integration test 只接 fake 或 stub，它可能看不到 Consumer 和 Provider 之間的欄位不相容；如果它真的讓 Consumer 呼叫正在運作的 Provider，這個問題通常就會被抓到。兩種測試都合理，差別在於測試環境的成本。</p>
+<p>契約測試要處理的是：無法便宜地讓兩個服務一起啟動，但仍想提早驗證跨服務邊界相容性的情況。它把互動中真正重要的承諾寫成可執行的檢查，讓 Consumer 和 Provider 可以分開驗證。</p>
+<h2 id="契約測試保護的是邊界上的共同承諾">契約測試保護的是邊界上的共同承諾</h2>
+<p>先把這幾種測試的責任分開：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>主要問題</th><th>保護的風險</th></tr></thead><tbody><tr><td>Unit test</td><td>單一行為規則對不對？</td><td>計算、狀態轉換、不變量</td></tr><tr><td>Integration test</td><td>元件接起來後能不能運作？</td><td>資料庫、序列化、transaction、runtime wiring</td></tr><tr><td>Contract test</td><td>Consumer 和 Provider 的約定是否相容？</td><td>API 欄位、事件格式、狀態碼、錯誤語意</td></tr><tr><td>End-to-end test</td><td>完整使用者流程能不能走完？</td><td>多服務拓撲、部署設定、關鍵旅程</td></tr></tbody></table>
+<p>契約測試的單位不是某個 class，也不是整個產品，而是一次跨服務互動。這個互動可能是：</p>
+<ul>
+<li>Consumer 呼叫 <code>GET /orders/{id}</code>，期待收到哪些欄位與狀態碼。</li>
+<li>Provider 發出 <code>OrderCreated</code> 事件，Consumer 依賴哪些欄位與訊息標頭。</li>
+<li>Consumer 收到付款失敗事件後，必須把訂單轉成哪個狀態。</li>
+</ul>
+<p>契約只需要描述互動中真正被依賴的部分，不需要把 Provider 的所有內部行為或整份 domain model 都搬進去。Spring Cloud Contract 的文件也特別提醒，契約測試是在測應用程式之間的契約，不是用來描述完整業務功能。<a href="#ref-1">[1]</a></p>
+<p>這裡的「驗收」不是使用者驗收。契約測試只驗證服務邊界的互動相容性；完整的業務流程和使用者旅程，仍然需要 acceptance test 或 E2E test。</p>
+<h2 id="當跨服務-integration-test-太貴時契約測試補什麼">當跨服務 integration test 太貴時，契約測試補什麼</h2>
+<p>先修正一個容易誤導的說法：integration test 沒有「天然不夠」。如果 Consumer 的 integration test 真的呼叫正在運作的 Provider，Consumer 期待 <code>total_amount</code>、Provider 卻回傳 <code>total</code>，這個測試就會失敗。這時再加契約測試，可能只是重複覆蓋。</p>
+<p>契約測試處理的是另一個問題：兩個服務不能或不值得每次一起啟動。</p>
+<p>例如：</p>
+<ol>
+<li>Consumer 端測試讓 client 呼叫 fake Provider，fake 回傳 <code>total_amount</code>。</li>
+<li>Provider 的測試啟動自己的 API 和資料庫，但只確認自己能產生資料。</li>
+<li>兩邊的測試都綠燈，因為 Consumer 看到的是 fake，Provider 沒有看到 Consumer 的期待。</li>
+</ol>
+<p>當兩個服務真的一起啟動時，完整的跨服務 integration test 可以抓到這個欄位不一致；問題是它可能需要準備兩套服務、資料庫、broker 和部署設定，回饋慢，失敗也難定位。</p>
+<p>在 CDC 流程中，Consumer 先寫出自己依賴的互動，Provider 用同一份契約驗證實作，Consumer 再使用由契約產生的 stub。它不會比真實跨服務 integration test 更接近 production，也不會驗證更多業務邏輯；它只是用較低的環境成本，提早驗證服務邊界是否相容。</p>
+<h2 id="contract-不是-api-文件的同義詞">Contract 不是 API 文件的同義詞</h2>
+<p>API 文件通常要服務很多讀者：前端、後端、測試、維運、外部整合者。契約測試則只需要回答一個更窄的問題：這個 Consumer 依賴的互動，Provider 是否仍然提供？</p>
+<p>一份可用的契約通常包含：</p>
+<ul>
+<li>request 或 event 的方法、路徑、topic、header 與必要欄位。</li>
+<li>response 或 event 的狀態碼、欄位型別、格式與必要語意。</li>
+<li>哪些值是固定的，哪些值只需要符合格式或範圍。</li>
+<li>Consumer 真的使用哪些欄位，以及 Provider 必須保留哪些相容性。</li>
+</ul>
+<p>它通常不應該包含：</p>
+<ul>
+<li>Provider 內部用了哪個 service 或 repository method。</li>
+<li>完整的資料庫 schema 與不會跨服務流動的欄位。</li>
+<li>所有可能的業務情境，或一整套 E2E 流程。</li>
+</ul>
+<p>契約過寬，測試抓不到真正的破壞；契約過窄，Provider 每次內部重構都可能被不必要地綁住。這裡的判斷和上一篇談 mock 的原則一樣：先問這個欄位或互動是不是跨服務的承諾，再決定要不要寫進契約。</p>
+<h2 id="consumer-driven-contract-到底是什麼">Consumer-driven contract 到底是什麼</h2>
+<p>Consumer-driven contract（CDC）不是「Consumer 寫完契約，Provider 無條件照做」。它是一種協作流程：Consumer 先把自己真正依賴的互動寫出來，Provider 再驗證自己的實作是否滿足這些需求。</p>
+<p>Consumer 之所以適合先提出契約，是因為它最清楚自己實際使用了哪些欄位。Provider 可能提供一個很大的 response，但 Consumer 只依賴其中五個欄位；契約應該先保護這五個欄位，而不是把整份 response 的每個欄位都鎖死。</p>
+<p>不過，CDC 不是唯一模式：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>誰定義契約</th><th>適合情境</th></tr></thead><tbody><tr><td>Consumer-driven</td><td>Consumer 提出需求，Provider 驗證</td><td>Consumer 數量有限，雙方能協作</td></tr><tr><td>Provider-owned contract</td><td>Provider 定義公開介面，Consumer 使用</td><td>外部 Consumer 多，或 Provider 無法逐一協作</td></tr><tr><td>Shared schema</td><td>團隊共同維護 schema 與相容性規則</td><td>事件平台、Schema Registry、跨語言整合</td></tr></tbody></table>
+<p>Spring Cloud Contract 同時支援 Consumer-driven contracts 與由 Provider 定義的 contracts。真正重要的不是把某一種模式叫成唯一正解，而是契約的來源、審查責任與驗證流程要清楚。<a href="#ref-2">[2]</a></p>
+<p>Pact 也採用 consumer-driven、以實際互動案例產生契約的方式。這和只驗證 Provider 是否符合一份 schema 或 API 文件不同：後者不一定能證明目前的 Consumer 真的能正確使用它。<a href="#ref-3">[3]</a></p>
+<h2 id="用-ordercreated-看一次完整契約">用 OrderCreated 看一次完整契約</h2>
+<p>沿用前一篇的下單案例。Order Service 建立訂單後，發布 <code>OrderCreated</code> 事件；Payment Service 會消費這個事件，建立或更新付款流程。</p>
+<p>以下假設這個專案約定金額以 decimal string 傳遞，時間一律使用 UTC；實際專案應以自己的 API 與事件規格為準。先不要從 Java class 或 Kafka listener 倒推契約，先寫兩個服務真正同意的互動：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>Provider 承諾</th><th>Consumer 使用方式</th></tr></thead><tbody><tr><td>topic</td><td>固定送到 <code>orders</code></td><td>綁定消費來源</td></tr><tr><td><code>event-type</code>（header）</td><td>固定為 <code>OrderCreated</code></td><td>決定事件路由</td></tr><tr><td><code>event_id</code></td><td>UUID 格式；全域唯一由事件生成規則保證</td><td>去重與追蹤</td></tr><tr><td><code>order_id</code></td><td>非空字串，代表訂單</td><td>建立付款關聯</td></tr><tr><td><code>total_amount</code></td><td>使用約定的金額格式</td><td>計算付款金額</td></tr><tr><td><code>occurred_at</code></td><td>RFC 3339 UTC datetime</td><td>記錄處理時間線</td></tr></tbody></table>
+<p>這張表不是完整的 Order domain model。Payment Service 不需要知道 Order Service 的 repository、資料表或內部狀態機；它只需要知道收到事件後可以安全解析哪些欄位。</p>
+<p>可以把契約寫成接近協議的形式：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>topic: orders</span></span>
+<span class="line"><span>headers:</span></span>
+<span class="line"><span>  event-type: OrderCreated</span></span>
+<span class="line"><span>  content-type: application/json</span></span>
+<span class="line"><span>body:</span></span>
+<span class="line"><span>  event_id: UUID</span></span>
+<span class="line"><span>  order_id: non-empty string</span></span>
+<span class="line"><span>  total_amount: decimal string</span></span>
+<span class="line"><span>  occurred_at: RFC 3339 UTC datetime</span></span></code></pre>
+<p>這段不是特定工具的完整 DSL，而是先把「跨服務承諾」寫清楚。真正落地時，JSON Schema 可以表達 body 的結構與型別；topic、header、trigger 和 Consumer／Provider 的互動，則要交給 Spring Cloud Contract、Pact 或團隊既有的契約工具表達。</p>
+<h2 id="provider-要驗證自己沒有違約">Provider 要驗證自己沒有違約</h2>
+<p>Provider 端的測試問題不是「這個 method 有沒有被呼叫」，而是「對外輸出的互動是否符合契約」。以 <code>OrderCreated</code> 為例，Provider 測試至少要確認：</p>
+<ul>
+<li>在契約指定的測試情境被觸發時，確實發出事件。</li>
+<li>topic、event type、header 和 body 欄位符合契約。</li>
+<li><code>event_id</code>、<code>order_id</code>、<code>total_amount</code> 的格式正確。</li>
+<li>契約要求的欄位沒有因為重構或 serializer 修改而消失。</li>
+</ul>
+<p>這和前一篇的 integration test 有重疊，但責任不同。integration test 可以用真實 broker 驗證 outbox、publisher、serializer、ack 和 retry；contract test 則集中確認「送出去的事件長什麼樣子」。不需要每一個 Consumer 都被同時啟動，Provider 也可以先知道自己是否破壞了已發布的契約。</p>
+<p>以 Spring Cloud Contract 為例，Provider 可以從契約定義產生 verifier tests，讓建置流程檢查 HTTP 或 messaging output 是否符合契約。Messaging contract 也可以透過 message verifier 連接實際的 messaging integration。<a href="#ref-1">[1]</a></p>
+<h2 id="consumer-端如何使用契約資料">Consumer 端如何使用契約資料</h2>
+<p>Consumer 端可以使用契約產生的 stub 或測試訊息，測試自己的 client 或 listener 能不能處理 Provider 承諾的輸入。這是搭配契約資料的 Consumer 行為測試，不代表契約本身會驗證完整業務流程。</p>
+<p>Payment Service 的 Consumer 行為測試可以做這幾件事：</p>
+<ol>
+<li>載入一份符合 <code>OrderCreated</code> 契約的事件。</li>
+<li>讓 Payment Service 的 listener 處理它。</li>
+<li>搭配 Consumer 自己的行為測試，驗證付款記錄建立或狀態轉換符合規則。</li>
+<li>確認不需要啟動真正的 Order Service。</li>
+</ol>
+<p>這裡要分清楚兩個責任。契約提供的是「輸入會符合什麼格式」；Payment Service 自己的 unit 或 integration test，才負責驗證收到輸入後如何計算、寫入資料庫和處理錯誤。契約資料可以餵給 listener，但不應該因此取代完整的業務行為測試。</p>
+<p>Spring Cloud Contract 的 Stub Runner 可以下載或載入 Provider 產生的 stubs；HTTP 情境常見的是啟動 stub server，messaging 情境則可以透過 messaging route 或 trigger 產生測試訊息。契約本身也要描述訊息來源、destination、body、header，以及觸發訊息的方式。實際接法取決於使用的 messaging framework，不能把 HTTP stub server 的做法直接套到 Kafka。<a href="#ref-1">[1]</a></p>
+<h2 id="契約測試不會自動保證語意正確">契約測試不會自動保證語意正確</h2>
+<p>契約測試最容易被誤解成「有契約就安全」。它能抓到格式與約定被破壞，卻不會自動判斷欄位名稱背後的業務意義。</p>
+<p>例如 <code>total_amount</code> 從「含稅金額」改成「未稅金額」，型別和欄位名稱都沒有變，契約測試可能完全通過，但 Payment Service 算出的金額已經錯了。</p>
+<p>因此，契約需要同時寫出幾種資訊：</p>
+<ul>
+<li>型別與格式：字串、數字、UUID、時間格式。</li>
+<li>必填與選填：Consumer 是否能接受欄位不存在。</li>
+<li>相容性：新增欄位是否允許，移除或改名是否為 breaking change。</li>
+<li>語意：金額是否含稅、時間使用 UTC 還是本地時區、狀態值代表什麼。</li>
+</ul>
+<p>其中語意不能只靠 matcher 或 schema 解決。它需要規格討論、範例、review，必要時也要把關鍵不變量寫進 Consumer 的行為測試。</p>
+<h2 id="版本演進新增欄位不一定安全">版本演進：新增欄位不一定安全</h2>
+<p>最常見的說法是「只要向後相容，新增欄位就安全」。這句話少了一個前提：Consumer 是否會拒絕未知欄位，或是否把整個 response 當成完全相等的物件比較。</p>
+<p>可以用這個角度檢查變更：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>變更</th><th>常見風險</th><th>處理方向</th></tr></thead><tbody><tr><td>新增 optional 欄位</td><td>舊 Consumer 不接受未知欄位</td><td>先確認 parser 與序列化設定</td></tr><tr><td>移除欄位</td><td>Consumer 仍在使用</td><td>先查契約與使用者，再分階段淘汰</td></tr><tr><td>改變型別</td><td>解析直接失敗</td><td>發新版本或提供相容格式</td></tr><tr><td>改變 enum／狀態語意</td><td>型別沒變，決策卻變了</td><td>視為需要協作的 breaking change</td></tr><tr><td>改變金額、時間或單位</td><td>數值可解析但結果錯</td><td>把單位與語意寫進契約與案例</td></tr></tbody></table>
+<p>契約測試的價值不只是在變更後讓 CI 變紅，也是在變更前讓團隊看見「誰依賴這個欄位」。Spring Cloud Contract 的 stubs-per-consumer 模式，就是把不同 Consumer 的契約分開管理，讓 Provider 看見每個 Consumer 實際使用的部分。<a href="#ref-1">[1]</a></p>
+<h2 id="contract-testschema-testintegration-test-怎麼分">Contract test、schema test、integration test 怎麼分</h2>
+<p>這些名稱常常被混在一起，但它們回答的問題不一樣：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>問題</th><th>是否需要完整 Provider</th></tr></thead><tbody><tr><td>Schema validation</td><td>payload 是否符合結構與型別？</td><td>不一定</td></tr><tr><td>Contract test</td><td>這個 Consumer 和 Provider 的互動是否相容？</td><td>通常不需要同時啟動</td></tr><tr><td>Integration test</td><td>實際 client、broker、serializer 和依賴能否運作？</td><td>依案例決定</td></tr><tr><td>Acceptance／E2E test</td><td>完整使用者旅程或業務流程是否成立？</td><td>通常需要多個服務</td></tr></tbody></table>
+<p>這些測試不是一條嚴格的 <code>unit → contract → integration → E2E</code> 階梯。Unit test 是依賴隔離的行為測試；contract test 是跨服務邊界的相容性測試；integration test 是實際元件、基礎設施與 runtime wiring 的整合測試；acceptance／E2E test 則是完整旅程的測試。它們可以在同一條 CI pipeline 中依序執行，但責任和依賴範圍不同，也不必互相取代。</p>
+<p>以這個系列的敘事順序來說，契約測試放在 integration test 之後、E2E 之前是合適的：上一篇先說明單一服務如何和資料庫、HTTP 或 outbox 接起來，這一篇再處理服務之間如何保持共同理解，下一篇才討論完整拓撲與使用者旅程。但這是由問題範圍安排出的閱讀順序，不代表測試金字塔裡存在唯一的線性層級。</p>
+<p>Schema validation 可以是契約測試的一部分，但單獨通過 schema 不代表 Consumer 的行為正確。反過來，Consumer contract test 也不應該偷偷變成完整 integration test，否則每個 Consumer 都要準備同一套資料庫、broker 和部署環境，契約測試很快就失去快速回饋的優勢。</p>
+<h2 id="不是每個服務邊界都需要契約測試">不是每個服務邊界都需要契約測試</h2>
+<p>契約測試不是測試金字塔裡必須補上的一層，而是用維護成本換取更早跨服務回饋的選擇。是否採用，應該看服務邊界的風險，以及現有測試能不能便宜地發現相同問題：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>情境</th><th>建議</th></tr></thead><tbody><tr><td>Consumer 和 Provider 分開部署，變更節奏也不同</td><td>值得考慮契約測試</td></tr><tr><td>Consumer 很多，E2E 昂貴又難定位</td><td>值得考慮契約測試</td></tr><tr><td>Consumer mock 經常和真實 Provider 漂移</td><td>值得考慮契約測試</td></tr><tr><td>同一個 repository、一起部署，真實 integration test 很便宜</td><td>優先維護 integration test</td></tr><tr><td>介面穩定且只需要檢查 payload 結構</td><td>Schema validation 可能已經足夠</td></tr></tbody></table>
+<p>如果 integration test 已經能低成本呼叫真實 Provider，契約測試可能只是重複覆蓋。反過來，如果每次驗證跨服務相容性都要啟動完整環境，契約測試的價值就不只是多一個測試種類，而是把回饋提前，並讓失敗更容易歸因到某個 Consumer 或 Provider。</p>
+<p>實務上不需要一次替所有服務邊界導入。可以先挑一個最常變更、Consumer 最多，或一旦不相容就會造成高成本事故的互動，寫一份最小契約，觀察它是否真的減少 mock 漂移與晚期整合失敗。如果團隊沒有契約發布、驗證和退場的責任人，先不要急著引入工具。</p>
+<h2 id="最常見的五個誤區">最常見的五個誤區</h2>
+<ol>
+<li>
+<p><strong>把所有 API 文件欄位都寫成契約。</strong> 這會讓契約變成 Provider 的完整 DTO 快照，任何不影響 Consumer 的欄位調整都可能造成不必要的失敗。</p>
+</li>
+<li>
+<p><strong>只測 Provider，不測 Consumer。</strong> Provider 通過只代表它能產生符合契約的輸出，Consumer 仍可能解析錯誤或忽略必要的狀態轉換。</p>
+</li>
+<li>
+<p><strong>只測 Consumer 的 mock，不讓 Provider 驗證同一份契約。</strong> 這樣只是把 Consumer 的猜測保存下來，沒有形成雙方共同的檢查。</p>
+</li>
+<li>
+<p><strong>把契約測試寫成 E2E。</strong> 契約測試的目的，是讓雙方可以獨立驗證；如果每次都把所有服務和真實 broker 啟動，測試成本就回到 integration 或 E2E 的問題。</p>
+</li>
+<li>
+<p><strong>把業務流程全部塞進契約。</strong> 契約應該保護跨服務互動，不是描述「建立訂單到付款完成」的所有分支。完整流程仍然要由 integration、E2E 或 acceptance test 負責。</p>
+</li>
+</ol>
+<h2 id="ai-可以幫忙產生契約但不能替團隊決定語意">AI 可以幫忙產生契約，但不能替團隊決定語意</h2>
+<p>AI 很適合協助整理既有 API、事件 payload 和 Consumer 使用位置：</p>
+<ul>
+<li>從程式碼與測試找出 Consumer 實際讀取的欄位。</li>
+<li>將既有案例整理成 HTTP 或 messaging contract 的初稿。</li>
+<li>列出新增、移除、改名與型別變更可能影響的 Consumer。</li>
+<li>產生 Provider verifier 與 Consumer stub test 的骨架。</li>
+</ul>
+<p>但有三件事不能只讓 AI 從目前程式碼猜：</p>
+<ul>
+<li>欄位的業務語意，例如金額是否含稅。</li>
+<li>欄位缺少或新增時，舊 Consumer 應該怎麼做。</li>
+<li>事件是允許重送、亂序，還是必須依序處理。</li>
+</ul>
+<p>給 AI 的 prompt 應該先提供跨服務承諾，再要求它產生契約：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>請為 Order Service 的 OrderCreated event 設計 consumer-driven contract。</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Consumer：Payment Service</span></span>
+<span class="line"><span>Consumer 實際使用：event_id、order_id、total_amount、occurred_at</span></span>
+<span class="line"><span>必須保留：event-type header、JSON 欄位名稱、total_amount 的 decimal string 格式</span></span>
+<span class="line"><span>相容性規則：可新增 optional 欄位，不可移除既有欄位，不可改變金額單位</span></span>
+<span class="line"><span>不要包含：repository、database schema、private method、完整付款流程</span></span></code></pre>
+<p>這樣 AI 產生的是可 review 的契約草稿，不是把目前 DTO 原封不動複製成另一份規格。人仍然要確認契約是否真的代表跨團隊共同承諾。</p>
+<h2 id="放進-ciprovider-和-consumer-都要有回饋">放進 CI：Provider 和 Consumer 都要有回饋</h2>
+<p>以下流程以 CDC、由 Consumer 產生並發布契約為例。若採用 Provider-owned contract 或 shared schema，契約來源與發布流程會不同。</p>
+<p>契約測試的 CI 流程至少要讓兩邊都能收到結果：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Consumer pull request</span></span>
+<span class="line"><span>  -> 產生或更新 Consumer contract</span></span>
+<span class="line"><span>  -> Consumer test 使用 Provider stub</span></span>
+<span class="line"><span>  -> 發布契約或測試資產</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Provider pull request</span></span>
+<span class="line"><span>  -> 讀取已發布的 Consumer contracts</span></span>
+<span class="line"><span>  -> 執行 Provider verifier tests</span></span>
+<span class="line"><span>  -> 通過後才允許發布新版本</span></span></code></pre>
+<p>如果契約資產放在 artifact repository、Git repository 或 registry，版本、來源和 Consumer 名稱都要可追蹤。否則測試失敗時，團隊只知道「某個 stub 不相容」，卻不知道是哪個 Consumer、哪個版本或哪一次變更造成的。</p>
+<p>也不要把每個 Consumer 的契約都當成永遠不能改的法律。契約反映的是目前的使用者與系統需求；當 Consumer 被淘汰、事件版本升級或業務語意改變時，契約也要有審查與退場流程。</p>
+<h2 id="結論">結論</h2>
+<p>unit test 保護單一規則，integration test 保護元件接起來後的行為，contract test 則保護 Consumer 和 Provider 對同一個跨服務互動的共同理解。這些測試不是固定要全部存在的清單，而是針對不同風險做取捨。</p>
+<p>契約測試最有價值的地方，不是讓測試種類再多一種，而是讓服務可以分開演進，卻不必等到完整部署後才知道彼此已經不相容。它也不是 integration 或 E2E 的替代品：資料庫、broker、retry 和部署拓撲仍然需要其他測試層負責。</p>
+<p>因此，契約測試不是每個服務邊界都要加上的一層。只有當服務必須獨立部署，而真實跨服務 integration test 又慢又難定位時，才值得用額外維護成本換取更早的回饋。</p>
+<p>真正困難的地方，是決定哪些欄位和語意值得成為共同承諾。AI 可以從程式碼和測試快速整理出候選契約，但不能替團隊決定一個欄位改名後，誰需要先知道、誰必須遷移、什麼時候可以刪除舊版本。</p>
+<p>下一篇轉向 E2E 測試：當整個服務拓撲真的要一起跑時，哪些使用者旅程值得付出這個成本，又要怎麼避免 E2E 變成慢、脆弱、失敗後難以定位的大型測試。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] Spring Cloud Contract，〈<a href="https://docs.spring.io/spring-cloud-contract/docs/current/reference/html/getting-started.html">Getting Started</a>〉</li>
+<li><a id="ref-2"></a>[2] Spring Cloud Contract，〈<a href="https://docs.spring.io/spring-cloud-contract/docs/current/reference/html/documentation-overview.html">Documentation Overview</a>〉</li>
+<li><a id="ref-3"></a>[3] Pact，〈<a href="https://docs.pact.io/">Introduction</a>〉</li>
+</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
