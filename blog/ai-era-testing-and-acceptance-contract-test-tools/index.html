@@ -12,41 +12,6 @@ Skip to main content
 </blockquote>
 <p>契約測試（contract testing）就是用自動化測試，驗證系統之間對 request、response、message 或事件格式的共同約定沒有被破壞。</p>
 <p>不過，契約測試不是一個單一工具，也不是只有一種工作流。OpenAPI + Schemathesis、Pact 和 Spring Cloud Contract 都能用來驗證契約，但它們解決的問題不完全一樣。</p>
-<h2 id="先釐清pytest-是測試執行器不是契約測試框架">先釐清：pytest 是測試執行器，不是契約測試框架</h2>
-<p>pytest 是 Python 的測試執行器與 assertion framework。它可以測試任何可以被觀察和驗證的輸入、輸出或狀態，但契約測試的定義來自被驗證的系統邊界與 contract，不是 pytest 本身。</p>
-<p>同樣的測試概念，在不同語言會使用不同工具：</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>語言</th><th>測試執行工具</th></tr></thead><tbody><tr><td>Python</td><td>pytest</td></tr><tr><td>Java／Kotlin</td><td>JUnit、Gradle、Maven</td></tr><tr><td>JavaScript／TypeScript</td><td>Jest、Vitest、Node test</td></tr><tr><td>Go</td><td><code>go test</code></td></tr><tr><td>C#</td><td>xUnit、NUnit</td></tr></tbody></table>
-<p>OpenAPI 描述的是 HTTP API 的介面，包括輸入、輸出與狀態碼；測試由哪種語言執行，則是另一個層次的選擇。</p>
-<p>同理，Pydantic 也不是 canonical contract 本身。它是 Python 裡的一種資料模型與 validator。如果系統是跨語言的，通常會把 OpenAPI、JSON Schema、Protobuf 或 Avro 當作跨語言的正式規格，再由各語言使用自己的 model 和 validator。</p>
 <h2 id="三組方案其實在驗證不同問題">三組方案其實在驗證不同問題</h2>
 <p>可以先用下面這張圖分辨工具的責任：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>OpenAPI + Schemathesis</span></span>
