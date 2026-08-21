@@ -1,0 +1,295 @@
+<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test-tools/"><!-- Primary Meta Tags --><title>契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract</title><meta name="title" content="契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract"><meta name="description" content="契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test-tools/"><meta property="og:title" content="契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract"><meta property="og:description" content="契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test-tools.C6ms2oFf.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test-tools/"><meta property="twitter:title" content="契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract"><meta property="twitter:description" content="契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test-tools.C6ms2oFf.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract","description":"契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。","datePublished":"2026-08-21T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test-tools.C6ms2oFf.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
+Skip to main content
+</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/ai-era-testing-and-acceptance-contract-test-tools.C6ms2oFf_Z4JYzu.webp" alt="契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-08-21T00:00:00.000Z"> Aug 21, 2026 </time>  </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Testing </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> ContractTesting </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> APITesting </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <blockquote>
+<p><a href="/blog/ai-era-testing-and-acceptance-contract-test/">上一篇：契約測試到底在保護誰？</a></p>
+</blockquote>
+<p>這篇接著前一篇談契約測試的定位，整理 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證什麼、怎麼運作，以及如何放進 CI。</p>
+<p>API、微服務或訊息系統之間最麻煩的問題，通常不是某個函式算錯，而是系統邊界的約定慢慢漂移了。</p>
+<p>文件說 response 一定有 <code>id</code>，實際卻回傳 <code>null</code>；consumer 期待 <code>404</code>，provider 改成了 <code>200</code>；某個欄位被重新命名，直到前端或另一個服務部署後才發現。</p>
+<p>這些問題都可以歸結成一件事：</p>
+<blockquote>
+<p>實際系統是否仍然遵守對外公布的 contract？</p>
+</blockquote>
+<p>契約測試（contract testing）就是用自動化測試，驗證系統之間對 request、response、message 或事件格式的共同約定沒有被破壞。</p>
+<p>不過，契約測試不是一個單一工具，也不是只有一種工作流。OpenAPI + Schemathesis、Pact 和 Spring Cloud Contract 都能用來驗證契約，但它們解決的問題不完全一樣。</p>
+<h2 id="先釐清pytest-是測試執行器不是契約測試框架">先釐清：pytest 是測試執行器，不是契約測試框架</h2>
+<p>pytest 是 Python 的測試執行器與 assertion framework。它可以測試任何可以被觀察和驗證的輸入、輸出或狀態，但契約測試的定義來自被驗證的系統邊界與 contract，不是 pytest 本身。</p>
+<p>同樣的測試概念，在不同語言會使用不同工具：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>語言</th><th>測試執行工具</th></tr></thead><tbody><tr><td>Python</td><td>pytest</td></tr><tr><td>Java／Kotlin</td><td>JUnit、Gradle、Maven</td></tr><tr><td>JavaScript／TypeScript</td><td>Jest、Vitest、Node test</td></tr><tr><td>Go</td><td><code>go test</code></td></tr><tr><td>C#</td><td>xUnit、NUnit</td></tr></tbody></table>
+<p>OpenAPI 描述的是 HTTP API 的介面，包括輸入、輸出與狀態碼；測試由哪種語言執行，則是另一個層次的選擇。</p>
+<p>同理，Pydantic 也不是 canonical contract 本身。它是 Python 裡的一種資料模型與 validator。如果系統是跨語言的，通常會把 OpenAPI、JSON Schema、Protobuf 或 Avro 當作跨語言的正式規格，再由各語言使用自己的 model 和 validator。</p>
+<h2 id="三組方案其實在驗證不同問題">三組方案其實在驗證不同問題</h2>
+<p>可以先用下面這張圖分辨工具的責任：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>OpenAPI + Schemathesis</span></span>
+<span class="line"><span>→ 這個 endpoint 的回應是否符合 OpenAPI schema？</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Pact</span></span>
+<span class="line"><span>→ 這個 provider 是否滿足特定 consumer 的實際需求？</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Spring Cloud Contract</span></span>
+<span class="line"><span>→ 能不能從 contract 產生 provider tests 與 consumer stubs？</span></span></code></pre>
+<p>OpenAPI + Schemathesis 偏向 schema-driven、黑箱式的 endpoint testing。它從 OpenAPI 產生輸入，呼叫實際 endpoint，再驗證 response。</p>
+<p>Pact 偏向 consumer-driven contract testing。consumer 先描述自己真正依賴的 request 和 response，provider 再驗證是否能滿足這些 expectation。</p>
+<p>Spring Cloud Contract 則把 contract DSL、provider-side generated tests、WireMock stubs 和 artifact repository 串成一套 workflow。它既支援 provider-side contract，也支援 consumer-driven contract；實際差異在於 contract 的所有權與發布流程。</p>
+<h2 id="openapi--schemathesis最接近給-contract-和-endpoint直接產出報告">OpenAPI + Schemathesis：最接近「給 contract 和 endpoint，直接產出報告」</h2>
+<p>如果需求是：</p>
+<blockquote>
+<p>給定一份 API contract 和一個 endpoint，自動呼叫 API、驗證結果，再產出 CI 可以讀的報告。</p>
+</blockquote>
+<p>那最直接的選擇通常是 OpenAPI + Schemathesis。</p>
+<p>OpenAPI 可以描述：</p>
+<ul>
+<li>path、HTTP method、query、header 和 request body</li>
+<li>request 與 response 的欄位、型別和必填條件</li>
+<li>status code</li>
+<li>enum、格式與限制</li>
+<li>不同狀態下的 response</li>
+</ul>
+<p>例如：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">openapi</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">3.0.3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">info</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  title</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">User API</span></span>
+<span class="line"><span style="color:#85E89D">  version</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">1.0.0</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">paths</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  /users/{user_id}</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    get</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      parameters</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        - </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">user_id</span></span>
+<span class="line"><span style="color:#85E89D">          in</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">path</span></span>
+<span class="line"><span style="color:#85E89D">          required</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">true</span></span>
+<span class="line"><span style="color:#85E89D">          schema</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">            type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">string</span></span>
+<span class="line"><span style="color:#85E89D">            format</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">uuid</span></span>
+<span class="line"><span style="color:#85E89D">      responses</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#9ECBFF">        "200"</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">          description</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">User found</span></span>
+<span class="line"><span style="color:#85E89D">          content</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">            application/json</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">              schema</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">                $ref</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"#/components/schemas/User"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">components</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  schemas</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    User</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">object</span></span>
+<span class="line"><span style="color:#85E89D">      required</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">        - </span><span style="color:#9ECBFF">id</span></span>
+<span class="line"><span style="color:#E1E4E8">        - </span><span style="color:#9ECBFF">name</span></span>
+<span class="line"><span style="color:#85E89D">      properties</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">        id</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">          type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">string</span></span>
+<span class="line"><span style="color:#85E89D">        name</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">          type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">string</span></span></code></pre>
+<p>Schemathesis 會讀取這份 schema，產生多組測試輸入，呼叫實際 API，並檢查 status code、response schema 與 server error。它也能產生邊界值和錯誤輸入，不只測一條手寫的 happy path；但它主要驗證 API 是否符合 schema，不會取代業務規則測試或 E2E 測試。</p>
+<p>基本使用方式如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">schemathesis</span><span style="color:#9ECBFF"> run</span><span style="color:#9ECBFF"> openapi.yaml</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --url</span><span style="color:#9ECBFF"> "</span><span style="color:#E1E4E8">$API_BASE_URL</span><span style="color:#9ECBFF">"</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --report</span><span style="color:#9ECBFF"> junit</span><span style="color:#79B8FF"> \</span></span>
+<span class="line"><span style="color:#79B8FF">  --report-dir</span><span style="color:#9ECBFF"> ./test-reports</span></span></code></pre>
+<p>Schemathesis 支援 JUnit、HAR、VCR 和 NDJSON 等輸出格式，JUnit XML 可以交給 CI 系統統一收集。<a href="https://schemathesis.readthedocs.io/en/stable/">Schemathesis 官方文件</a></p>
+<p>GitHub Actions 的概念範例如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">API contract test</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#79B8FF">on</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  pull_request</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  push</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">jobs</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  contract-test</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    runs-on</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">ubuntu-latest</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">    env</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">      API_BASE_URL</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">http://127.0.0.1:8000</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">    steps</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">uses</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">actions/checkout@v4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">      # 實際專案需要在這裡啟動測試環境</span></span>
+<span class="line"><span style="color:#6A737D">      # 例如：docker compose up -d api</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Install Schemathesis</span></span>
+<span class="line"><span style="color:#85E89D">        run</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">pip install schemathesis</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Run API contract tests</span></span>
+<span class="line"><span style="color:#85E89D">        run</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">|</span></span>
+<span class="line"><span style="color:#9ECBFF">          schemathesis run openapi.yaml \</span></span>
+<span class="line"><span style="color:#9ECBFF">            --url "$API_BASE_URL" \</span></span>
+<span class="line"><span style="color:#9ECBFF">            --report junit \</span></span>
+<span class="line"><span style="color:#9ECBFF">            --report-dir ./test-reports</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Upload JUnit report</span></span>
+<span class="line"><span style="color:#85E89D">        if</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">always()</span></span>
+<span class="line"><span style="color:#85E89D">        uses</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">actions/upload-artifact@v4</span></span>
+<span class="line"><span style="color:#85E89D">        with</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">          name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">api-contract-test-report</span></span>
+<span class="line"><span style="color:#85E89D">          path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">test-reports/</span></span></code></pre>
+<p>這種做法的優點是簡單、跨語言，而且很接近「規格檔對實際服務做驗證」。但它有一個前提：OpenAPI 必須描述得夠準確。如果 schema 本身就是錯的，測試只會很有信心地驗證錯誤規格。</p>
+<h2 id="pact從-consumer-真正依賴的互動出發">Pact：從 consumer 真正依賴的互動出發</h2>
+<p>Pact 的核心不是測試完整 API，而是驗證 consumer 和 provider 之間的實際互動。</p>
+<p>典型流程如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Consumer 撰寫測試</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Pact 產生 JSON contract</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Consumer CI 發布 contract</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Provider CI 取回 contract</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Provider replay request 並驗證 response</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>（可選但推薦）Pact Broker 分享 contract、驗證結果與版本相容性</span></span></code></pre>
+<p>假設前端只需要 User API 的 <code>id</code> 和 <code>name</code>，另一個服務需要 <code>id</code> 和 <code>email</code>。兩個 consumer 可以各自建立自己的 Pact。Pact contract 不會描述 Provider 整份 API，只記錄特定 consumer 真正依賴的互動；Provider 仍需自行測試其他功能與 consumer。</p>
+<p>這是 Pact 很重要的特性：contract 通常從 consumer 的測試互動產生，而不是先描述 provider 的整份 API。Pact 會把這些互動保存成 contract，再讓 provider 端重新執行並驗證。<a href="https://docs.pact.io/getting_started/how_pact_works">Pact 官方文件</a></p>
+<p>Pact 適合：</p>
+<ul>
+<li>consumer 和 provider 由不同團隊維護</li>
+<li>多個服務各自獨立部署</li>
+<li>系統使用多種語言或框架</li>
+<li>需要知道哪些 consumer/provider 版本可以安全一起部署</li>
+<li>HTTP API 與非同步訊息都需要驗證</li>
+</ul>
+<p>Pact Broker 是可選但很實用的共享元件，負責分享 Pact 和 provider verification 結果，也能提供不同版本之間的相容性矩陣。<a href="https://docs.pact.io/pact_broker">Pact Broker 官方文件</a></p>
+<p>Pact 不適合被當成 provider 的完整功能測試工具。Pact 官方也建議，contract test 應該聚焦在 consumer 的需求與雙方對互動的共同理解，而不是取代 provider 自己的 functional tests。<a href="https://docs.pact.io/consumer">Pact consumer testing</a></p>
+<h2 id="spring-cloud-contract把-contractgenerated-tests-和-stubs-串起來">Spring Cloud Contract：把 contract、generated tests 和 stubs 串起來</h2>
+<p>Spring Cloud Contract 的核心價值，是把一份 contract DSL 或 YAML 轉換成多種測試產物。</p>
+<p>常見流程如下：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>撰寫 contract DSL／YAML</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Provider 產生並執行 contract tests</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>產生 WireMock stubs</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>發布至 Maven 相容的 artifact repository，例如 Nexus 或 Artifactory，也可以使用 Git 儲存</span></span>
+<span class="line"><span>    ↓</span></span>
+<span class="line"><span>Consumer 使用 Stub Runner 啟動 stubs</span></span></code></pre>
+<p>Provider 端的 contract 可能描述：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">request</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  method</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">GET</span></span>
+<span class="line"><span style="color:#85E89D">  url</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">/users/123</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#85E89D">response</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  status</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">200</span></span>
+<span class="line"><span style="color:#85E89D">  headers</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    Content-Type</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">application/json</span></span>
+<span class="line"><span style="color:#85E89D">  body</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    id</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"123"</span></span>
+<span class="line"><span style="color:#85E89D">    name</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">Samson</span></span></code></pre>
+<p>Spring Cloud Contract 可以根據這份定義：</p>
+<ul>
+<li>產生 provider-side tests</li>
+<li>驗證實際 provider 的 response</li>
+<li>產生 WireMock stubs</li>
+<li>讓 consumer 在測試時使用 provider stubs</li>
+<li>把 stubs 發布到 artifact repository</li>
+</ul>
+<p>Stub Runner 會下載並啟動 provider stubs，讓 consumer 的 integration tests 不必啟動完整的 provider 服務。<a href="https://docs.spring.io/spring-cloud-contract/reference/project-features-stubrunner.html">Spring Cloud Contract Stub Runner</a></p>
+<p>Spring Cloud Contract 最適合 Spring Boot、Java 或 Kotlin 團隊，尤其是已經使用 Maven／Gradle，以及 Nexus／Artifactory 的組織。它也支援非 JVM 應用，但通常需要透過 Docker 或外部 artifact 流程整合，因此跨語言使用時的體驗不如 Pact 直接。<a href="https://docs.spring.io/spring-cloud-contract/reference/using/provider-contract-testing-non-jvm.html">Spring Cloud Contract 非 JVM 流程</a></p>
+<h2 id="pact-和-spring-cloud-contract-的差異">Pact 和 Spring Cloud Contract 的差異</h2>
+<p>兩者可以用下面這張表快速比較：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>面向</th><th>Pact</th><th>Spring Cloud Contract</th></tr></thead><tbody><tr><td>核心定位</td><td>Consumer-driven contract testing</td><td>Provider／Consumer-driven contract testing</td></tr><tr><td>合約來源</td><td>Consumer 測試產生 Pact</td><td>DSL 或 YAML contract</td></tr><tr><td>Provider 驗證</td><td>Replay consumer 的 request</td><td>執行 generated provider tests</td></tr><tr><td>Consumer 測試</td><td>Pact mock provider</td><td>Stub Runner、WireMock 或 message stub</td></tr><tr><td>合約交換</td><td>Pact Broker</td><td>Maven 相容 repository（例如 Nexus／Artifactory）或 Git</td></tr><tr><td>主要生態</td><td>跨語言、跨框架</td><td>Spring／JVM 整合最完整</td></tr><tr><td>典型重點</td><td>consumer 實際依賴什麼</td><td>contract 如何產生 tests 與 stubs</td></tr></tbody></table>
+<p>更直白地說：</p>
+<ul>
+<li>Pact 比較像「Consumer 說我需要這些互動，Provider 證明自己做得到」。</li>
+<li>Spring Cloud Contract 比較像「團隊維護一份 contract，從它產生 provider tests 和 consumer stubs」。</li>
+</ul>
+<p>兩者都能做 consumer-driven contract testing，所以差異不是「一個能做、另一個不能做」，而是預設 workflow、工具鏈和生態系不同。</p>
+<h2 id="實務上可以並存">實務上可以並存</h2>
+<p>這些工具不一定要互相取代。它們可以分層使用：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>OpenAPI + Schemathesis</span></span>
+<span class="line"><span>→ 驗證 OpenAPI 描述的 API response 是否符合 schema</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Pact／Spring Cloud Contract</span></span>
+<span class="line"><span>→ 驗證重要 consumer-provider 互動</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Unit／integration tests</span></span>
+<span class="line"><span>→ 驗證業務邏輯與基礎設施整合</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>E2E tests</span></span>
+<span class="line"><span>→ 驗證少量關鍵使用者旅程</span></span></code></pre>
+<p>例如一個服務可以同時有：</p>
+<ul>
+<li>Schemathesis：確保 OpenAPI 與實際 endpoint 沒有 drift</li>
+<li>Pact：確保前端使用的幾個重要 User API interaction 不會被 provider 破壞</li>
+<li>Unit tests：驗證權限、狀態轉換與錯誤處理</li>
+<li>E2E：驗證使用者能完成登入、下單或付款流程</li>
+</ul>
+<p>這樣的分工比用單一工具包辦所有測試更清楚。每個工具只需要回答一個具體問題。</p>
+<blockquote>
+<p>OpenAPI 定義 API 應該長什麼樣，Schemathesis 驗證 API 實際長什麼樣；Pact 驗證 consumer 依賴的互動，Spring Cloud Contract 則把 contract、provider tests 和 consumer stubs 串成一套工程流程。</p>
+</blockquote>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>

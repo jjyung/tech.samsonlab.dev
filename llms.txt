@@ -40,6 +40,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract
+
+**Description:** 契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。
+
+**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-contract-test-tools/
+
+---
+
 ### 整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？
 
 **Description:** Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。
@@ -198,4 +206,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-19T01:55:58.547Z
+Last updated: 2026-08-21T01:15:16.917Z
