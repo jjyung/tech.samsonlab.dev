@@ -1,7 +1,4 @@
-<!DOCTYPE html><html lang="zh-TW"> <head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v6.2.2"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><!-- Primary Meta Tags --><title>微服務與作業系統類比地圖</title><meta name="title" content="微服務與作業系統類比地圖"><meta name="description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><meta property="og:title" content="微服務與作業系統類比地圖"><meta property="og:description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><meta property="twitter:title" content="微服務與作業系統類比地圖"><meta property="twitter:description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"微服務與作業系統類比地圖","description":"用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。","datePublished":"2026-06-15T00:00:00.000Z","dateModified":"2026-06-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.DAwYO1Mp.css"></head> <body> <header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"> <a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">
-Skip to main content
-</a> <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"> <div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"> <a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a> </div> <div class="flex items-center gap-1"> <a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold"> Blog </a> <a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Projects </a> <a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> Conferences </a> <a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent"> About </a> </div> <div class="hidden items-center gap-1 sm:flex"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </nav> </header> <main id="main-content" class="w-full"> <article> <div class="w-full px-4 pt-10 sm:pt-14"> <div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"> <img src="/_astro/microservices-os-analogy-map.iUpEfjIa_HzFsG.webp" alt="微服務與作業系統類比地圖" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"> </div> </div> <div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"> <div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"> <p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p> <div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"> <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time> <div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">
-Last updated on <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time> </div> </div> <div class="mb-4 flex flex-wrap justify-center gap-2"> <span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Microservices </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Architecture </span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]"> Operating System </span> </div> <h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl"> 微服務與作業系統類比地圖 </h1> </div> <div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl">  <p>很多微服務問題，如果換成作業系統的語言來看，會突然變得比較清楚。</p>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><!-- Primary Meta Tags --><title>微服務與作業系統類比地圖</title><meta name="title" content="微服務與作業系統類比地圖"><meta name="description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><meta property="og:title" content="微服務與作業系統類比地圖"><meta property="og:description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/microservices-os-analogy-map/"><meta property="twitter:title" content="微服務與作業系統類比地圖"><meta property="twitter:description" content="用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"微服務與作業系統類比地圖","description":"用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。","datePublished":"2026-06-15T00:00:00.000Z","dateModified":"2026-06-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/microservices-os-analogy-map.iUpEfjIa.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.C05Xrt88.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/microservices-os-analogy-map.iUpEfjIa_HzFsG.webp" alt="微服務與作業系統類比地圖" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-06-15T00:00:00.000Z">Jun 15, 2026</time><div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">Last updated on <time datetime="2026-06-15T00:00:00.000Z">Jun 15, 2026</time></div></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Microservices</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Architecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Operating System</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">微服務與作業系統類比地圖</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><p>很多微服務問題，如果換成作業系統的語言來看，會突然變得比較清楚。</p>
 <p>這不是因為微服務「等於」作業系統，而是因為兩者常常在解同一類問題：資源有限、併發會衝突、快取會失效、故障會擴散、排程永遠在做取捨。作業系統在這些題目上已經演化了幾十年，所以當我們在微服務架構裡卡住時，先問一句「OS 會怎麼看這個問題？」通常很有幫助。</p>
 <h2 id="核心命題">核心命題</h2>
 <p>把微服務直接說成「叢集上的作業系統」當然太粗了，但這個類比仍然很有用。兩者差別主要在 scope：</p>
@@ -10,423 +7,423 @@ Last updated on <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time> 
 <li><strong>微服務</strong>：管理叢集上的 service instance、network call、distributed state、API</li>
 </ul>
 <p>它們不是一一對應，但很多核心問題高度同構。下面這張表，就是我自己在思考微服務時最常用的一套映射。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">mindmap</span></span>
-<span class="line"><span style="color:#E1E4E8">  root((微服務與 OS 類比))</span></span>
-<span class="line"><span style="color:#E1E4E8">    儲存階層</span></span>
-<span class="line"><span style="color:#E1E4E8">      DB ↔ Disk</span></span>
-<span class="line"><span style="color:#E1E4E8">      Redis ↔ Page Cache</span></span>
-<span class="line"><span style="color:#E1E4E8">      In-memory Cache ↔ CPU Cache</span></span>
-<span class="line"><span style="color:#E1E4E8">    I/O 模型</span></span>
-<span class="line"><span style="color:#E1E4E8">      Blocking Call ↔ blocking read</span></span>
-<span class="line"><span style="color:#E1E4E8">      Async Call ↔ async I/O</span></span>
-<span class="line"><span style="color:#E1E4E8">      MQ ↔ completion queue</span></span>
-<span class="line"><span style="color:#E1E4E8">    併發控制</span></span>
-<span class="line"><span style="color:#E1E4E8">      分散式鎖 ↔ Mutex</span></span>
-<span class="line"><span style="color:#E1E4E8">      樂觀鎖 ↔ CAS</span></span>
-<span class="line"><span style="color:#E1E4E8">      Rate Limit ↔ Semaphore</span></span>
-<span class="line"><span style="color:#E1E4E8">    排程</span></span>
-<span class="line"><span style="color:#E1E4E8">      Pod ↔ Process</span></span>
-<span class="line"><span style="color:#E1E4E8">      K8s Scheduler ↔ CPU Scheduler</span></span>
-<span class="line"><span style="color:#E1E4E8">      Resource Limits ↔ Cgroup</span></span>
-<span class="line"><span style="color:#E1E4E8">    隔離</span></span>
-<span class="line"><span style="color:#E1E4E8">      Container ↔ Process Isolation</span></span>
-<span class="line"><span style="color:#E1E4E8">      Network Policy ↔ Namespace</span></span>
-<span class="line"><span style="color:#E1E4E8">      Blast Radius ↔ Crash Boundary</span></span>
-<span class="line"><span style="color:#E1E4E8">    故障處理</span></span>
-<span class="line"><span style="color:#E1E4E8">      Retry ↔ TCP Backoff</span></span>
-<span class="line"><span style="color:#E1E4E8">      Health Check ↔ Watchdog</span></span>
-<span class="line"><span style="color:#E1E4E8">      Bulkhead ↔ Process Isolation</span></span>
-<span class="line"><span style="color:#E1E4E8">    通訊與協調</span></span>
-<span class="line"><span style="color:#E1E4E8">      MQ ↔ Pipe</span></span>
-<span class="line"><span style="color:#E1E4E8">      Shared Cache ↔ Shared Memory</span></span>
-<span class="line"><span style="color:#E1E4E8">      etcd ↔ Coordination Primitive</span></span>
-<span class="line"><span style="color:#E1E4E8">    可觀測性</span></span>
-<span class="line"><span style="color:#E1E4E8">      Tracing ↔ strace</span></span>
-<span class="line"><span style="color:#E1E4E8">      Metrics ↔ procfs</span></span>
-<span class="line"><span style="color:#E1E4E8">      Telemetry ↔ eBPF</span></span>
-<span class="line"><span style="color:#E1E4E8">    生命週期</span></span>
-<span class="line"><span style="color:#E1E4E8">      Orchestrator ↔ systemd</span></span>
-<span class="line"><span style="color:#E1E4E8">      Probe ↔ Health Check</span></span>
-<span class="line"><span style="color:#E1E4E8">      Rolling Update ↔ Rolling Restart</span></span>
-<span class="line"><span style="color:#E1E4E8">    名稱解析</span></span>
-<span class="line"><span style="color:#E1E4E8">      Service Name ↔ DNS</span></span>
-<span class="line"><span style="color:#E1E4E8">      Ingress ↔ Gateway</span></span>
-<span class="line"><span style="color:#E1E4E8">      Load Balancer ↔ Dispatch</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#F97583">mindmap</span></span>
+<span class="line"><span style="color:#FFAB70">  root</span><span style="color:#F97583">((</span><span style="color:#9ECBFF">微服務與 OS 類比</span><span style="color:#F97583">))</span></span>
+<span class="line"><span style="color:#9ECBFF">    儲存階層</span></span>
+<span class="line"><span style="color:#9ECBFF">      DB </span><span style="color:#E1E4E8">↔ Disk</span></span>
+<span class="line"><span style="color:#9ECBFF">      Redis </span><span style="color:#E1E4E8">↔ Page Cache</span></span>
+<span class="line"><span style="color:#9ECBFF">      In-memory Cache </span><span style="color:#E1E4E8">↔ CPU Cache</span></span>
+<span class="line"><span style="color:#9ECBFF">    I/O 模型</span></span>
+<span class="line"><span style="color:#9ECBFF">      Blocking Call </span><span style="color:#E1E4E8">↔ blocking read</span></span>
+<span class="line"><span style="color:#9ECBFF">      Async Call </span><span style="color:#E1E4E8">↔ async I/O</span></span>
+<span class="line"><span style="color:#9ECBFF">      MQ </span><span style="color:#E1E4E8">↔ completion queue</span></span>
+<span class="line"><span style="color:#9ECBFF">    併發控制</span></span>
+<span class="line"><span style="color:#9ECBFF">      分散式鎖 </span><span style="color:#E1E4E8">↔ Mutex</span></span>
+<span class="line"><span style="color:#9ECBFF">      樂觀鎖 </span><span style="color:#E1E4E8">↔ CAS</span></span>
+<span class="line"><span style="color:#9ECBFF">      Rate Limit </span><span style="color:#E1E4E8">↔ Semaphore</span></span>
+<span class="line"><span style="color:#9ECBFF">    排程</span></span>
+<span class="line"><span style="color:#9ECBFF">      Pod </span><span style="color:#E1E4E8">↔ Process</span></span>
+<span class="line"><span style="color:#9ECBFF">      K8s Scheduler </span><span style="color:#E1E4E8">↔ CPU Scheduler</span></span>
+<span class="line"><span style="color:#9ECBFF">      Resource Limits </span><span style="color:#E1E4E8">↔ Cgroup</span></span>
+<span class="line"><span style="color:#9ECBFF">    隔離</span></span>
+<span class="line"><span style="color:#9ECBFF">      Container </span><span style="color:#E1E4E8">↔ Process Isolation</span></span>
+<span class="line"><span style="color:#9ECBFF">      Network Policy </span><span style="color:#E1E4E8">↔ Namespace</span></span>
+<span class="line"><span style="color:#9ECBFF">      Blast Radius </span><span style="color:#E1E4E8">↔ Crash Boundary</span></span>
+<span class="line"><span style="color:#9ECBFF">    故障處理</span></span>
+<span class="line"><span style="color:#9ECBFF">      Retry </span><span style="color:#E1E4E8">↔ TCP Backoff</span></span>
+<span class="line"><span style="color:#9ECBFF">      Health Check </span><span style="color:#E1E4E8">↔ Watchdog</span></span>
+<span class="line"><span style="color:#9ECBFF">      Bulkhead </span><span style="color:#E1E4E8">↔ Process Isolation</span></span>
+<span class="line"><span style="color:#9ECBFF">    通訊與協調</span></span>
+<span class="line"><span style="color:#9ECBFF">      MQ </span><span style="color:#E1E4E8">↔ Pipe</span></span>
+<span class="line"><span style="color:#9ECBFF">      Shared Cache </span><span style="color:#E1E4E8">↔ Shared Memory</span></span>
+<span class="line"><span style="color:#9ECBFF">      etcd </span><span style="color:#E1E4E8">↔ Coordination Primitive</span></span>
+<span class="line"><span style="color:#9ECBFF">    可觀測性</span></span>
+<span class="line"><span style="color:#9ECBFF">      Tracing </span><span style="color:#E1E4E8">↔ strace</span></span>
+<span class="line"><span style="color:#9ECBFF">      Metrics </span><span style="color:#E1E4E8">↔ procfs</span></span>
+<span class="line"><span style="color:#9ECBFF">      Telemetry </span><span style="color:#E1E4E8">↔ eBPF</span></span>
+<span class="line"><span style="color:#9ECBFF">    生命週期</span></span>
+<span class="line"><span style="color:#9ECBFF">      Orchestrator </span><span style="color:#E1E4E8">↔ systemd</span></span>
+<span class="line"><span style="color:#9ECBFF">      Probe </span><span style="color:#E1E4E8">↔ Health Check</span></span>
+<span class="line"><span style="color:#9ECBFF">      Rolling Update </span><span style="color:#E1E4E8">↔ Rolling Restart</span></span>
+<span class="line"><span style="color:#9ECBFF">    名稱解析</span></span>
+<span class="line"><span style="color:#9ECBFF">      Service Name </span><span style="color:#E1E4E8">↔ DNS</span></span>
+<span class="line"><span style="color:#9ECBFF">      Ingress </span><span style="color:#E1E4E8">↔ Gateway</span></span>
+<span class="line"><span style="color:#9ECBFF">      Load Balancer </span><span style="color:#E1E4E8">↔ Dispatch</span></span></code></pre>
 <h2 id="類比地圖">類比地圖</h2>
 <h3 id="儲存階層快取永遠是主題">儲存階層：快取永遠是主題</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>DB（有鎖、可能慢）</td><td>Disk（機械延遲、I/O wait）</td><td>最慢的持久層</td></tr><tr><td>Redis / 應用快取</td><td>Page Cache / Buffer Cache</td><td>減少下游存取</td></tr><tr><td>本地 in-memory cache</td><td>L1 / L2 / L3 CPU Cache</td><td>最快的熱資料</td></tr><tr><td>cache invalidation</td><td>cache invalidation</td><td>所有層的共同惡夢</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB（有鎖、可能慢）</td>
+<td>Disk（機械延遲、I/O wait）</td>
+<td>最慢的持久層</td>
+</tr>
+<tr>
+<td>Redis / 應用快取</td>
+<td>Page Cache / Buffer Cache</td>
+<td>減少下游存取</td>
+</tr>
+<tr>
+<td>本地 in-memory cache</td>
+<td>L1 / L2 / L3 CPU Cache</td>
+<td>最快的熱資料</td>
+</tr>
+<tr>
+<td>cache invalidation</td>
+<td>cache invalidation</td>
+<td>所有層的共同惡夢</td>
+</tr>
+</tbody>
+</table>
 <p>當你覺得「這裡要加 cache」時，真正該追問的通常不是要不要加，而是 invalidation strategy 是什麼。</p>
 <h3 id="io-模型不要把算力浪費在等待上">I/O 模型：不要把算力浪費在等待上</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>blocking API call 卡住 thread</td><td>blocking read() 卡住 process</td><td>同步等待會浪費資源</td></tr><tr><td>async HTTP client / callback</td><td>async I/O / epoll / io_uring</td><td>結果到了再通知我</td></tr><tr><td>Message Queue / async job</td><td>async I/O completion queue</td><td>先交出去，完成再通知</td></tr><tr><td>circuit breaker</td><td>syscall error code (EIO, ENOSPC)</td><td>失敗要快速返回</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>blocking API call 卡住 thread</td>
+<td>blocking read() 卡住 process</td>
+<td>同步等待會浪費資源</td>
+</tr>
+<tr>
+<td>async HTTP client / callback</td>
+<td>async I/O / epoll / io_uring</td>
+<td>結果到了再通知我</td>
+</tr>
+<tr>
+<td>Message Queue / async job</td>
+<td>async I/O completion queue</td>
+<td>先交出去，完成再通知</td>
+</tr>
+<tr>
+<td>circuit breaker</td>
+<td>syscall error code (EIO, ENOSPC)</td>
+<td>失敗要快速返回</td>
+</tr>
+</tbody>
+</table>
 <p>第三方服務呼叫本質上就是 I/O。能 async 就不要把 worker thread 卡在那裡等，這跟 OS 用 async I/O 避免空轉是同一個方向。</p>
 <h3 id="併發控制共享狀態一定會出事">併發控制：共享狀態一定會出事</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>分散式鎖（Redis lock / DB row lock）</td><td>Mutex / futex</td><td>同一時間只有一個 writer</td></tr><tr><td>樂觀鎖（version check）</td><td>CAS (Compare-And-Swap)</td><td>先讀，寫入時檢查沒被改過</td></tr><tr><td>Rate limiter</td><td>Semaphore</td><td>控制同時進入的臨界區</td></tr><tr><td>服務間 circular wait</td><td>Deadlock</td><td>互相等對方，誰都動不了</td></tr><tr><td>冪等性（重複請求只處理一次）</td><td>at-most-once / duplicate suppression</td><td>重複操作不產生額外副作用</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分散式鎖（Redis lock / DB row lock）</td>
+<td>Mutex / futex</td>
+<td>同一時間只有一個 writer</td>
+</tr>
+<tr>
+<td>樂觀鎖（version check）</td>
+<td>CAS (Compare-And-Swap)</td>
+<td>先讀，寫入時檢查沒被改過</td>
+</tr>
+<tr>
+<td>Rate limiter</td>
+<td>Semaphore</td>
+<td>控制同時進入的臨界區</td>
+</tr>
+<tr>
+<td>服務間 circular wait</td>
+<td>Deadlock</td>
+<td>互相等對方，誰都動不了</td>
+</tr>
+<tr>
+<td>冪等性（重複請求只處理一次）</td>
+<td>at-most-once / duplicate suppression</td>
+<td>重複操作不產生額外副作用</td>
+</tr>
+</tbody>
+</table>
 <p>高併發系統真正難的地方，通常不是「有沒有鎖」，而是重送、重試、重複消費會不會把狀態弄髒。分散式系統裡的 idempotency key，處理的是 duplicate safety，不是 memory ordering，但兩者都在保護共享狀態。</p>
 <h3 id="排程有限資源無限需求">排程：有限資源，無限需求</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>Pod / Service instance</td><td>Process</td><td>可調度的最小單位</td></tr><tr><td>Connection pool / Worker pool</td><td>Thread Pool</td><td>複用避免建立銷毀成本</td></tr><tr><td>Kubernetes Scheduler</td><td>CPU Scheduler (CFS)</td><td>選擇誰在哪個 node/core 跑</td></tr><tr><td>Priority class / QoS</td><td>Nice value / RT priority</td><td>重要的工作先跑</td></tr><tr><td>Resource limits</td><td>Cgroup</td><td>隔離資源，避免 noisy neighbor</td></tr><tr><td>Service mesh sidecar</td><td>Daemon / transparent proxy</td><td>伴隨主服務提供橫切功能</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pod / Service instance</td>
+<td>Process</td>
+<td>可調度的最小單位</td>
+</tr>
+<tr>
+<td>Connection pool / Worker pool</td>
+<td>Thread Pool</td>
+<td>複用避免建立銷毀成本</td>
+</tr>
+<tr>
+<td>Kubernetes Scheduler</td>
+<td>CPU Scheduler (CFS)</td>
+<td>選擇誰在哪個 node/core 跑</td>
+</tr>
+<tr>
+<td>Priority class / QoS</td>
+<td>Nice value / RT priority</td>
+<td>重要的工作先跑</td>
+</tr>
+<tr>
+<td>Resource limits</td>
+<td>Cgroup</td>
+<td>隔離資源，避免 noisy neighbor</td>
+</tr>
+<tr>
+<td>Service mesh sidecar</td>
+<td>Daemon / transparent proxy</td>
+<td>伴隨主服務提供橫切功能</td>
+</tr>
+</tbody>
+</table>
 <p>OS 用 cgroup 隔離 process 的資源使用；Kubernetes 用 resource limits 管理 Pod 的資源邊界。底層機制不同，但工程目標一致：別讓 noisy neighbor 吃掉整台機器。</p>
 <h3 id="隔離故障不要擴散">隔離：故障不要擴散</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>Container / Namespace</td><td>Process isolation (virtual address space)</td><td>看不見彼此的世界</td></tr><tr><td>VM / Staging-Prod 分離</td><td>VM / Hypervisor</td><td>徹底隔離的執行環境</td></tr><tr><td>Network policy</td><td>Network namespace / iptables</td><td>控制誰可以跟誰通訊</td></tr><tr><td>Blast radius 控制</td><td>Kernel panic vs process crash</td><td>crash 要侷限在最小範圍內</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container / Namespace</td>
+<td>Process isolation (virtual address space)</td>
+<td>看不見彼此的世界</td>
+</tr>
+<tr>
+<td>VM / Staging-Prod 分離</td>
+<td>VM / Hypervisor</td>
+<td>徹底隔離的執行環境</td>
+</tr>
+<tr>
+<td>Network policy</td>
+<td>Network namespace / iptables</td>
+<td>控制誰可以跟誰通訊</td>
+</tr>
+<tr>
+<td>Blast radius 控制</td>
+<td>Kernel panic vs process crash</td>
+<td>crash 要侷限在最小範圍內</td>
+</tr>
+</tbody>
+</table>
 <p>OS 裡 process crash 不該拉垮整個系統。微服務裡 service down 也一樣，隔離永遠是第一道防線。</p>
 <h3 id="故障處理快失敗比慢拖垮好">故障處理：快失敗，比慢拖垮好</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>API error / gRPC status code</td><td>syscall return errno</td><td>錯誤要明確返回</td></tr><tr><td>Retry with exponential backoff</td><td>TCP retry（指數退避）</td><td>別把已經壞的東西打爆</td></tr><tr><td>Health check + auto restart</td><td>Watchdog</td><td>掛了就重啟</td></tr><tr><td>Graceful shutdown (SIGTERM)</td><td>Signal handling (SIGTERM -> cleanup)</td><td>優雅退出：完成手上工作再走</td></tr><tr><td>Bulkhead pattern</td><td>Process isolation</td><td>一個壞了別讓其他的也壞</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API error / gRPC status code</td>
+<td>syscall return errno</td>
+<td>錯誤要明確返回</td>
+</tr>
+<tr>
+<td>Retry with exponential backoff</td>
+<td>TCP retry（指數退避）</td>
+<td>別把已經壞的東西打爆</td>
+</tr>
+<tr>
+<td>Health check + auto restart</td>
+<td>Watchdog</td>
+<td>掛了就重啟</td>
+</tr>
+<tr>
+<td>Graceful shutdown (SIGTERM)</td>
+<td>Signal handling (SIGTERM -&gt; cleanup)</td>
+<td>優雅退出：完成手上工作再走</td>
+</tr>
+<tr>
+<td>Bulkhead pattern</td>
+<td>Process isolation</td>
+<td>一個壞了別讓其他的也壞</td>
+</tr>
+</tbody>
+</table>
 <p>busy waiting 在 OS 是 busy loop；在微服務裡常見的對應則是不帶 backoff 的連續 retry。兩者本質上都在浪費有限資源，還會把原本局部的故障放大。</p>
 <h3 id="通訊與協調介面緩衝同步">通訊與協調：介面、緩衝、同步</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>Message Queue (Kafka, NATS)</td><td>Pipe / FIFO</td><td>非同步解耦的 buffer</td></tr><tr><td>Redis / 共享快取</td><td>Shared Memory</td><td>很快，但一致性風險也更高</td></tr><tr><td>Event webhook / SSE</td><td>Signal / Interrupt</td><td>有事通知你，別一直輪詢</td></tr><tr><td>etcd / ZooKeeper</td><td>SysV IPC / coordination primitive</td><td>分散式協調、leader election</td></tr><tr><td>gRPC / HTTP</td><td>syscall interface</td><td>跨邊界呼叫的標準介面</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Message Queue (Kafka, NATS)</td>
+<td>Pipe / FIFO</td>
+<td>非同步解耦的 buffer</td>
+</tr>
+<tr>
+<td>Redis / 共享快取</td>
+<td>Shared Memory</td>
+<td>很快，但一致性風險也更高</td>
+</tr>
+<tr>
+<td>Event webhook / SSE</td>
+<td>Signal / Interrupt</td>
+<td>有事通知你，別一直輪詢</td>
+</tr>
+<tr>
+<td>etcd / ZooKeeper</td>
+<td>SysV IPC / coordination primitive</td>
+<td>分散式協調、leader election</td>
+</tr>
+<tr>
+<td>gRPC / HTTP</td>
+<td>syscall interface</td>
+<td>跨邊界呼叫的標準介面</td>
+</tr>
+</tbody>
+</table>
 <p>OS 裡 IPC 的 trade-off，在分散式系統幾乎原封不動地重現。shared memory 很快，但容易踩一致性問題；pipe 安全得多，但表達能力和成本也不同。每種通訊方式，本質上都是 speed、safety、complexity 的取捨。</p>
 <h3 id="可觀測性看不到就優化不了">可觀測性：看不到，就優化不了</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>Distributed Tracing (Jaeger, Tempo)</td><td>strace / ltrace</td><td>追蹤請求/呼叫的完整路徑</td></tr><tr><td>Latency heatmap / P99 graph</td><td>perf / flame graph</td><td>找到瓶頸在哪一層</td></tr><tr><td>Metrics endpoint (Prometheus)</td><td>/proc / /sys</td><td>暴露內部狀態</td></tr><tr><td>Centralized logging (ELK, Loki)</td><td>syslog</td><td>統一的日誌收集</td></tr><tr><td>Service mesh telemetry</td><td>eBPF / kernel probes</td><td>無侵入地補上觀測能力</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Distributed Tracing (Jaeger, Tempo)</td>
+<td>strace / ltrace</td>
+<td>追蹤請求/呼叫的完整路徑</td>
+</tr>
+<tr>
+<td>Latency heatmap / P99 graph</td>
+<td>perf / flame graph</td>
+<td>找到瓶頸在哪一層</td>
+</tr>
+<tr>
+<td>Metrics endpoint (Prometheus)</td>
+<td>/proc / /sys</td>
+<td>暴露內部狀態</td>
+</tr>
+<tr>
+<td>Centralized logging (ELK, Loki)</td>
+<td>syslog</td>
+<td>統一的日誌收集</td>
+</tr>
+<tr>
+<td>Service mesh telemetry</td>
+<td>eBPF / kernel probes</td>
+<td>無侵入地補上觀測能力</td>
+</tr>
+</tbody>
+</table>
 <p>OS 和分散式系統在觀測上的哲學非常一致：你不測，就不知道；你不知道，就不能穩定地優化。</p>
 <h3 id="啟動與生命週期活著不是只有-start">啟動與生命週期：活著不是只有 start</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>K8s / ECS Orchestrator</td><td>init / systemd</td><td>管理所有 service 的生命週期</td></tr><tr><td>Container image pull + start</td><td>fork + exec</td><td>準備環境，啟動執行</td></tr><tr><td>Readiness / Liveness probe</td><td>Process health check</td><td>確定能上線才接收流量</td></tr><tr><td>PreStop hook</td><td>SIGTERM handler</td><td>優雅退出，完成殘局</td></tr><tr><td>Rolling update</td><td>supervisor-controlled rolling restart</td><td>逐步替換、避免整體中斷</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K8s / ECS Orchestrator</td>
+<td>init / systemd</td>
+<td>管理所有 service 的生命週期</td>
+</tr>
+<tr>
+<td>Container image pull + start</td>
+<td>fork + exec</td>
+<td>準備環境，啟動執行</td>
+</tr>
+<tr>
+<td>Readiness / Liveness probe</td>
+<td>Process health check</td>
+<td>確定能上線才接收流量</td>
+</tr>
+<tr>
+<td>PreStop hook</td>
+<td>SIGTERM handler</td>
+<td>優雅退出，完成殘局</td>
+</tr>
+<tr>
+<td>Rolling update</td>
+<td>supervisor-controlled rolling restart</td>
+<td>逐步替換、避免整體中斷</td>
+</tr>
+</tbody>
+</table>
 <p>很多服務問題不是出在「啟不起來」，而是出在「啟動太早接流量」、「退出時沒收尾」、「升級時把整排一起打掉」。這一整套，其實就是生命週期管理。</p>
 <h3 id="名稱解析與服務發現先找到對方才談得上呼叫">名稱解析與服務發現：先找到對方，才談得上呼叫</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>微服務</th><th>OS</th><th>概念</th></tr></thead><tbody><tr><td>Service name -> IP lookup</td><td>DNS -> IP resolution</td><td>把名字翻譯成位置</td></tr><tr><td>K8s Service / Ingress</td><td>/etc/hosts + gateway</td><td>本機解析 + 路由</td></tr><tr><td>Load balancer</td><td>scheduler / dispatch queue</td><td>進來的流量分配給後端</td></tr><tr><td>Service mesh / Istio</td><td>iptables / nftables NAT</td><td>透明的流量攔截與轉發</td></tr></tbody></table>
+<table>
+<thead>
+<tr>
+<th>微服務</th>
+<th>OS</th>
+<th>概念</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service name -&gt; IP lookup</td>
+<td>DNS -&gt; IP resolution</td>
+<td>把名字翻譯成位置</td>
+</tr>
+<tr>
+<td>K8s Service / Ingress</td>
+<td>/etc/hosts + gateway</td>
+<td>本機解析 + 路由</td>
+</tr>
+<tr>
+<td>Load balancer</td>
+<td>scheduler / dispatch queue</td>
+<td>進來的流量分配給後端</td>
+</tr>
+<tr>
+<td>Service mesh / Istio</td>
+<td>iptables / nftables NAT</td>
+<td>透明的流量攔截與轉發</td>
+</tr>
+</tbody>
+</table>
 <p>這一層常常被當成「只是網路設定」，但它其實是在回答一個很核心的系統問題：一個名字如何穩定地對應到一群會變動的執行實體。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[微服務世界] --> B[Service Name]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[Discovery / DNS]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[Load Balancer]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[Service Instance]</span></span>
-<span class="line"><span style="color:#E1E4E8">    F[OS 世界] --> G[Process Name]</span></span>
-<span class="line"><span style="color:#E1E4E8">    G --> H[Name Resolution / Routing]</span></span>
-<span class="line"><span style="color:#E1E4E8">    H --> I[Scheduler / Dispatch]</span></span>
-<span class="line"><span style="color:#E1E4E8">    I --> J[Runnable Process]</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#F97583">flowchart</span><span style="color:#B392F0"> LR</span></span>
+<span class="line"><span style="color:#FFAB70">    A</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">微服務世界</span><span style="color:#F97583">]</span><span style="color:#F97583"> --&gt;</span><span style="color:#FFAB70"> B</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Service Name</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    B </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> C</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Discovery / DNS</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    C </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> D</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Load Balancer</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    D </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> E</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Service Instance</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    F</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">OS 世界</span><span style="color:#F97583">]</span><span style="color:#F97583"> --&gt;</span><span style="color:#FFAB70"> G</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Process Name</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    G </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> H</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Name Resolution / Routing</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    H </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> I</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Scheduler / Dispatch</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    I </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> J</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">Runnable Process</span><span style="color:#F97583">]</span></span></code></pre>
 <h2 id="這張映射表怎麼用">這張映射表怎麼用</h2>
 <p>遇到一個微服務設計問題時，我通常會先跑這三步：</p>
 <ol>
@@ -438,11 +435,11 @@ Last updated on <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time> 
 <blockquote>
 <p><strong>OS 是工程世界裡最成熟的複雜系統之一。當你在微服務裡卡住時，先看看 OS 會怎麼拆這個問題。</strong></p>
 </blockquote>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#E1E4E8">flowchart LR</span></span>
-<span class="line"><span style="color:#E1E4E8">    A[遇到微服務問題] --> B[判斷問題類型]</span></span>
-<span class="line"><span style="color:#E1E4E8">    B --> C[找對應 OS 原語]</span></span>
-<span class="line"><span style="color:#E1E4E8">    C --> D[翻成分散式做法]</span></span>
-<span class="line"><span style="color:#E1E4E8">    D --> E[設計 API / Queue / Lock / Limit / Probe]</span></span></code></pre>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#F97583">flowchart</span><span style="color:#B392F0"> LR</span></span>
+<span class="line"><span style="color:#FFAB70">    A</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">遇到微服務問題</span><span style="color:#F97583">]</span><span style="color:#F97583"> --&gt;</span><span style="color:#FFAB70"> B</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">判斷問題類型</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    B </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> C</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">找對應 OS 原語</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    C </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> D</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">翻成分散式做法</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">    D </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> E</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">設計 API / Queue / Lock / Limit / Probe</span><span style="color:#F97583">]</span></span></code></pre>
 <h2 id="相關資源">相關資源</h2>
 <ul>
 <li><a href="https://research.google.com/pubs/archive/43438.pdf"><strong>Borg: Large-Scale Cluster Management at Google</strong></a>（Google Research PDF，2015）: 很多叢集排程與資源管理觀念的來源。</li>
@@ -450,4 +447,5 @@ Last updated on <time datetime="2026-06-15T00:00:00.000Z"> Jun 15, 2026 </time> 
 <li><a href="https://www.tenlong.com.tw/products/9781119586166"><strong>Operating System Concepts, 10/e (IE-Paperback)</strong></a>（天瓏書局，俗稱恐龍書）: 想補 OS 底層機制，這本通常是最常見的入門與課程參考書。</li>
 <li><a href="https://ebpf.io/what-is-ebpf/"><strong>What is eBPF?</strong></a>（eBPF 官方）: 如果你對「無侵入可觀測性」特別有興趣，這是很好的入門起點。</li>
 <li><a href="https://docs.ebpf.io/"><strong>eBPF Docs</strong></a>（官方文件）: 想往工具、map types、tracing 細節繼續挖，可以從這裡展開。</li>
-</ul>  </div> </div> </article> </main> <script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.D1KrPOHo.js"></script> <footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"> <div class="mx-auto max-w-5xl"> <p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p> <div class="mt-5 flex justify-center gap-4"> <a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on LinkedIn</span> <svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg> </a> <a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"> <span class="sr-only">Visit Samson on GitHub</span> <svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> </a> </div> </div> </footer> </body></html>
+</ul>
+</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">Agent Sandbox：是什麼、為什麼需要、現在大家怎麼做</span></a><a href="/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex justify-center gap-4"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
