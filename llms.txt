@@ -12,7 +12,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。
 
-**URL:** https://tech.samsonlab.dev//blog/agent-cost-context-cache-compaction-memory/
+**URL:** https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/
 
 ---
 
@@ -20,7 +20,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。
 
-**URL:** https://tech.samsonlab.dev//blog/agent-loops-and-long-running-agents-from-official-docs/
+**URL:** https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/
 
 ---
 
@@ -28,7 +28,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Sandbox 不是單純的 code runner，而是 agent 的 execution boundary。這篇文章整理它為什麼重要、常見組合方式，以及主流產品與框架現在怎麼做。
 
-**URL:** https://tech.samsonlab.dev//blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/
+**URL:** https://tech.samsonlab.dev/blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/
 
 ---
 
@@ -36,7 +36,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。
 
-**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-contract-test/
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/
 
 ---
 
@@ -44,7 +44,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。
 
-**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-contract-test-tools/
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test-tools/
 
 ---
 
@@ -52,7 +52,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。
 
-**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-integration-test/
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/
 
 ---
 
@@ -60,7 +60,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。
 
-**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-unit-test/
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test/
 
 ---
 
@@ -68,7 +68,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 用同一組 unit test 對照兩種正確實作，說明測試如何保護行為而不是鎖住寫法；再補充 Python、Java、C++ 的 parameterized／table-driven 寫法，以及 100% line coverage 的盲點。
 
-**URL:** https://tech.samsonlab.dev//blog/ai-era-testing-and-acceptance-unit-test-implementation/
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-unit-test-implementation/
 
 ---
 
@@ -76,7 +76,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Exploring whether CLIs need complete redesign for AI Agents or simply enhancement with machine-readable output. The future lies in dual-mode interfaces that serve both humans and machines.
 
-**URL:** https://tech.samsonlab.dev//blog/cli-for-agents-rewrite-or-augment/
+**URL:** https://tech.samsonlab.dev/blog/cli-for-agents-rewrite-or-augment/
 
 ---
 
@@ -84,7 +84,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。
 
-**URL:** https://tech.samsonlab.dev//blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/
+**URL:** https://tech.samsonlab.dev/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/
 
 ---
 
@@ -92,7 +92,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。
 
-**URL:** https://tech.samsonlab.dev//blog/figma-to-code-before-design-evidence-pack/
+**URL:** https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/
 
 ---
 
@@ -100,7 +100,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** SEO optimizes for search engines, AEO optimizes for AI agents. Understanding how llms.txt and content architecture shift from human-first discovery to agent-friendly interfaces.
 
-**URL:** https://tech.samsonlab.dev//blog/from-seo-to-aeo/
+**URL:** https://tech.samsonlab.dev/blog/from-seo-to-aeo/
 
 ---
 
@@ -108,7 +108,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。
 
-**URL:** https://tech.samsonlab.dev//blog/graphify-knowledge-graph-first-code-tracing/
+**URL:** https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing/
 
 ---
 
@@ -116,7 +116,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。
 
-**URL:** https://tech.samsonlab.dev//blog/mcp-toolbox-for-databases-standardizing-agent-data-access/
+**URL:** https://tech.samsonlab.dev/blog/mcp-toolbox-for-databases-standardizing-agent-data-access/
 
 ---
 
@@ -124,7 +124,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 用作業系統的視角理解微服務，從快取、I/O、併發、排程到故障處理，建立一張實用的類比地圖。
 
-**URL:** https://tech.samsonlab.dev//blog/microservices-os-analogy-map/
+**URL:** https://tech.samsonlab.dev/blog/microservices-os-analogy-map/
 
 ---
 
@@ -132,7 +132,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** Monolithic agent 與 multi-agent 的差異，不只是拆分程度，而是 context isolation、context continuity 與整體 context cost shape 的取捨。
 
-**URL:** https://tech.samsonlab.dev//blog/monolithic-agent-vs-multi-agent-context-cost/
+**URL:** https://tech.samsonlab.dev/blog/monolithic-agent-vs-multi-agent-context-cost/
 
 ---
 
@@ -140,7 +140,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 從 Stage-Gate 到 AI agent，理解為什麼先規劃、再審查、最後執行會成為高不確定任務的穩定模式。
 
-**URL:** https://tech.samsonlab.dev//blog/plan-gate-execute/
+**URL:** https://tech.samsonlab.dev/blog/plan-gate-execute/
 
 ---
 
@@ -148,7 +148,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。
 
-**URL:** https://tech.samsonlab.dev//blog/when-ai-says-done-verification-before-production/
+**URL:** https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/
 
 ---
 
@@ -158,7 +158,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 用 Google ADK 打造一個多代理人投資分析框架，召集 13 位傳奇投資人同時分析同一支股票，透過辯論式架構得出結論，同時支援美股與台股市場。
 
-**URL:** https://tech.samsonlab.dev//projects/alpha-council/
+**URL:** https://tech.samsonlab.dev/projects/alpha-council/
 
 ---
 
@@ -166,7 +166,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 以 Java 21 與 Spring Boot 3 打造的高可用、分散式轉盤抽獎平台，透過 Redis 預扣、資料庫條件扣減與 RabbitMQ 事件處理，確保高併發下不重複抽獎、不超發庫存。
 
-**URL:** https://tech.samsonlab.dev//projects/lucky-draw-system/
+**URL:** https://tech.samsonlab.dev/projects/lucky-draw-system/
 
 ---
 
@@ -176,7 +176,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 在 COSCUP 2025 分享如何使用 Spring Cloud Contract，測試事件驅動微服務中的 REST 與 Kafka 契約。
 
-**URL:** https://tech.samsonlab.dev//conferences/coscup-2025/
+**URL:** https://tech.samsonlab.dev/conferences/coscup-2025/
 
 ---
 
@@ -184,7 +184,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 在 COSCUP 2026 分享如何使用 Google ADK 與開源模型，打造以台股資料與語境為核心的多代理人投資分析系統。
 
-**URL:** https://tech.samsonlab.dev//conferences/coscup-2026/
+**URL:** https://tech.samsonlab.dev/conferences/coscup-2026/
 
 ---
 
@@ -192,7 +192,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 **Description:** 在 JCConf 2025 分享如何使用 Spring AI 與 OpenAPI，把既有 API 包裝成 Agent 可以理解與呼叫的工具。
 
-**URL:** https://tech.samsonlab.dev//conferences/jcconf-2025/
+**URL:** https://tech.samsonlab.dev/conferences/jcconf-2025/
 
 ---
 
@@ -206,4 +206,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-21T01:15:16.917Z
+Last updated: 2026-08-21T01:18:04.287Z
