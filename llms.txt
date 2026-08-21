@@ -40,7 +40,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### 契約測試工具比較與選擇指南：OpenAPI、Pact 與 Spring Cloud Contract
+### 契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract
 
 **Description:** 契約測試不是單一工具。本文比較 OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract 各自驗證的邊界、CI 流程與適用情境，並說明何時分層搭配，避免把 API schema、consumer 互動與 provider stubs 混成同一件事。
 
@@ -206,4 +206,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-21T01:18:04.287Z
+Last updated: 2026-08-21T01:27:39.378Z
