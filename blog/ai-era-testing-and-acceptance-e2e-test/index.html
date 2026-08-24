@@ -186,7 +186,7 @@
 </ul>
 <h3 id="browser-level-e2e">Browser-level E2E</h3>
 <p>Browser-level E2E 從使用者操作畫面開始，驗證瀏覽器、前端路由、API 呼叫與後端流程的連接。</p>
-<p>它適合保護少數最重要的使用者旅程，但不適合把每個 UI 狀態都塞進去。定位元素時，應優先使用使用者看得到的角色、標籤或明確的測試識別，而不是依賴容易變動的 CSS 結構。Playwright 官方文件也建議以面向使用者的定位方式與自動等待、web-first assertions 來降低時序問題。[1]</p>
+<p>它適合保護少數最重要的使用者旅程，但不適合把每個 UI 狀態都塞進去。定位元素時，應優先使用使用者看得到的角色、標籤或明確的測試識別，而不是依賴容易變動的 CSS 結構。Playwright 官方文件也建議以面向使用者的定位方式與自動等待、web-first assertions 來降低時序問題。<a href="#ref-1">[1]</a></p>
 <h3 id="deployment-smoke-test">Deployment smoke test</h3>
 <p>Deployment smoke test 通常在部署完成後執行，只驗證最小但關鍵的路徑，例如：</p>
 <ul>
@@ -223,7 +223,7 @@
 <li>服務很快時，測試白白等待。</li>
 <li>服務變慢時，五秒又不夠，測試仍然失敗。</li>
 </ul>
-<p>更可靠的做法是等待可觀察的業務條件，例如輪詢訂單狀態直到進入預期狀態，或讓測試框架使用帶有 timeout 的 assertion。Playwright 的 web-first assertions 會在條件未滿足時自動重試，適合用來等待畫面上的最終狀態，而不是等待一段沒有業務意義的時間。[2]</p>
+<p>更可靠的做法是等待可觀察的業務條件，例如輪詢訂單狀態直到進入預期狀態，或讓測試框架使用帶有 timeout 的 assertion。Playwright 的 web-first assertions 會在條件未滿足時自動重試，適合用來等待畫面上的最終狀態，而不是等待一段沒有業務意義的時間。<a href="#ref-2">[2]</a></p>
 <p>示意上，測試應該表達「等待訂單變成已確認」：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can complete the order journey'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#6A737D">  // 建立測試資料與登入狀態的方式依專案而定。</span></span>
@@ -274,7 +274,7 @@
 </tr>
 </tbody>
 </table>
-<p>每次失敗至少應保留足夠的診斷資料：測試步驟、瀏覽器截圖、console 與 network log、請求 correlation ID，以及服務端 log。Playwright 的 Trace Viewer 可以在測試失敗後重看操作步驟、DOM、network 與 assertion 狀態；官方文件也提供在第一次 retry 時保留 trace 的設定方式。[3]</p>
+<p>每次失敗至少應保留足夠的診斷資料：測試步驟、瀏覽器截圖、console 與 network log、請求 correlation ID，以及服務端 log。Playwright 的 Trace Viewer 可以在測試失敗後重看操作步驟、DOM、network 與 assertion 狀態；官方文件也提供在第一次 retry 時保留 trace 的設定方式。<a href="#ref-3">[3]</a></p>
 <p>Retry 可以幫助我們判斷偶發性，但不能拿來掩蓋不穩定。若一個測試常常第一次失敗、第二次成功，這本身就是系統或測試設計需要處理的訊號。</p>
 <h2 id="ai-可以產生骨架但人要決定通過條件">AI 可以產生骨架，但人要決定通過條件</h2>
 <p>AI 很適合協助建立 E2E 的初稿，尤其是已有使用者故事、驗收條件與 API 文件的專案。它可以協助：</p>
@@ -340,7 +340,15 @@
 <p>在 AI 加速產生程式碼的時代，E2E 的價值反而更清楚。它要確認系統仍然完成了使用者真正要完成的事；逐行程式碼是否被操作過，並不是它要回答的問題。</p>
 <p>下一篇會從測試往驗收再往前走：當 AI 能參與需求拆解、實作與測試產生時，團隊要怎麼把「可以交付」定義成可檢查、可追蹤的驗收流程？</p>
 <h2 id="參考資料">參考資料</h2>
-<p><a id="ref-1"></a>[1] Playwright, <a href="https://playwright.dev/docs/best-practices">Best Practices</a>。</p>
-<p><a id="ref-2"></a>[2] Playwright, <a href="https://playwright.dev/docs/test-assertions">Assertions</a>。</p>
-<p><a id="ref-3"></a>[3] Playwright, <a href="https://playwright.dev/docs/trace-viewer">Trace Viewer</a>。</p>
+<ul>
+<li>
+<p><a id="ref-1"></a>[1] Playwright，〈<a href="https://playwright.dev/docs/best-practices">Best Practices</a>〉</p>
+</li>
+<li>
+<p><a id="ref-2"></a>[2] Playwright，〈<a href="https://playwright.dev/docs/test-assertions">Assertions</a>〉</p>
+</li>
+<li>
+<p><a id="ref-3"></a>[3] Playwright，〈<a href="https://playwright.dev/docs/trace-viewer">Trace Viewer</a>〉</p>
+</li>
+</ul>
 </div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex justify-center gap-4"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
