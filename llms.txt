@@ -48,6 +48,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？
+
+**Description:** 單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。
+
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/
+
+---
+
 ### 整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？
 
 **Description:** Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。
@@ -206,4 +214,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-21T03:23:25.786Z
+Last updated: 2026-08-24T02:20:37.438Z
