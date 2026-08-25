@@ -64,6 +64,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Playwright E2E 測試架構：AI 時代的資料隔離、Fixture、生命週期與可維護性實務
+
+**Description:** 本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。
+
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/
+
+---
+
 ### AI 時代的自動化測試與驗收（二）：Unit Test（上）在保護什麼？
 
 **Description:** AI 能快速生成 unit test，卻不能替團隊決定哪些規則值得保護。本文從 unit 的範圍與行為定義出發，拆解 solitary、sociable、mock 與 state verification 的取捨，並整理用不變量審查 AI 生成測試的方法，避免 coverage、鏡射實作與假安全感。
@@ -214,4 +222,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-24T05:49:02.115Z
+Last updated: 2026-08-25T09:53:03.274Z
