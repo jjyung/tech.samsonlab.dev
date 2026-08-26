@@ -11,259 +11,68 @@
 <blockquote>
 <p>測試要獨立，靠的是資料邊界；程式碼要重用，靠的是清楚分工。</p>
 </blockquote>
-<h2 id="測試獨立不等於每次重建整個環境">測試獨立不等於每次重建整個環境</h2>
-<p>「每個測試都要獨立」常被誤解成「每個測試都要建立一個全新的資料庫」。這在某些系統可行，但不是唯一方式，也不一定是最有效率的方式。</p>
-<p>測試獨立真正要保證的是：</p>
-<ul>
-<li>一個測試的結果，不會改變另一個測試的預期結果。</li>
-<li>測試可以單獨執行，不需要依賴檔案中其他測試先跑完。</li>
-<li>測試可以平行執行，不會因為共用帳號或資料而互相覆蓋。</li>
-</ul>
-<p>這是「結果獨立」，不一定是「所有資源都完全獨立」。</p>
-<p>例如，所有測試可以共用同一份國家清單或幣別資料，只要測試不會修改它。相反地，使用者、訂單、付款紀錄與購物車通常是可變資料，就不應該讓多個測試共用同一筆。</p>
-<p>Playwright Test 會讓每個測試取得隔離的 page 與 browser context，內建的 <code>request</code> fixture 也會提供隔離的 API request context。<a href="#ref-1">[1]</a> 這解決了瀏覽器狀態的隔離，但不會自動隔離後端資料，因此資料設計仍然是測試框架之外的責任。</p>
-<h2 id="先定義資料的所有權">先定義資料的所有權</h2>
-<p>在設計重建策略之前，先把測試會用到的資料分成幾類：</p>
+<h2 id="先看這些元件怎麼連在一起">先看這些元件怎麼連在一起</h2>
+<p>這篇不是把 <code>test spec</code>、fixture、POM、API／service 與 data 分別介紹一遍。它們其實是在描述同一件事的不同顆粒度：一個測試案例如何從「要驗證什麼」，一路落到「用什麼資料把前置狀態準備出來」。</p>
+<p>如果按照從大到小的顆粒度列出，我會依序看：</p>
+<ol>
+<li><code>test spec</code></li>
+<li><code>fixture</code></li>
+<li>POM</li>
+<li>API／service</li>
+<li>data</li>
+</ol>
+<p>但這不是一條單一路徑。比較準確的關係是：<code>test spec</code> 使用 fixture；fixture 在同一層組合 POM、API／service 與 data。POM 和 API／service 是同層能力，data 是兩者共同操作的測試狀態。</p>
 <table>
 <thead>
 <tr>
-<th>資料類型</th>
-<th>例子</th>
-<th>建議所有權</th>
+<th>層級</th>
+<th>它回答的問題</th>
+<th>主要責任</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>靜態參考資料</td>
-<td>國家、幣別、商品分類</td>
-<td>環境或測試套件共用</td>
+<td><code>test spec</code></td>
+<td>使用者情境與驗收結果是什麼？</td>
+<td>描述測試意圖、操作流程與驗證結果</td>
 </tr>
 <tr>
-<td>測試前置資料</td>
-<td>可購買商品、測試租戶、角色</td>
-<td>fixture 或 worker 建立</td>
+<td><code>fixture</code></td>
+<td>這個測試需要哪些資源？活多久？</td>
+<td>組合依賴，管理 setup 與 teardown</td>
 </tr>
 <tr>
-<td>測試操作資料</td>
-<td>訂單、購物車、付款紀錄</td>
-<td>每個測試自己建立</td>
+<td>POM</td>
+<td>UI 要怎麼操作？</td>
+<td>封裝頁面定位器與畫面操作</td>
 </tr>
 <tr>
-<td>外部副作用</td>
-<td>郵件、付款、物流請求</td>
-<td>sandbox、替身或可追蹤的測試資源</td>
+<td>API／service</td>
+<td>前置狀態要怎麼建立或清理？</td>
+<td>呼叫 API、test service 或其他資料入口</td>
+</tr>
+<tr>
+<td>data</td>
+<td>測試實際使用哪些狀態與識別值？</td>
+<td>定義資料內容、所有權與唯一性</td>
 </tr>
 </tbody>
 </table>
-<p>這張表的重點在於回答兩個問題：</p>
-<ol>
-<li>哪些測試可以安全地共用這筆資料？</li>
-<li>哪個層級負責建立、使用與清理它？</li>
-</ol>
-<p>如果一筆資料會被測試修改，就不應該只因為「建立它很麻煩」而放在 global setup。建立成本高，不代表它適合共用；共用可變資料往往會把成本轉移到除錯與重跑。</p>
-<h2 id="資料隔離與生命週期的四種策略">資料隔離與生命週期的四種策略</h2>
-<p>不同系統可以採取不同的隔離與清理方式。比較實用的做法，是先理解每種策略保證了什麼，再選擇混合方案。</p>
-<h3 id="每次測試重置資料庫">每次測試重置資料庫</h3>
-<p>每個測試開始前把資料庫恢復到固定狀態。若系統能讓測試在同一個受控交易中執行，也可以使用 transaction rollback；但一般跨服務 E2E 的 HTTP 請求，不能直接假設能用一個 transaction 包住整條測試。</p>
-<p>優點是狀態容易理解，測試之間的資料污染較少。缺點是速度可能很慢，而且資料庫以外的狀態不一定能一起回復，例如 message broker、搜尋索引、檔案儲存與第三方 sandbox。</p>
-<p>這種方式適合資料模型單純、測試環境可快速重置的服務，但不一定適合完整的多服務 E2E。</p>
-<h3 id="每個-worker-建立一組資源">每個 worker 建立一組資源</h3>
-<p>每個 Playwright worker 建立一個測試使用者、租戶或資料 namespace，同一個 worker 裡的測試共用這些資源。</p>
-<p>這樣可以避免每個測試重複建立昂貴的資源，也適合準備登入狀態。代價是測試必須避免修改共用的可變資料，或在每個測試底下再建立唯一的訂單與其他 entity。</p>
-<p>worker scope 適合共用「建立成本高、內容穩定」的資源，不適合拿來共用「會被測試改變」的業務資料。</p>
-<h3 id="每個測試建立唯一資料">每個測試建立唯一資料</h3>
-<p>每個測試建立自己的使用者、訂單或租戶，並在識別值中加入測試批次、worker 或 UUID。</p>
-<p>例如：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> testDataId</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> `e2e-${</span><span style="color:#E1E4E8">process</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">env</span><span style="color:#9ECBFF">.</span><span style="color:#79B8FF">CI_JOB_ID</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'local'}-${</span><span style="color:#E1E4E8">crypto</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">randomUUID</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> email</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> `${</span><span style="color:#E1E4E8">testDataId</span><span style="color:#9ECBFF">}@example.test`</span><span style="color:#E1E4E8">;</span></span></code></pre>
-<p>這種方式最適合平行執行，也最容易追蹤某筆資料屬於哪個測試。缺點是建立資料的時間較長，因此通常會搭配共用的靜態 seed 或 worker fixture。</p>
-<h3 id="每個測試完成後清理">每個測試完成後清理</h3>
-<p>測試完成後刪除自己建立的資料，可以讓測試環境保持乾淨，但不能把清理當成唯一的隔離機制。</p>
-<p>測試可能在清理前就被程序中斷，外部服務也可能不允許立即刪除。比較可靠的策略，是同時使用：</p>
-<ul>
-<li>唯一 namespace，避免殘留資料影響下一次測試。</li>
-<li>測試批次標籤，方便找到整批資料。</li>
-<li>TTL 或排程清理，處理程序中斷留下的資料。</li>
-<li>fixture teardown，正常結束時主動清理。</li>
-</ul>
-<p>清理是環境衛生；資料唯一性才是測試獨立的核心保證。</p>
-<h2 id="建議的實務組合">建議的實務組合</h2>
-<p>對大多數多服務 E2E 專案，我會先從這個組合開始：</p>
-<ol>
-<li>環境啟動時建立靜態參考資料。</li>
-<li>每個 worker 準備登入身分或共用的穩定資源。</li>
-<li>每個測試透過 API 或 test service 建立自己的可變資料。</li>
-<li>測試使用完成後的業務結果，不依賴固定 ID 或固定排序。</li>
-<li>測試結束時清理，並以 namespace 或 TTL 處理清理失敗的殘留資料。</li>
-</ol>
-<p>這個方案不追求每一層都完全重建，而是把昂貴資源與可變資料分開管理。</p>
-<h2 id="用-api-準備資料讓-ui-測試保留真正的重點">用 API 準備資料，讓 UI 測試保留真正的重點</h2>
-<p>假設我們要測試「使用者可以取消已付款訂單」。有兩種寫法。</p>
-<p>第一種寫法，測試從 UI 開始：登入、選商品、加入購物車、送出訂單、模擬付款，最後才取消訂單。</p>
-<p>第二種寫法，使用測試用 API 建立一筆已付款訂單，測試從 UI 開始執行取消操作。</p>
-<p>第二種通常更適合 E2E：</p>
-<ul>
-<li>測試時間較短。</li>
-<li>測試失敗時更容易定位在取消功能。</li>
-<li>不會讓每個測試都重複驗證登入、下單與付款流程。</li>
-<li>測試資料的狀態可以精準控制。</li>
-</ul>
-<p>這不代表所有資料都應該直接寫資料庫。可以把準備方式分成三層：</p>
-<table>
-<thead>
-<tr>
-<th>準備方式</th>
-<th>適合情境</th>
-<th>主要代價</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>公開或測試 API</td>
-<td>正常的業務資料與狀態</td>
-<td>API 變更會影響測試支援程式</td>
-</tr>
-<tr>
-<td>Test service</td>
-<td>需要統一建立、查詢與清理的資料</td>
-<td>需要維護一層測試專用介面</td>
-</tr>
-<tr>
-<td>直接寫資料庫</td>
-<td>特殊狀態、大量資料或 API 無法建立的情境</td>
-<td>綁定資料表與 schema</td>
-</tr>
-</tbody>
-</table>
-<p>原則是：真正要驗證的業務操作，使用和使用者相同的入口；只是為了準備前置條件的操作，可以使用更快、更精準的測試入口。</p>
-<h2 id="pom-應該封裝什麼">POM 應該封裝什麼</h2>
-<p>Page Object Model 的目的，是把頁面定位器與頁面操作集中管理，讓測試不需要到處知道 CSS selector、按鈕文字或頁面結構。<a href="#ref-2">[2]</a></p>
-<p>一個 <code>OrderPage</code> 可以提供：</p>
-<ul>
-<li>開啟某筆訂單。</li>
-<li>取消訂單。</li>
-<li>讀取訂單狀態。</li>
-<li>等待頁面準備完成。</li>
-</ul>
-<p>但它不應該知道：</p>
-<ul>
-<li>測試要建立哪一種使用者。</li>
-<li>這筆訂單是否應該由 API 或資料庫建立。</li>
-<li>哪些測試情境需要先付款。</li>
-<li>整條跨頁面、跨服務的業務流程如何組合。</li>
-</ul>
-<p>一個簡化的 POM 可以長這樣：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { Locator, Page } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
+<p>這個列法是設計與閱讀上的顆粒度，不是嚴格的執行呼叫順序。執行時，<code>test spec</code> 通常先取得 fixture 提供的資源；fixture 可能透過 API／service 建立 data，也可能把 POM 組合進來；spec 再使用 POM 操作 UI，最後驗證結果。</p>
+<p>用「取消已付款訂單」來看，關係會比較清楚：spec 描述使用者可以取消訂單，fixture 準備登入身分與測試訂單，POM 負責開啟訂單頁和按下取消，API／service 建立已付款訂單並在結束後清理，data 則決定訂單的唯一 ID、付款狀態與相關 seed。這些不是五個獨立的工具，而是同一個案例從意圖到實作的五個切面。</p>
+<p>後面的內容會沿著這個關係展開：先看 spec 如何提出驗證需求，再看 fixture 如何組合資源，接著拆開 POM 與 API／service 的同層責任，最後集中處理 data 的隔離、平行執行與清理。</p>
+<h2 id="test-spec-是這條關係的起點">Test spec 是這條關係的起點</h2>
+<p>最上層的 <code>test spec</code> 應該保留使用者情境與業務驗證。它可以使用其他層提供的能力，但不需要知道資料是透過哪個 API 建立，也不需要知道按鈕使用哪個 CSS selector。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can cancel a paid order'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orderData</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">orderPage</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">open</span><span style="color:#E1E4E8">(orderData.id);</span></span>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">cancel</span><span style="color:#E1E4E8">();</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> OrderPage</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#F97583">  readonly</span><span style="color:#FFAB70"> status</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Locator</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  constructor</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">private</span><span style="color:#F97583"> readonly</span><span style="color:#FFAB70"> page</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Page</span><span style="color:#E1E4E8">) {</span></span>
-<span class="line"><span style="color:#79B8FF">    this</span><span style="color:#E1E4E8">.status </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByTestId</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'order-status'</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> open</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">orderId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) {</span></span>
-<span class="line"><span style="color:#F97583">    await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.page.</span><span style="color:#B392F0">goto</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`/orders/${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> cancel</span><span style="color:#E1E4E8">() {</span></span>
-<span class="line"><span style="color:#F97583">    await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.page.</span><span style="color:#B392F0">getByRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'button'</span><span style="color:#E1E4E8">, { name: </span><span style="color:#9ECBFF">'取消訂單'</span><span style="color:#E1E4E8"> }).</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">();</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
-<p>這個物件負責「怎麼操作訂單頁面」，但「取消後什麼結果才算成功」仍然由測試決定。</p>
-<h2 id="test-id-是穩定契約但不是所有元素的預設答案">Test id 是穩定契約，但不是所有元素的預設答案</h2>
-<p>在頁面上加 <code>data-testid</code>、<code>data-test</code> 或其他專用屬性，可以建立穩定而明確的測試契約。Playwright 將 test id 列為內建定位方式，但同時建議優先使用貼近使用者操作的定位器；Testing Library 也把 role、label、text 等語意查找方式排在 test id 前面。<a href="#ref-5">[5]</a> <a href="#ref-6">[6]</a> Playwright 預設讀取 <code>data-testid</code>；如果專案採用 <code>data-test</code>，需要在設定中指定 <code>testIdAttribute</code>。</p>
-<p>可以先用這個順序判斷：</p>
-<table>
-<thead>
-<tr>
-<th>定位方式</th>
-<th>優先使用時機</th>
-<th>主要代價</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>getByRole</code>、<code>getByLabel</code>、<code>getByText</code></td>
-<td>測試在意使用者看見的角色、名稱或文字</td>
-<td>UI 文案或可存取語意改變時，測試也會失敗</td>
-</tr>
-<tr>
-<td><code>getByTestId</code></td>
-<td>元素沒有穩定的語意定位方式，或文字是動態／不屬於測試重點</td>
-<td>它不會驗證可存取角色、名稱或使用者看到的文字</td>
-</tr>
-<tr>
-<td>CSS class、DOM 結構、XPath</td>
-<td>只有在沒有更好選項的遺留情境</td>
-<td>容易因樣式或實作重構而失效</td>
-</tr>
-</tbody>
-</table>
-<p>因此，按鈕的文字本身是需求的一部分時，應該寫成：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'button'</span><span style="color:#E1E4E8">, { name: </span><span style="color:#9ECBFF">'取消訂單'</span><span style="color:#E1E4E8"> }).</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">();</span></span></code></pre>
-<p>這不只找到按鈕，也會讓測試對按鈕的可存取角色與名稱保持敏感。如果測試只需要找到一個會顯示動態狀態的區塊，則 <code>data-testid="order-status"</code> 很適合：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(page.</span><span style="color:#B392F0">getByTestId</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'order-status'</span><span style="color:#E1E4E8">)).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'已取消'</span><span style="color:#E1E4E8">);</span></span></code></pre>
-<h3 id="test-id-的優點">Test id 的優點</h3>
-<ul>
-<li>不依賴 CSS class、DOM 層級或版面結構，前端重構時通常比較穩定。</li>
-<li>不會因為文案翻譯、品牌改字或格式調整而無意義地失效。</li>
-<li>可以把測試需要的定位點明確表達成前端與測試之間的契約。</li>
-<li>對狀態區塊、toast、表格列、空狀態與重複元件特別實用。</li>
-</ul>
-<h3 id="test-id-的缺點">Test id 的缺點</h3>
-<ul>
-<li>它是使用者看不到的實作契約，不能取代對 role、accessible name 與重要文字的驗證。</li>
-<li>如果每個元素都加，頁面會充滿測試專用標記，前端需要同步維護一套額外命名。</li>
-<li>過度依賴後，測試可能在 UI 已經不符合使用者需求時仍然通過。例如按鈕文字改錯了，但 <code>data-testid</code> 沒變。</li>
-<li>命名若綁定實作，例如 <code>primary-button</code>、<code>div-3</code> 或包含隨機資料庫 ID，仍然會帶來不必要的變動。</li>
-</ul>
-<p>實務上可以採用這幾個規則：</p>
-<ol>
-<li>互動元素先用 role 與 accessible name；表單欄位先用 label。</li>
-<li>對狀態、容器或動態內容使用穩定且描述意圖的 test id，例如 <code>order-status</code>、<code>order-row</code>、<code>empty-state</code>。</li>
-<li>重複列表先定位資料列，再用 role、文字或欄位值縮小範圍，不要讓 test id 自己承擔所有業務識別。</li>
-<li>全專案選定一種慣例，例如 <code>data-testid</code> 或 <code>data-test</code>，並在 Playwright 設定中統一；不要混用 CSS class 當測試定位器。</li>
-</ol>
-<p>這也解釋了前面 <code>OrderPage</code> 的選擇：取消按鈕用 <code>getByRole</code>，訂單狀態用 <code>getByTestId</code>。前者驗證使用者可操作的語意，後者提供穩定的狀態定位點。test id 應該是語意定位器的補充，而不是取代品。</p>
-<h2 id="service-不要變成另一個萬能物件">Service 不要變成另一個萬能物件</h2>
-<p>在 E2E 專案裡，<code>Service</code> 通常有兩種意思，最好先命名清楚：</p>
-<ul>
-<li>應用程式裡真正被測試的 domain service。</li>
-<li>測試程式碼裡用來呼叫 API、建立資料或清理資料的 test service。</li>
-</ul>
-<p>為了避免混淆，測試程式碼可以使用 <code>OrderApi</code>、<code>TestDataService</code> 或 <code>OrderDataClient</code> 這類名稱。</p>
-<p>例如：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { APIRequestContext } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> OrderDataClient</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#F97583">  constructor</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">private</span><span style="color:#F97583"> readonly</span><span style="color:#FFAB70"> request</span><span style="color:#F97583">:</span><span style="color:#B392F0"> APIRequestContext</span><span style="color:#E1E4E8">) {}</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> createPaidOrder</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">input</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">userId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">productId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
-<span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> response</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.request.</span><span style="color:#B392F0">post</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'/test-support/orders'</span><span style="color:#E1E4E8">, {</span></span>
-<span class="line"><span style="color:#E1E4E8">      data: input,</span></span>
-<span class="line"><span style="color:#E1E4E8">    });</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">response.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">()) {</span></span>
-<span class="line"><span style="color:#F97583">      throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Error</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`Failed to create order: ${</span><span style="color:#E1E4E8">response</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">status</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">    }</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">await</span><span style="color:#E1E4E8"> response.</span><span style="color:#B392F0">json</span><span style="color:#E1E4E8">()) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">id</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> };</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> deleteOrder</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">orderId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) {</span></span>
-<span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> response</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.request.</span><span style="color:#B392F0">delete</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`/test-support/orders/${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">response.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">()) {</span></span>
-<span class="line"><span style="color:#F97583">      throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Error</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`Failed to delete order ${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}: ${</span><span style="color:#E1E4E8">response</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">status</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">    }</span></span>
-<span class="line"><span style="color:#E1E4E8">  }</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
-<p>這個 client 可以負責建立與清理資料，但不要把 E2E 的所有驗證都包在裡面。否則測試會看不到自己真正驗證了什麼，API 呼叫也可能在不知不覺間取代了本來應該由 UI 驗證的行為。</p>
+<span class="line"><span style="color:#F97583">  await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(orderPage.status).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'已取消'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
+<p>這段測試的價值，在於讀者一眼就能看出它驗證什麼。至於登入、建立已付款訂單、準備頁面物件與清理資料，會由下面幾層接手。這也是整篇文章要守住的方向：越靠近 spec，越接近測試意圖；越往下，越接近可重用的實作細節。</p>
 <h2 id="fixture-是組合與生命週期的邊界">Fixture 是組合與生命週期的邊界</h2>
-<p>如果每個測試都自己 <code>new OrderPage(page)</code>、建立 <code>OrderDataClient</code>、產生 email，再記得清理資料，重複程式碼仍然會很多。</p>
-<p>這正是 fixture 適合處理的問題。Fixture 可以把依賴組合起來，並把 setup 與 teardown 放在同一個地方。Playwright 官方文件也把 fixtures 定義成建立測試環境的機制，並支援 reusable、on-demand 與 composable fixtures。<a href="#ref-1">[1]</a></p>
-<p>示意上，可以讓測試只拿到需要的物件：</p>
+<p><code>test spec</code> 不應該自己把 POM、API client、測試資料與清理流程一個個組合起來。fixture 位在 spec 與這些測試資源之間，負責把依賴接起來，並決定它們什麼時候建立、什麼時候清理。</p>
+<p>先看同一個「取消已付款訂單」案例如何被組合：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { test </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> base } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { OrderDataClient } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '../services/OrderDataClient'</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { OrderPage } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '../pages/OrderPage'</span><span style="color:#E1E4E8">;</span></span>
@@ -281,7 +90,8 @@
 <span class="line"></span>
 <span class="line"><span style="color:#B392F0">  orderData</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orders</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> order</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> orders.</span><span style="color:#B392F0">createPaidOrder</span><span style="color:#E1E4E8">({</span></span>
-<span class="line"><span style="color:#6A737D">      // 這兩筆是不可變的 seed；如果使用者狀態會被修改，應改成每個測試建立唯一使用者。</span></span>
+<span class="line"><span style="color:#6A737D">      // seed-user、seed-product 必須是不可變的參考資料；訂單本身每次建立新 ID。</span></span>
+<span class="line"><span style="color:#6A737D">      // 如果這些資源會被修改，應改由 data factory 產生唯一資源。</span></span>
 <span class="line"><span style="color:#E1E4E8">      userId: </span><span style="color:#9ECBFF">'seed-user'</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">      productId: </span><span style="color:#9ECBFF">'seed-product'</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    });</span></span>
@@ -296,17 +106,8 @@
 <span class="line"><span style="color:#E1E4E8">});</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">export</span><span style="color:#E1E4E8"> { expect } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span></code></pre>
-<p>測試本身就可以聚焦在情境：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { test, expect } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '../fixtures/test'</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can cancel a paid order'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orderData</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">orderPage</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">open</span><span style="color:#E1E4E8">(orderData.id);</span></span>
-<span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">cancel</span><span style="color:#E1E4E8">();</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">  await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(orderPage.status).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'已取消'</span><span style="color:#E1E4E8">);</span></span>
-<span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
-<p>這段程式碼仍然是示意，<code>test-support</code> API、認證方式與清理策略需要依實際系統調整。重點是責任分配：fixture 管生命週期，service 管資料操作，POM 管畫面操作，spec 管測試意圖與驗證。</p>
-<h2 id="fixture-scope-要和資料生命週期一致">Fixture scope 要和資料生命週期一致</h2>
+<p>這裡先看關係，不需要把每個 fixture 寫成完整實作：fixture 組合 <code>OrderPage</code> 與 <code>OrderDataClient</code>，資料 fixture 負責建立和清理訂單，spec 則只取得自己要用的資源。POM 與 API／service 是 fixture 下的同層能力，兩者都服務同一個 spec，但不應互相取代。</p>
+<h3 id="fixture-scope-要和資料生命週期一致">Fixture scope 要和資料生命週期一致</h3>
 <p>Playwright fixture 最容易被誤用的地方，是 scope 選錯。</p>
 <p>可以用一個簡單的判斷方式：</p>
 <table>
@@ -349,7 +150,262 @@
 <p>如果把訂單放在 worker scope，第一個測試取消了它，第二個測試就可能收到已取消的訂單。這類錯誤在單獨執行時不一定出現，平行執行或測試順序改變後才會暴露。</p>
 <p>認證狀態也要特別小心。<code>storageState</code> 可以減少每個測試重複登入的成本，但它只代表瀏覽器身分與 session，不代表業務資料已經可以安全共用。若測試不會修改共享的伺服器狀態，可以共用一個帳號；若測試會修改伺服器狀態，則應該讓每個 worker 使用不同帳號。Playwright 官方的 authentication 指南也把認證狀態與測試隔離策略分開處理。<a href="#ref-3">[3]</a></p>
 <p>同樣地，若 <code>test-support</code> API 需要登入，必須在 request fixture 或自訂 client 中明確設定認證，不要假設 page 的 session 會自動套用到另一個 API request context。</p>
+<h2 id="pom-應該封裝什麼">POM 應該封裝什麼</h2>
+<p>fixture 提供了 <code>orderPage</code>，但頁面物件本身只需要知道畫面怎麼操作，不需要知道訂單怎麼建立。POM 是 fixture 組合的其中一個同層能力，負責把頁面定位器與 UI 操作集中管理。</p>
+<p>Page Object Model 的目的，是把頁面定位器與頁面操作集中管理，讓測試不需要到處知道 CSS selector、按鈕文字或頁面結構。<a href="#ref-2">[2]</a></p>
+<p>一個 <code>OrderPage</code> 可以提供：</p>
+<ul>
+<li>開啟某筆訂單。</li>
+<li>取消訂單。</li>
+<li>讀取訂單狀態。</li>
+<li>等待頁面準備完成。</li>
+</ul>
+<p>但它不應該知道：</p>
+<ul>
+<li>測試要建立哪一種使用者。</li>
+<li>這筆訂單是否應該由 API 或資料庫建立。</li>
+<li>哪些測試情境需要先付款。</li>
+<li>整條跨頁面、跨服務的業務流程如何組合。</li>
+</ul>
+<p>一個簡化的 POM 可以長這樣：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { Locator, Page } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> OrderPage</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  readonly</span><span style="color:#FFAB70"> status</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Locator</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  constructor</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">private</span><span style="color:#F97583"> readonly</span><span style="color:#FFAB70"> page</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Page</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#79B8FF">    this</span><span style="color:#E1E4E8">.status </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByTestId</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'order-status'</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> open</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">orderId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.page.</span><span style="color:#B392F0">goto</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`/orders/${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> cancel</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">    await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.page.</span><span style="color:#B392F0">getByRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'button'</span><span style="color:#E1E4E8">, { name: </span><span style="color:#9ECBFF">'取消訂單'</span><span style="color:#E1E4E8"> }).</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>這個物件負責「怎麼操作訂單頁面」，但「取消後什麼結果才算成功」仍然由測試決定。</p>
+<h3 id="test-id-是穩定契約但不是所有元素的預設答案">Test id 是穩定契約，但不是所有元素的預設答案</h3>
+<p>在頁面上加 <code>data-testid</code>、<code>data-test</code> 或其他專用屬性，可以建立穩定而明確的測試契約。Playwright 將 test id 列為內建定位方式，但同時建議優先使用貼近使用者操作的定位器；Testing Library 也把 role、label、text 等語意查找方式排在 test id 前面。<a href="#ref-5">[5]</a> <a href="#ref-6">[6]</a> Playwright 預設讀取 <code>data-testid</code>；如果專案採用 <code>data-test</code>，需要在設定中指定 <code>testIdAttribute</code>。</p>
+<p>可以先用這個順序判斷：</p>
+<table>
+<thead>
+<tr>
+<th>定位方式</th>
+<th>優先使用時機</th>
+<th>主要代價</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>getByRole</code>、<code>getByLabel</code>、<code>getByText</code></td>
+<td>測試在意使用者看見的角色、名稱或文字</td>
+<td>UI 文案或可存取語意改變時，測試也會失敗</td>
+</tr>
+<tr>
+<td><code>getByTestId</code></td>
+<td>元素沒有穩定的語意定位方式，或文字是動態／不屬於測試重點</td>
+<td>它不會驗證可存取角色、名稱或使用者看到的文字</td>
+</tr>
+<tr>
+<td>CSS class、DOM 結構、XPath</td>
+<td>只有在沒有更好選項的遺留情境</td>
+<td>容易因樣式或實作重構而失效</td>
+</tr>
+</tbody>
+</table>
+<p>因此，按鈕的文字本身是需求的一部分時，應該寫成：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'button'</span><span style="color:#E1E4E8">, { name: </span><span style="color:#9ECBFF">'取消訂單'</span><span style="color:#E1E4E8"> }).</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">();</span></span></code></pre>
+<p>這不只找到按鈕，也會讓測試對按鈕的可存取角色與名稱保持敏感。如果測試只需要找到一個會顯示動態狀態的區塊，則 <code>data-testid="order-status"</code> 很適合：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(page.</span><span style="color:#B392F0">getByTestId</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'order-status'</span><span style="color:#E1E4E8">)).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'已取消'</span><span style="color:#E1E4E8">);</span></span></code></pre>
+<p><strong>Test id 的優點</strong></p>
+<ul>
+<li>不依賴 CSS class、DOM 層級或版面結構，前端重構時通常比較穩定。</li>
+<li>不會因為文案翻譯、品牌改字或格式調整而無意義地失效。</li>
+<li>可以把測試需要的定位點明確表達成前端與測試之間的契約。</li>
+<li>對狀態區塊、toast、表格列、空狀態與重複元件特別實用。</li>
+</ul>
+<p><strong>Test id 的缺點</strong></p>
+<ul>
+<li>它是使用者看不到的實作契約，不能取代對 role、accessible name 與重要文字的驗證。</li>
+<li>如果每個元素都加，頁面會充滿測試專用標記，前端需要同步維護一套額外命名。</li>
+<li>過度依賴後，測試可能在 UI 已經不符合使用者需求時仍然通過。例如按鈕文字改錯了，但 <code>data-testid</code> 沒變。</li>
+<li>命名若綁定實作，例如 <code>primary-button</code>、<code>div-3</code> 或包含隨機資料庫 ID，仍然會帶來不必要的變動。</li>
+</ul>
+<p>實務上可以採用這幾個規則：</p>
+<ol>
+<li>互動元素先用 role 與 accessible name；表單欄位先用 label。</li>
+<li>對狀態、容器或動態內容使用穩定且描述意圖的 test id，例如 <code>order-status</code>、<code>order-row</code>、<code>empty-state</code>。</li>
+<li>重複列表先定位資料列，再用 role、文字或欄位值縮小範圍，不要讓 test id 自己承擔所有業務識別。</li>
+<li>全專案選定一種慣例，例如 <code>data-testid</code> 或 <code>data-test</code>，並在 Playwright 設定中統一；不要混用 CSS class 當測試定位器。</li>
+</ol>
+<p>這也解釋了前面 <code>OrderPage</code> 的選擇：取消按鈕用 <code>getByRole</code>，訂單狀態用 <code>getByTestId</code>。前者驗證使用者可操作的語意，後者提供穩定的狀態定位點。test id 應該是語意定位器的補充，而不是取代品。</p>
+<h2 id="apiservice準備前置狀態">API／service：準備前置狀態</h2>
+<p>POM 與 API／service 都是 fixture 組合的同層能力。前者模擬使用者操作，後者準備測試需要的後端狀態；兩者都服務同一個 <code>test spec</code>，但不應互相取代。</p>
+<h3 id="用-api-準備資料讓-ui-測試保留真正的重點">用 API 準備資料，讓 UI 測試保留真正的重點</h3>
+<p>資料的所有權與隔離方式會在下一節整理；這裡先處理入口選擇。API／service 負責把 spec 需要的前置狀態準備好，讓測試不用繞一大圈才能抵達真正要驗證的畫面。</p>
+<p>假設我們要測試「使用者可以取消已付款訂單」。有兩種寫法。</p>
+<p>第一種寫法，測試從 UI 開始：登入、選商品、加入購物車、送出訂單、模擬付款，最後才取消訂單。</p>
+<p>第二種寫法，使用測試用 API 建立一筆已付款訂單，測試從 UI 開始執行取消操作。</p>
+<p>第二種通常更適合 E2E：</p>
+<ul>
+<li>測試時間較短。</li>
+<li>測試失敗時更容易定位在取消功能。</li>
+<li>不會讓每個測試都重複驗證登入、下單與付款流程。</li>
+<li>測試資料的狀態可以精準控制。</li>
+</ul>
+<p>這不代表所有資料都應該直接寫資料庫。可以把準備方式分成三層：</p>
+<table>
+<thead>
+<tr>
+<th>準備方式</th>
+<th>適合情境</th>
+<th>主要代價</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>公開或測試 API</td>
+<td>正常的業務資料與狀態</td>
+<td>API 變更會影響測試支援程式</td>
+</tr>
+<tr>
+<td>Test service</td>
+<td>需要統一建立、查詢與清理的資料</td>
+<td>需要維護一層測試專用介面</td>
+</tr>
+<tr>
+<td>直接寫資料庫</td>
+<td>特殊狀態、大量資料或 API 無法建立的情境</td>
+<td>綁定資料表與 schema</td>
+</tr>
+</tbody>
+</table>
+<p>原則是：真正要驗證的業務操作，使用和使用者相同的入口；只是為了準備前置條件的操作，可以使用更快、更精準的測試入口。</p>
+<h3 id="service-不要變成另一個萬能物件">Service 不要變成另一個萬能物件</h3>
+<p>在 E2E 專案裡，<code>Service</code> 通常有兩種意思，最好先命名清楚：</p>
+<ul>
+<li>應用程式裡真正被測試的 domain service。</li>
+<li>測試程式碼裡用來呼叫 API、建立資料或清理資料的 test service。</li>
+</ul>
+<p>為了避免混淆，測試程式碼可以使用 <code>OrderApi</code>、<code>TestDataService</code> 或 <code>OrderDataClient</code> 這類名稱。</p>
+<p>例如：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { APIRequestContext } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> class</span><span style="color:#B392F0"> OrderDataClient</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">  constructor</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">private</span><span style="color:#F97583"> readonly</span><span style="color:#FFAB70"> request</span><span style="color:#F97583">:</span><span style="color:#B392F0"> APIRequestContext</span><span style="color:#E1E4E8">) {}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> createPaidOrder</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">input</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">userId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">productId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> response</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.request.</span><span style="color:#B392F0">post</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'/test-support/orders'</span><span style="color:#E1E4E8">, {</span></span>
+<span class="line"><span style="color:#E1E4E8">      data: input,</span></span>
+<span class="line"><span style="color:#E1E4E8">    });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">response.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">      throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Error</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`Failed to create order: ${</span><span style="color:#E1E4E8">response</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">status</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">await</span><span style="color:#E1E4E8"> response.</span><span style="color:#B392F0">json</span><span style="color:#E1E4E8">()) </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">id</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> };</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  async</span><span style="color:#B392F0"> deleteOrder</span><span style="color:#E1E4E8">(</span><span style="color:#FFAB70">orderId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> response</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#79B8FF"> this</span><span style="color:#E1E4E8">.request.</span><span style="color:#B392F0">delete</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`/test-support/orders/${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">    if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">response.</span><span style="color:#B392F0">ok</span><span style="color:#E1E4E8">()) {</span></span>
+<span class="line"><span style="color:#F97583">      throw</span><span style="color:#F97583"> new</span><span style="color:#B392F0"> Error</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">`Failed to delete order ${</span><span style="color:#E1E4E8">orderId</span><span style="color:#9ECBFF">}: ${</span><span style="color:#E1E4E8">response</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">status</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span></code></pre>
+<p>這個 client 可以負責建立與清理資料，但不要把 E2E 的所有驗證都包在裡面。否則測試會看不到自己真正驗證了什麼，API 呼叫也可能在不知不覺間取代了本來應該由 UI 驗證的行為。</p>
+<h2 id="data測試狀態與隔離的基礎">Data：測試狀態與隔離的基礎</h2>
+<h3 id="測試獨立與資料所有權">測試獨立與資料所有權</h3>
+<p>前面的 API／service 已經說明資料可以從哪裡進入系統，現在要回答的是：這個情境需要什麼資料，才能在任何執行順序下得到相同的預期結果？這裡先定義 data 的邊界，再討論重建與清理策略。</p>
+<p>「每個測試都要獨立」常被誤解成「每個測試都要建立一個全新的資料庫」。這在某些系統可行，但不是唯一方式，也不一定是最有效率的方式。</p>
+<p>測試獨立真正要保證的是：</p>
+<ul>
+<li>一個測試的結果，不會改變另一個測試的預期結果。</li>
+<li>測試可以單獨執行，不需要依賴檔案中其他測試先跑完。</li>
+<li>測試可以平行執行，不會因為共用帳號或資料而互相覆蓋。</li>
+</ul>
+<p>這是「結果獨立」，不一定是「所有資源都完全獨立」。</p>
+<p>例如，所有測試可以共用同一份國家清單或幣別資料，只要測試不會修改它。相反地，使用者、訂單、付款紀錄與購物車通常是可變資料，就不應該讓多個測試共用同一筆。</p>
+<p>Playwright Test 會讓每個測試取得隔離的 page 與 browser context，內建的 <code>request</code> fixture 也會提供隔離的 API request context。<a href="#ref-1">[1]</a> 這解決了瀏覽器狀態的隔離，但不會自動隔離後端資料，因此資料設計仍然是測試框架之外的責任。</p>
+<p>在設計重建策略之前，先把測試會用到的資料分成幾類：</p>
+<table>
+<thead>
+<tr>
+<th>資料類型</th>
+<th>例子</th>
+<th>建議所有權</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>靜態參考資料</td>
+<td>國家、幣別、商品分類</td>
+<td>環境或測試套件共用</td>
+</tr>
+<tr>
+<td>測試前置資料</td>
+<td>可購買商品、測試租戶、角色</td>
+<td>fixture 或 worker 建立</td>
+</tr>
+<tr>
+<td>測試操作資料</td>
+<td>訂單、購物車、付款紀錄</td>
+<td>每個測試自己建立</td>
+</tr>
+<tr>
+<td>外部副作用</td>
+<td>郵件、付款、物流請求</td>
+<td>sandbox、替身或可追蹤的測試資源</td>
+</tr>
+</tbody>
+</table>
+<p>這張表的重點不是分類本身，而是回答兩個問題：</p>
+<ol>
+<li>哪些測試可以安全地共用這筆資料？</li>
+<li>哪個層級負責建立、使用與清理它？</li>
+</ol>
+<p>如果一筆資料會被測試修改，就不應該只因為「建立它很麻煩」而放在 global setup。建立成本高，不代表它適合共用；共用可變資料往往會把成本轉移到除錯與重跑。</p>
+<h3 id="資料隔離與生命週期">資料隔離與生命週期</h3>
+<p>不同系統可以採取不同的隔離與清理方式。比較實用的做法，是先理解每種策略保證了什麼，再選擇混合方案。</p>
+<p><strong>每次測試重置資料庫</strong></p>
+<p>每個測試開始前把資料庫恢復到固定狀態。若系統能讓測試在同一個受控交易中執行，也可以使用 transaction rollback；但一般跨服務 E2E 的 HTTP 請求，不能直接假設能用一個 transaction 包住整條測試。</p>
+<p>優點是狀態容易理解，測試之間的資料污染較少。缺點是速度可能很慢，而且資料庫以外的狀態不一定能一起回復，例如 message broker、搜尋索引、檔案儲存與第三方 sandbox。</p>
+<p>這種方式適合資料模型單純、測試環境可快速重置的服務，但不一定適合完整的多服務 E2E。</p>
+<p><strong>每個 worker 建立一組資源</strong></p>
+<p>每個 Playwright worker 建立一個測試使用者、租戶或資料 namespace，同一個 worker 裡的測試共用這些資源。</p>
+<p>這樣可以避免每個測試重複建立昂貴的資源，也適合準備登入狀態。代價是測試必須避免修改共用的可變資料，或在每個測試底下再建立唯一的訂單與其他 entity。</p>
+<p>worker scope 適合共用「建立成本高、內容穩定」的資源，不適合拿來共用「會被測試改變」的業務資料。</p>
+<p><strong>每個測試建立唯一資料</strong></p>
+<p>每個測試建立自己的使用者、訂單或租戶，並在識別值中加入測試批次、worker 或 UUID。</p>
+<p>例如：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> testDataId</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> `e2e-${</span><span style="color:#E1E4E8">process</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">env</span><span style="color:#9ECBFF">.</span><span style="color:#79B8FF">CI_JOB_ID</span><span style="color:#F97583"> ??</span><span style="color:#9ECBFF"> 'local'}-${</span><span style="color:#E1E4E8">crypto</span><span style="color:#9ECBFF">.</span><span style="color:#B392F0">randomUUID</span><span style="color:#9ECBFF">()</span><span style="color:#9ECBFF">}`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> email</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> `${</span><span style="color:#E1E4E8">testDataId</span><span style="color:#9ECBFF">}@example.test`</span><span style="color:#E1E4E8">;</span></span></code></pre>
+<p>這種方式最適合平行執行，也最容易追蹤某筆資料屬於哪個測試。缺點是建立資料的時間較長，因此通常會搭配共用的靜態 seed 或 worker fixture。</p>
+<p><strong>每個測試完成後清理</strong></p>
+<p>測試完成後刪除自己建立的資料，可以讓測試環境保持乾淨，但不能把清理當成唯一的隔離機制。</p>
+<p>測試可能在清理前就被程序中斷，外部服務也可能不允許立即刪除。比較可靠的策略，是同時使用：</p>
+<ul>
+<li>唯一 namespace，避免殘留資料影響下一次測試。</li>
+<li>測試批次標籤，方便找到整批資料。</li>
+<li>TTL 或排程清理，處理程序中斷留下的資料。</li>
+<li>fixture teardown，正常結束時主動清理。</li>
+</ul>
+<p>清理是環境衛生；資料唯一性才是測試獨立的核心保證。</p>
+<h3 id="建議的實務組合">建議的實務組合</h3>
+<p>對大多數多服務 E2E 專案，我會先從這個組合開始：</p>
+<ol>
+<li>環境啟動時建立靜態參考資料。</li>
+<li>每個 worker 準備登入身分或共用的穩定資源。</li>
+<li>每個測試透過 API 或 test service 建立自己的可變資料。</li>
+<li>測試使用完成後的業務結果，不依賴固定 ID 或固定排序。</li>
+<li>測試結束時清理，並以 namespace 或 TTL 處理清理失敗的殘留資料。</li>
+</ol>
+<p>這個方案不追求每一層都完全重建，而是把昂貴資源與可變資料分開管理。</p>
 <h2 id="重複使用測試程式碼的界線">重複使用測試程式碼的界線</h2>
+<p>五層關係接起來之後，才適合討論哪些程式碼值得重複使用。抽象化的目標不是讓每個檔案都變短，而是讓上層保留意圖、下層承擔機械性細節。</p>
 <p>測試程式碼應該重複使用，但不是所有重複都值得抽象化。</p>
 <p>最值得抽出的通常是機械性細節：</p>
 <ul>
@@ -384,6 +440,7 @@
 <span class="line"><span style="color:#F97583">await</span><span style="color:#B392F0"> expect</span><span style="color:#E1E4E8">(orderPage.status).</span><span style="color:#B392F0">toHaveText</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'處理中'</span><span style="color:#E1E4E8">);</span></span></code></pre>
 <p>這樣共用的是動作，不是測試的意義。</p>
 <h2 id="一個可維護的-playwright-目錄結構">一個可維護的 Playwright 目錄結構</h2>
+<p>目錄結構應該把前面的責任鏈呈現出來，而不是只按照類別名稱分資料夾。讀者看到 <code>spec</code>、<code>fixtures</code>、<code>pages</code>、<code>services</code> 與 <code>factories</code> 時，應該能推測它們之間誰使用誰、哪一層可以變動。</p>
 <p>實際目錄不需要完全照搬，但可以用責任來組織：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>tests/</span></span>
 <span class="line"><span>├─ e2e/</span></span>
@@ -413,8 +470,9 @@
 <li>跟資源組合與生命週期有關，放 <code>fixtures</code>。</li>
 <li>跟特定使用者旅程有關，優先留在 <code>e2e</code> spec，必要時才抽成命名清楚的 flow。</li>
 </ul>
-<p>這樣的分類讓程式碼的變更影響範圍比較容易預測，也不需要為了追求漂亮的目錄硬套結構。</p>
-<h2 id="資料隔離與平行執行">資料隔離與平行執行</h2>
+<p>這樣的分類不是為了追求漂亮的目錄，而是讓程式碼的變更影響範圍比較容易預測。</p>
+<h2 id="平行執行會檢驗整條關係">平行執行會檢驗整條關係</h2>
+<p>這條責任鏈最後會在平行執行時接受檢驗：spec 是否真的獨立，取決於 fixture 的 scope；fixture 是否安全，取決於 service 建立的資料是否唯一；資料是否唯一，則取決於 data 的識別策略。</p>
 <p>當測試開始平行執行，固定資料通常會立刻暴露問題：</p>
 <ul>
 <li>兩個測試使用同一個 email。</li>
@@ -427,7 +485,7 @@
 <p>一個比較完整的資料識別，可以包含：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>環境 + CI job + worker + test data UUID</span></span></code></pre>
 <p>當測試失敗時，這個識別也能幫助我們從 log、資料庫與外部 sandbox 找回完整脈絡。</p>
-<h2 id="失敗後如何處理殘留資料">失敗後如何處理殘留資料</h2>
+<h3 id="失敗後如何處理殘留資料">失敗後如何處理殘留資料</h3>
 <p>清理策略應該在測試設計一開始就決定，而不是等到 CI 環境塞滿資料才補救。</p>
 <p>可以依資源類型選擇不同策略：</p>
 <table>
@@ -462,6 +520,7 @@
 </table>
 <p>不要只依賴測試程式中的 <code>afterEach</code>。如果程序被 kill、runner 崩潰或外部 API timeout，teardown 可能無法正常完成。測試資料應該具備可辨識、可重試與可批次清理的特性。</p>
 <h2 id="這些抽象化會帶來什麼代價">這些抽象化會帶來什麼代價</h2>
+<p>把責任拆成五層，確實能讓變更有地方放，但也會增加間接性。這一節要看的不是「拆層好不好」，而是這條關係是否讓測試更容易理解與除錯。</p>
 <p>POM、Service 與 Fixture 都能減少重複，但也都會增加一層間接性。</p>
 <p>常見代價包括：</p>
 <ul>
@@ -500,12 +559,13 @@
 <h2 id="結語把測試寫成可理解的系統">結語：把測試寫成可理解的系統</h2>
 <p>一套能長期運作的 E2E 測試，不是由大量錄製腳本堆出來的。它需要幾個清楚的邊界：</p>
 <ul>
-<li>測試案例擁有自己的可變資料。</li>
-<li>API 或 test service 負責準備資料。</li>
-<li>POM 負責頁面互動與 locator。</li>
-<li>Fixture 負責資源組合與生命週期。</li>
 <li>Test spec 保留使用者情境與業務驗證。</li>
+<li>Fixture 組合測試需要的資源，管理 setup 與 teardown。</li>
+<li>POM 負責頁面互動與 locator。</li>
+<li>API／service 負責準備與清理後端狀態。</li>
+<li>Data 定義資料內容、所有權與唯一識別。</li>
 </ul>
+<p>從顆粒度看，這五個位置依序是 <code>test spec</code>、<code>fixture</code>、POM、API／service 與 data；但 POM 和 API／service 在 fixture 下是同層能力。從執行責任看，則是上層提出驗證需求，下層提供可控的實作細節。少了其中一層，測試不一定立刻壞掉，但責任會開始混在一起：spec 變成 setup 腳本，fixture 藏住業務意圖，POM 開始建立資料，service 偷偷替 UI 做驗證，最後平行執行時才發現 data 根本沒有隔離。</p>
 <p>這些分工讓測試同時具備兩種特性：可以重複使用實作細節，也不會把測試真正要驗證的事情藏起來。</p>
 <p>Playwright 的工具可以讓測試快速啟動、平行執行與重用 fixture，但好的 E2E 架構仍然來自團隊對資料所有權與測試責任的清楚定義。</p>
 <p>下一篇會接著討論：當測試、需求與 AI 產生的實作都需要被驗證時，驗收條件要怎麼變成真正可以檢查的交付流程？</p>
