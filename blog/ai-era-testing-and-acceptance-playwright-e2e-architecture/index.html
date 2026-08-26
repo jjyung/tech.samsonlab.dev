@@ -12,16 +12,16 @@
 <p>測試要獨立，靠的是資料邊界；程式碼要重用，靠的是清楚分工。</p>
 </blockquote>
 <h2 id="先看這些元件怎麼連在一起">先看這些元件怎麼連在一起</h2>
-<p>這篇不是把 <code>test spec</code>、fixture、POM、API／service 與 data 分別介紹一遍。它們其實是在描述同一件事的不同顆粒度：一個測試案例如何從「要驗證什麼」，一路落到「用什麼資料把前置狀態準備出來」。</p>
+<p>這篇不是把 test spec、fixture、POM、API／service 與 data 分別介紹一遍。它們其實是在描述同一件事的不同顆粒度：一個測試案例如何從「要驗證什麼」，一路落到「用什麼資料把前置狀態準備出來」。</p>
 <p>如果按照從大到小的顆粒度列出，我會依序看：</p>
 <ol>
-<li><code>test spec</code></li>
-<li><code>fixture</code></li>
+<li>test spec</li>
+<li>fixture</li>
 <li>POM</li>
 <li>API／service</li>
 <li>data</li>
 </ol>
-<p>但這不是一條單一路徑。比較準確的關係是：<code>test spec</code> 使用 fixture；fixture 在同一層組合 POM、API／service 與 data。POM 和 API／service 是同層能力，data 是兩者共同操作的測試狀態。</p>
+<p>但這不是一條單一路徑。比較準確的關係是：test spec 使用 fixture；fixture 在同一層組合 POM、API／service 與 data。POM 和 API／service 是同層能力，data 是兩者共同操作的測試狀態。</p>
 <table>
 <thead>
 <tr>
@@ -32,12 +32,12 @@
 </thead>
 <tbody>
 <tr>
-<td><code>test spec</code></td>
+<td>test spec</td>
 <td>使用者情境與驗收結果是什麼？</td>
 <td>描述測試意圖、操作流程與驗證結果</td>
 </tr>
 <tr>
-<td><code>fixture</code></td>
+<td>fixture</td>
 <td>這個測試需要哪些資源？活多久？</td>
 <td>組合依賴，管理 setup 與 teardown</td>
 </tr>
@@ -58,11 +58,11 @@
 </tr>
 </tbody>
 </table>
-<p>這個列法是設計與閱讀上的顆粒度，不是嚴格的執行呼叫順序。執行時，<code>test spec</code> 通常先取得 fixture 提供的資源；fixture 可能透過 API／service 建立 data，也可能把 POM 組合進來；spec 再使用 POM 操作 UI，最後驗證結果。</p>
+<p>這個列法是設計與閱讀上的顆粒度，不是嚴格的執行呼叫順序。執行時，test spec 通常先取得 fixture 提供的資源；fixture 可能透過 API／service 建立 data，也可能把 POM 組合進來；spec 再使用 POM 操作 UI，最後驗證結果。</p>
 <p>用「取消已付款訂單」來看，關係會比較清楚：spec 描述使用者可以取消訂單，fixture 準備登入身分與測試訂單，POM 負責開啟訂單頁和按下取消，API／service 建立已付款訂單並在結束後清理，data 則決定訂單的唯一 ID、付款狀態與相關 seed。這些不是五個獨立的工具，而是同一個案例從意圖到實作的五個切面。</p>
 <p>後面的內容會沿著這個關係展開：先看 spec 如何提出驗證需求，再看 fixture 如何組合資源，接著拆開 POM 與 API／service 的同層責任，最後集中處理 data 的隔離、平行執行與清理。</p>
 <h2 id="test-spec-是這條關係的起點">Test spec 是這條關係的起點</h2>
-<p>最上層的 <code>test spec</code> 應該保留使用者情境與業務驗證。它可以使用其他層提供的能力，但不需要知道資料是透過哪個 API 建立，也不需要知道按鈕使用哪個 CSS selector。</p>
+<p>最上層的 test spec 應該保留使用者情境與業務驗證。它可以使用其他層提供的能力，但不需要知道資料是透過哪個 API 建立，也不需要知道按鈕使用哪個 CSS selector。</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can cancel a paid order'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orderData</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">orderPage</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">open</span><span style="color:#E1E4E8">(orderData.id);</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">cancel</span><span style="color:#E1E4E8">();</span></span>
@@ -71,7 +71,7 @@
 <span class="line"><span style="color:#E1E4E8">});</span></span></code></pre>
 <p>這段測試的價值，在於讀者一眼就能看出它驗證什麼。至於登入、建立已付款訂單、準備頁面物件與清理資料，會由下面幾層接手。這也是整篇文章要守住的方向：越靠近 spec，越接近測試意圖；越往下，越接近可重用的實作細節。</p>
 <h2 id="fixture-是組合與生命週期的邊界">Fixture 是組合與生命週期的邊界</h2>
-<p><code>test spec</code> 不應該自己把 POM、API client、測試資料與清理流程一個個組合起來。fixture 位在 spec 與這些測試資源之間，負責把依賴接起來，並決定它們什麼時候建立、什麼時候清理。</p>
+<p>test spec 不應該自己把 POM、API client、測試資料與清理流程一個個組合起來。fixture 位在 spec 與這些測試資源之間，負責把依賴接起來，並決定它們什麼時候建立、什麼時候清理。</p>
 <p>先看同一個「取消已付款訂單」案例如何被組合：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { test </span><span style="color:#F97583">as</span><span style="color:#E1E4E8"> base } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '@playwright/test'</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { OrderDataClient } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> '../services/OrderDataClient'</span><span style="color:#E1E4E8">;</span></span>
@@ -242,7 +242,7 @@
 </ol>
 <p>這也解釋了前面 <code>OrderPage</code> 的選擇：取消按鈕用 <code>getByRole</code>，訂單狀態用 <code>getByTestId</code>。前者驗證使用者可操作的語意，後者提供穩定的狀態定位點。test id 應該是語意定位器的補充，而不是取代品。</p>
 <h2 id="apiservice準備前置狀態">API／service：準備前置狀態</h2>
-<p>POM 與 API／service 都是 fixture 組合的同層能力。前者模擬使用者操作，後者準備測試需要的後端狀態；兩者都服務同一個 <code>test spec</code>，但不應互相取代。</p>
+<p>POM 與 API／service 都是 fixture 組合的同層能力。前者模擬使用者操作，後者準備測試需要的後端狀態；兩者都服務同一個 test spec，但不應互相取代。</p>
 <h3 id="用-api-準備資料讓-ui-測試保留真正的重點">用 API 準備資料，讓 UI 測試保留真正的重點</h3>
 <p>資料的所有權與隔離方式會在下一節整理；這裡先處理入口選擇。API／service 負責把 spec 需要的前置狀態準備好，讓測試不用繞一大圈才能抵達真正要驗證的畫面。</p>
 <p>假設我們要測試「使用者可以取消已付款訂單」。有兩種寫法。</p>
@@ -565,7 +565,7 @@
 <li>API／service 負責準備與清理後端狀態。</li>
 <li>Data 定義資料內容、所有權與唯一識別。</li>
 </ul>
-<p>從顆粒度看，這五個位置依序是 <code>test spec</code>、<code>fixture</code>、POM、API／service 與 data；但 POM 和 API／service 在 fixture 下是同層能力。從執行責任看，則是上層提出驗證需求，下層提供可控的實作細節。少了其中一層，測試不一定立刻壞掉，但責任會開始混在一起：spec 變成 setup 腳本，fixture 藏住業務意圖，POM 開始建立資料，service 偷偷替 UI 做驗證，最後平行執行時才發現 data 根本沒有隔離。</p>
+<p>從顆粒度看，這五個位置依序是 test spec、fixture、POM、API／service 與 data；但 POM 和 API／service 在 fixture 下是同層能力。從執行責任看，則是上層提出驗證需求，下層提供可控的實作細節。少了其中一層，測試不一定立刻壞掉，但責任會開始混在一起：spec 變成 setup 腳本，fixture 藏住業務意圖，POM 開始建立資料，service 偷偷替 UI 做驗證，最後平行執行時才發現 data 根本沒有隔離。</p>
 <p>這些分工讓測試同時具備兩種特性：可以重複使用實作細節，也不會把測試真正要驗證的事情藏起來。</p>
 <p>Playwright 的工具可以讓測試快速啟動、平行執行與重用 fixture，但好的 E2E 架構仍然來自團隊對資料所有權與測試責任的清楚定義。</p>
 <p>下一篇會接著討論：當測試、需求與 AI 產生的實作都需要被驗證時，驗收條件要怎麼變成真正可以檢查的交付流程？</p>
