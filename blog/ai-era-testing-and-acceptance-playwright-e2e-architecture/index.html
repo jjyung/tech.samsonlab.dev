@@ -6,7 +6,7 @@
 <p>E2E 測試要怎麼準備資料、保持測試獨立，並且讓測試程式碼可以長期維護？</p>
 </blockquote>
 <p>當測試只有幾條時，直接在測試裡登入、建立資料、操作畫面，看起來最快。等到測試數量增加，問題就會一起出現：測試互相依賴、資料清不乾淨、平行執行不穩定，最後每個人都開始複製一份自己的登入與資料建立流程。</p>
-<p>Playwright 提供了 <code>Page</code>、<code>BrowserContext</code>、<code>APIRequestContext</code> 與 fixtures，但它不會替我們決定應用程式資料如何隔離。真正重要的設計，是把測試情境、測試資料、UI 操作與生命週期管理分開。</p>
+<p>Playwright 提供了 <code>Page</code>、<code>BrowserContext</code>、<code>APIRequestContext</code> 與 <code>fixtures</code>，但它不會替我們決定應用程式資料如何隔離。真正重要的設計，是把測試情境、測試資料、UI 操作與生命週期管理分開。</p>
 <p>這篇的核心原則是：</p>
 <blockquote>
 <p>測試要獨立，靠的是資料邊界；程式碼要重用，靠的是清楚分工。</p>
@@ -120,7 +120,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Page、BrowserContext</td>
+<td><code>Page</code>、<code>BrowserContext</code></td>
 <td>test fixture</td>
 <td>每個測試都需要獨立瀏覽器狀態</td>
 </tr>
@@ -284,7 +284,7 @@
 </table>
 <p>原則是：真正要驗證的業務操作，使用和使用者相同的入口；只是為了準備前置條件的操作，可以使用更快、更精準的測試入口。</p>
 <h3 id="service-不要變成另一個萬能物件">Service 不要變成另一個萬能物件</h3>
-<p>在 E2E 專案裡，<code>Service</code> 通常有兩種意思，最好先命名清楚：</p>
+<p>在 E2E 專案裡，Service 通常有兩種意思，最好先命名清楚：</p>
 <ul>
 <li>應用程式裡真正被測試的 domain service。</li>
 <li>測試程式碼裡用來呼叫 API、建立資料或清理資料的 test service。</li>
