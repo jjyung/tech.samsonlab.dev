@@ -64,7 +64,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### Playwright E2E 測試架構：AI 時代的資料隔離、Fixture、生命週期與可維護性實務
+### E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？
 
 **Description:** 本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。
 
@@ -222,4 +222,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-25T09:53:03.274Z
+Last updated: 2026-08-26T01:11:39.833Z
