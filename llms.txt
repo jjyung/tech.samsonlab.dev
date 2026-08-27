@@ -32,6 +32,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### AI 時代的自動化測試與驗收（九）：測試全綠之後，如何用驗收條件、證據地圖、剩餘風險與責任分工做出交付決策？
+
+**Description:** AI 時代的自動化測試與驗收（九）從驗收條件、evidence map、探索式測試與 AI 輔助出發，說明如何把測試結果接回需求、使用者價值、剩餘風險與交付決策，讓團隊在測試全綠後仍能判斷這次交付是否真的可以發布，並留下可追蹤的接受理由與責任。
+
+**URL:** https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-acceptance-workflow/
+
+---
+
 ### 契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾
 
 **Description:** 契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。
@@ -222,4 +230,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-26T08:02:37.556Z
+Last updated: 2026-08-27T05:52:04.766Z
