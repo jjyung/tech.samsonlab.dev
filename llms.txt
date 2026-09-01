@@ -168,7 +168,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### 專案管理與企業架構如何合作：讓當期交付不偏離長期方向
+### 企業架構實務（一）：專案管理與企業架構如何合作？
 
 **Description:** 說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。
 
@@ -238,4 +238,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-01T03:35:08.885Z
+Last updated: 2026-09-01T04:00:17.382Z
