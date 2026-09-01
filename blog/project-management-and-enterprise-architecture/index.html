@@ -1,0 +1,154 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/project-management-and-enterprise-architecture/"><!-- Primary Meta Tags --><title>專案管理與企業架構如何合作：讓當期交付不偏離長期方向</title><meta name="title" content="專案管理與企業架構如何合作：讓當期交付不偏離長期方向"><meta name="description" content="說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/project-management-and-enterprise-architecture/"><meta property="og:title" content="專案管理與企業架構如何合作：讓當期交付不偏離長期方向"><meta property="og:description" content="說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/project-management-and-enterprise-architecture.D6u391vt.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/project-management-and-enterprise-architecture/"><meta property="twitter:title" content="專案管理與企業架構如何合作：讓當期交付不偏離長期方向"><meta property="twitter:description" content="說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/project-management-and-enterprise-architecture.D6u391vt.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"專案管理與企業架構如何合作：讓當期交付不偏離長期方向","description":"說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。","datePublished":"2026-09-01T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/project-management-and-enterprise-architecture.D6u391vt.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.C05Xrt88.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/project-management-and-enterprise-architecture.D6u391vt_Z1r5LR6.webp" alt="專案管理與企業架構如何合作：讓當期交付不偏離長期方向" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-01T00:00:00.000Z">Sep 1, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">enterprise-architecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">project-management</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">governance</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">專案管理與企業架構如何合作：讓當期交付不偏離長期方向</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><p>專案常遇到一種很實際的衝突：眼前的交付有明確期限與預算，這次選擇卻可能改變下一個專案的整合成本、資料責任與營運風險。專案管理關心範疇、時程、資源與驗收；企業架構（Enterprise Architecture，EA）關心企業能力、系統邊界與轉型順序。兩者處理的是同一項投資，只是觀察的時間尺度不同。</p>
+<p>只靠專案管理，團隊可能準時完成眼前的交付，卻把整合成本或技術債留給下一個專案。只靠 EA，組織可能畫出完整的目標架構，卻沒有把方向轉成預算、里程碑與可驗收成果。</p>
+<p>本文以企業內部 EA 培訓使用的參考資料為出發點，整理一套協作框架，用來回答一個實務問題：</p>
+<blockquote>
+<p>專案管理與 EA 如何在不同時間尺度上互相補位，讓專案完成當期交付，也不偏離企業長期方向？</p>
+</blockquote>
+<p>為了避免角色混用，本文以 PM 代表單一專案中的專案管理職能；涉及投資組合、跨專案資源與治理機制時，則使用 PMO 或專案治理。業務價值、投資優先級與風險是否接受，最終由董事會、專案贊助人、產品負責人或其他有權責的業務 owner 決定。</p>
+<h2 id="當期交付也會留下長期架構影響">當期交付也會留下長期架構影響</h2>
+<p>系統發生事故時，專案通常先修正直接原因、完成回歸測試，再控制下一次上線的風險。這些工作都合理，也需要 PM 管理範圍、期限、依賴與驗收。然而，如果每次修補只處理本期問題，沒有檢查資料責任、整合邊界與故障範圍，眼前完成的交付可能成為下一個專案的限制。</p>
+<p>MIT CISR 的《Enterprise Architecture as Strategy》把 EA 定位為建立 business execution foundation 的方式：企業先決定哪些流程必須做好，再用架構把策略落實成可運作的能力。<a href="#ref-1">[1]</a> 換成專案語言，就是先確認組織需要哪些能力與結果，再判斷現有系統如何逐步演進。</p>
+<p>兩種角色可以濃縮成一句話：</p>
+<blockquote>
+<p>PM 確保當期交付可行且受控；EA 確保這次交付仍朝企業需要的能力前進。</p>
+</blockquote>
+<p>在決策形成前，PM 與 EA 共同提出選項與代價，再由有權責的業務或投資決策者決定價值、優先級與風險處置。</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#F97583">flowchart</span><span style="color:#B392F0"> TB</span></span>
+<span class="line"><span style="color:#FFAB70">  EA</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"EA 視角&lt;br/&gt;企業方向、能力缺口與目標狀態&lt;br/&gt;系統、資料與整合邊界"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  PM</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"PM 視角&lt;br/&gt;當期範圍、里程碑、預算&lt;br/&gt;依賴、風險與驗收"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Assessment</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"共同評估&lt;br/&gt;選項、代價、過渡路徑與影響"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Owner</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"業務／投資決策者&lt;br/&gt;董事會、贊助人或業務 owner"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Delivery</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"分階段交付&lt;br/&gt;計畫、協作、驗收與成果"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Evidence</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"營運與交付證據&lt;br/&gt;實際限制、成果與新風險"</span><span style="color:#F97583">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FFAB70">  EA </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">提供方向與長期影響</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> Assessment</span></span>
+<span class="line"><span style="color:#FFAB70">  PM </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">提供可行性與交付影響</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> Assessment</span></span>
+<span class="line"><span style="color:#FFAB70">  Assessment </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">提出方案與決策資訊</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> Owner</span></span>
+<span class="line"><span style="color:#FFAB70">  Owner </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">決定價值</span><span style="color:#E1E4E8">、</span><span style="color:#9ECBFF">優先級與風險處置</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> Delivery</span></span>
+<span class="line"><span style="color:#FFAB70">  Delivery </span><span style="color:#F97583">--&gt;</span><span style="color:#FFAB70"> Evidence</span></span>
+<span class="line"><span style="color:#FFAB70">  Evidence </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">更新基線與 roadmap</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> EA</span></span>
+<span class="line"><span style="color:#FFAB70">  Evidence </span><span style="color:#F97583">--&gt;|</span><span style="color:#9ECBFF">調整範圍與後續計畫</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> PM</span></span></code></pre>
+<h2 id="pm-與-ea-看的是不同時間尺度">PM 與 EA 看的是不同時間尺度</h2>
+<p>EA 要讓專案看見這次選擇留下的長期影響。核心資料各自由哪個系統負責？現有系統需要長期共存時，哪些能力要保留、包覆或逐步替換？外部系統無法同步改造時，新的整合邊界如何維持相容？現在的選擇會不會成為下一階段的瓶頸？</p>
+<p>這些問題會形成三類架構輸入：</p>
+<ol>
+<li><strong>決策邊界</strong>：交易資料要有明確責任歸屬，跨系統整合要有可追蹤的契約與版本策略，重要操作要能稽核。</li>
+<li><strong>目標與過渡狀態</strong>：說清楚核心系統、舊 POS 與新能力在不同階段如何共存，不用一開始就畫出涵蓋全企業的完整藍圖。</li>
+<li><strong>跨專案依賴</strong>：辨識展店、加盟、會員活動、財務日結與外部平台共同依賴的資料、介面與平台能力。</li>
+</ol>
+<p>McKinsey 與 Henley Business School 的調查提供了一個實務對照。自認是 digital leaders 的受訪者更常表示，EA 團隊會參與高階策略討論、更新未來架構，並以 business capability 作為通往目標架構的里程碑。投入高於平均時間做策略規劃的 EA 團隊，也更常回報可持續的解決方案與較高的專案效益。這是相關性調查，不能證明因果，但可以看出長期規劃與專案成果並不互斥。<a href="#ref-2">[2]</a></p>
+<p>PM 則把方向轉成專案承諾：這一階段先改善哪一條流程、需要哪些團隊與外部廠商、預算和時程是否足夠、切換失敗如何回復，以及什麼證據可以證明成果。當目標超出團隊可以承擔的範圍，PM 要促成拆分、重新排序或風險升級，讓業務 owner 做出取捨。</p>
+<p>Kaine Ugwu 的文章原本比較的是 EA 與 PMO。EA 提供目標狀態、transition architecture、依賴、roadmap 與轉型原則；PMO 形成可執行的專案計畫，並持續回報進度、阻礙、風險與必要變更。<a href="#ref-3">[3]</a> 單一專案由 PM 管理交付；跨專案排序、共用資源與投資治理則屬於 PMO 或專案治理。兩個層次要分開，資訊仍需雙向流動。</p>
+<h2 id="把合作放進專案生命週期">把合作放進專案生命週期</h2>
+<p>EA 無須審查每一行程式碼，PM 也不能等到上線前才詢問架構影響。最有價值的介入點，是高影響力決策仍可調整的時候。這種先規劃、再檢查、最後執行的節奏，也和 <a href="/blog/plan-gate-execute/">Plan Gate Execute</a> 談的分階段做法相近。以下分工是本文整理的協作建議，並非引用來源定義的標準流程。</p>
+<table>
+<thead>
+<tr>
+<th>專案階段</th>
+<th>PM 的主要任務</th>
+<th>EA 的主要任務</th>
+<th>協作產出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>啟動</td>
+<td>釐清業務目標、範圍假設、資源與限制</td>
+<td>評估對企業能力、現有系統與其他計畫的影響</td>
+<td>展店、新品牌、加盟與不中斷營運的架構影響初評</td>
+</tr>
+<tr>
+<td>規劃</td>
+<td>安排里程碑、預算、依賴、風險與驗收方式</td>
+<td>定義架構原則、資料責任、系統邊界與過渡狀態</td>
+<td>分階段 roadmap、外部系統依賴、審查節點與可驗收指標</td>
+</tr>
+<tr>
+<td>執行</td>
+<td>協調工作、阻塞、變更與決策時程</td>
+<td>參與高影響力設計決策，記錄例外與長期影響</td>
+<td>ADR、整合契約、切換與回復方案、技術債清單</td>
+</tr>
+<tr>
+<td>監控</td>
+<td>追蹤範圍、時程、成本、品質與風險</td>
+<td>評估變更是否偏離目標，或把風險轉移到其他系統</td>
+<td>故障範圍、交易可追查性、展店時間與交付速度的證據</td>
+</tr>
+<tr>
+<td>收尾</td>
+<td>完成驗收、交接、未結事項與經驗回顧</td>
+<td>更新實際架構、可重用資產與後續 roadmap</td>
+<td>As-Is／To-Be 更新、例外處置與下一階段投資建議</td>
+</tr>
+</tbody>
+</table>
+<p>這個協作會持續到收尾：預算、人才或外部依賴不足時，調整過渡路徑；資料責任或故障範圍擴大時，重新檢視範圍、時程與風險。重大取捨仍由業務或投資決策者承擔。</p>
+<h2 id="把架構方向轉成可驗收成果">把架構方向轉成可驗收成果</h2>
+<p>以餐飲業為例，連鎖業者從既有門市擴展到更多據點、新品牌或加盟體系時，常會同時面對幾個問題：原本只服務單一品牌與少數門市的 POS 或核心系統，開始承擔訂單、付款、庫存、會員、外送與電子發票等跨通路流程；新門市的菜單、價格、權限與設備設定仍得靠工程團隊處理；舊系統又不能一次下線，因為營運中的門市不能長時間停擺。</p>
+<p>因此，轉型不只是換掉一套系統，而是要逐步拆開資料責任與整合邊界，讓新能力可以和既有系統共存，並降低單一服務異常時擴大成所有門市與通路中斷的風險。這時「支援快速展店與多通路成長」仍無法直接排程，也無法直接驗收。PM、EA、產品負責人與交付團隊要把架構意圖拆成專案問題，再為每個問題定義證據。下表只示範這個轉譯方式，不預先決定技術方案。</p>
+<table>
+<thead>
+<tr>
+<th>架構意圖</th>
+<th>專案需要回答的問題</th>
+<th>可驗收的證據</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>局部故障不再拖垮所有門市與通路</td>
+<td>第一階段先隔離哪些故障？哪些功能可以降級？</td>
+<td>故障演練證明單一外部服務或模組異常時，其餘接單與出餐流程仍可運作</td>
+</tr>
+<tr>
+<td>訂單、付款、退款與發票可追查</td>
+<td>哪個系統負責各種交易狀態？跨系統如何關聯？</td>
+<td>客服與財務能沿同一筆交易識別碼查到完整歷程，並解釋狀態差異</td>
+</tr>
+<tr>
+<td>舊 POS 與新能力至少共存三年</td>
+<td>哪些契約必須穩定？門市如何分批切換與回復？</td>
+<td>相容性測試、分批上線計畫、回復演練與版本淘汰條件</td>
+</tr>
+<tr>
+<td>新門市五個工作天內完成設定</td>
+<td>哪些差異要改成設定？誰有權限修改與核准？</td>
+<td>用新門市情境演練菜單、價格、權限與設備設定，全程不修改程式</td>
+</tr>
+</tbody>
+</table>
+<p>這個轉譯會逼出必要的取捨。第一階段要優先降低尖峰中斷、縮短新門市設定時間，還是先改善財務對帳，屬於業務與投資決策；PM 提供成本、時程與依賴，EA 說明每個選項對目標架構與後續階段的影響。架構要求若排不進計畫、找不到 owner 或無法驗收，代表它仍太抽象，或當期範圍需要重新決定。驗收條件、證據與剩餘風險如何接回交付決策，也可參考 <a href="/blog/ai-era-testing-and-acceptance-acceptance-workflow/">AI 時代的自動化測試與驗收（九）</a>。</p>
+<h3 id="留下五份最小產物">留下五份最小產物</h3>
+<p>有跨系統影響的改造不必產生厚重文件，但至少要留下可追蹤的決策脈絡：</p>
+<ol>
+<li><strong>架構原則對照</strong>：方案採用哪些原則，哪些地方暫時例外。</li>
+<li><strong>架構決策紀錄</strong>：選了什麼、放棄什麼、依據是什麼、何時重新檢視。</li>
+<li><strong>專案依賴圖</strong>：標出核心系統、舊 POS、金流、電子發票、ERP、外送平台、團隊與其他專案。</li>
+<li><strong>例外登錄與處理期限</strong>：記錄誰接受風險、補強期限與收斂條件。</li>
+<li><strong>驗收與營運指標</strong>：定義上線前如何證明，上線後由誰觀察與處理異常。</li>
+</ol>
+<h2 id="架構治理要守住哪些邊界">架構治理要守住哪些邊界</h2>
+<p>技術選擇是否需要升級，可以先看影響範圍與不可逆程度。以餐飲連鎖業者為例，下列決策應由 EA 或架構審查介入：</p>
+<ul>
+<li>改變訂單、付款、庫存或會員資料的責任歸屬與 domain boundary</li>
+<li>新增供多個通路、團隊或品牌共用的 API、事件或平台能力</li>
+<li>引入長期基礎設施、供應商、資安或營運依賴</li>
+<li>影響加盟權限、個資、稽核、可用性或災難復原</li>
+<li>失敗後難以回復，或會和其他轉型專案競爭共同資源</li>
+</ul>
+<p>團隊可以自行決定不改變外部契約與資料責任的內部重構、能快速回復的實作細節、已被既有標準涵蓋的低風險選擇，以及只影響單一元件且不增加長期營運負擔的調整。例如，重新整理 Promotion 模組內部程式結構可以留在團隊；改變優惠、訂單與付款之間的交易責任，就需要把問題提高一層。</p>
+<p>治理深度也要符合風險。時程壓力確實存在，但審查仍要聚焦於交易、資安、切換與回復風險，不能因此省略高影響力決策的紀錄。若新品牌或加盟需求中途改變資料與權限邊界，EA 先盤點受影響的系統和長期依賴，PM 再換算成時程、成本、品質與承諾的變化，最後由業務 owner 選擇延期、分階段、縮小範圍或接受風險。</p>
+<p>這套協作仍有現實限制。目標狀態可能建立在不完整的現況資料上，預算與時程會迫使組織採用過渡方案，不同單位也可能對風險和急迫性有不同判斷。例外缺少 owner 與期限，最後就會成為永久狀態；文件存在，也不等於團隊已理解決策或用營運證據驗證結果。</p>
+<p>Atencio、Bustos 與 Mancini 的文獻回顧指出，既有研究強調專案與業務對齊，也把 EA 視為治理工具；但作者在選定文獻中沒有找到 EA 在 project-based organizations 的完整應用，只看到部分元件，EA 在 project management 領域的應用則較明確。<a href="#ref-4">[4]</a> 這個研究缺口提醒我們，本文框架適合拿來釐清問題與責任，還不能被當成已成熟驗證的固定方法。</p>
+<p>PM 與 EA 的合作可以用三個問題檢查：誰有權決定價值與風險、當期交付要用什麼證據驗收、這次選擇會替下一階段增加什麼限制。PM 讓方向成為可交付承諾，EA 讓交付不會只剩一次性的修補；業務與投資決策者則對最後的取捨負責。</p>
+<h2 id="參考資料">參考資料</h2>
+<!-- markdownlint-disable MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] Jeanne W. Ross、Peter Weill、David C. Robertson，〈<a href="https://cisr.mit.edu/publication/enterprise-architecture-as-strategy">Enterprise Architecture as Strategy: Creating a Foundation for Business Execution</a>〉，MIT CISR，2006。</li>
+<li><a id="ref-2"></a>[2] Sven Blumberg、Oliver Bossert、Jan Sokalski，〈<a href="https://www.mckinsey.com/capabilities/tech-and-ai/our-insights/five-enterprise-architecture-practices-that-add-value-to-digital-transformations">Five enterprise-architecture practices that add value to digital transformations</a>〉，McKinsey &amp; Company，2018。</li>
+<li><a id="ref-3"></a>[3] Kaine Ugwu，〈<a href="https://www.architectureandgovernance.com/elevating-ea/understanding-complementary-relationship-enterprise-architecture-project-management/">Understanding the Complementary Relationship Between Enterprise Architecture &amp; Project Management</a>〉，Architecture &amp; Governance，2017。</li>
+<li><a id="ref-4"></a>[4] Edison Atencio、Guillermo Bustos、Mauro Mancini，〈<a href="https://doi.org/10.3390/su14169801">Enterprise Architecture Approach for Project Management and Project-Based Organizations: A Review</a>〉，《Sustainability》，2022。</li>
+</ul>
+<!-- markdownlint-enable MD033 -->
+</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-acceptance-workflow/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">AI 時代的自動化測試與驗收（九）：測試全綠之後，如何用驗收條件、證據地圖、剩餘風險與責任分工做出交付決策？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex justify-center gap-4"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

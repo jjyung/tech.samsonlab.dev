@@ -168,6 +168,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 專案管理與企業架構如何合作：讓當期交付不偏離長期方向
+
+**Description:** 說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。
+
+**URL:** https://tech.samsonlab.dev/blog/project-management-and-enterprise-architecture/
+
+---
+
 ### AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統
 
 **Description:** AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。
@@ -230,4 +238,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-08-27T06:06:21.840Z
+Last updated: 2026-09-01T03:35:08.885Z
