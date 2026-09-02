@@ -176,6 +176,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型
+
+**Description:** 這篇以虛構的好味餐飲集團為例，從會員日尖峰事故、OneFood 單體系統與兩年展店計畫，整理企業架構轉型要面對的業務目標、利害關係人、系統現況與營運限制；重點不是先選技術，而是先建立後續 EA 架構分析可反覆引用、比較方案並追蹤決策的共同情境。
+
+**URL:** https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/
+
+---
+
 ### AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統
 
 **Description:** AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。
@@ -238,4 +246,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-01T04:00:17.382Z
+Last updated: 2026-09-02T05:58:17.769Z
