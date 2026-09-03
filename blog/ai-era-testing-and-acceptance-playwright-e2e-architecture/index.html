@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><!-- Primary Meta Tags --><title>E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</title><meta name="title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta name="description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><meta property="og:title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta property="og:description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><meta property="twitter:title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta property="twitter:description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？","description":"本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。","datePublished":"2026-08-25T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Ct7ttYwY.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6_Z13oqQ4.webp" alt="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-25T00:00:00.000Z">Aug 25, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Playwright</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">E2E</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><!-- Primary Meta Tags --><title>E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</title><meta name="title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta name="description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><meta property="og:title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta property="og:description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/"><meta property="twitter:title" content="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？"><meta property="twitter:description" content="本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？","description":"本文整理 Playwright E2E 測試的資料隔離、API 前置資料、POM、Service 與 Fixture 分工，說明如何在平行執行下維持測試獨立，並讓 AI 產生的測試骨架仍然可讀、可維護，也提供殘留資料清理與抽象化取捨的判斷。","datePublished":"2026-08-25T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BJGPvr3o.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-playwright-e2e-architecture.S7-i1ii6_Z13oqQ4.webp" alt="E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-25T00:00:00.000Z">Aug 25, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Playwright</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">E2E</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
 <p><a href="/blog/ai-era-testing-and-acceptance-e2e-test/">上一篇：E2E 只保護最重要的旅程</a></p>
 </blockquote>
 <p>上一篇談的是「哪些使用者旅程值得用 E2E 保護」。這一篇往前走一步，討論另一個更容易在實務上卡住的問題：</p>
@@ -22,48 +22,48 @@
 <li>data</li>
 </ol>
 <p>但這不是一條單一路徑。比較準確的關係是：test spec 使用 fixture；fixture 在同一層組合 POM、API／service 與 data。POM 和 API／service 是同層能力，data 是兩者共同操作的測試狀態。</p>
-<table>
-<thead>
-<tr>
-<th>層級</th>
-<th>它回答的問題</th>
-<th>主要責任</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>test spec</td>
-<td>使用者情境與驗收結果是什麼？</td>
-<td>描述測試意圖、操作流程與驗證結果</td>
-</tr>
-<tr>
-<td>fixture</td>
-<td>這個測試需要哪些資源？活多久？</td>
-<td>組合依賴，管理 setup 與 teardown</td>
-</tr>
-<tr>
-<td>POM</td>
-<td>UI 要怎麼操作？</td>
-<td>封裝頁面定位器與畫面操作</td>
-</tr>
-<tr>
-<td>API／service</td>
-<td>前置狀態要怎麼建立或清理？</td>
-<td>呼叫 API、test service 或其他資料入口</td>
-</tr>
-<tr>
-<td>data</td>
-<td>測試實際使用哪些狀態與識別值？</td>
-<td>定義資料內容、所有權與唯一性</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層級</th><th>它回答的問題</th><th>主要責任</th></tr></thead><tbody><tr><td>test spec</td><td>使用者情境與驗收結果是什麼？</td><td>描述測試意圖、操作流程與驗證結果</td></tr><tr><td>fixture</td><td>這個測試需要哪些資源？活多久？</td><td>組合依賴，管理 setup 與 teardown</td></tr><tr><td>POM</td><td>UI 要怎麼操作？</td><td>封裝頁面定位器與畫面操作</td></tr><tr><td>API／service</td><td>前置狀態要怎麼建立或清理？</td><td>呼叫 API、test service 或其他資料入口</td></tr><tr><td>data</td><td>測試實際使用哪些狀態與識別值？</td><td>定義資料內容、所有權與唯一性</td></tr></tbody></table>
 <p>這個列法是設計與閱讀上的顆粒度，不是嚴格的執行呼叫順序。執行時，test spec 通常先取得 fixture 提供的資源；fixture 可能透過 API／service 建立 data，也可能把 POM 組合進來；spec 再使用 POM 操作 UI，最後驗證結果。</p>
 <p>用「取消已付款訂單」來看，關係會比較清楚：spec 描述使用者可以取消訂單，fixture 準備登入身分與測試訂單，POM 負責開啟訂單頁和按下取消，API／service 建立已付款訂單並在結束後清理，data 則決定訂單的唯一 ID、付款狀態與相關 seed。這些不是五個獨立的工具，而是同一個案例從意圖到實作的五個切面。</p>
 <p>後面的內容會沿著這個關係展開：先看 spec 如何提出驗證需求，再看 fixture 如何組合資源，接著拆開 POM 與 API／service 的同層責任，最後集中處理 data 的隔離、平行執行與清理。</p>
 <h2 id="test-spec-是這條關係的起點">Test spec 是這條關係的起點</h2>
 <p>最上層的 test spec 應該保留使用者情境與業務驗證。它可以使用其他層提供的能力，但不需要知道資料是透過哪個 API 建立，也不需要知道按鈕使用哪個 CSS selector。</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can cancel a paid order'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orderData</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">orderPage</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can cancel a paid order'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orderData</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">orderPage</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">open</span><span style="color:#E1E4E8">(orderData.id);</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> orderPage.</span><span style="color:#B392F0">cancel</span><span style="color:#E1E4E8">();</span></span>
 <span class="line"></span>
@@ -83,12 +83,12 @@
 <span class="line"><span style="color:#FFAB70">  orderPage</span><span style="color:#F97583">:</span><span style="color:#B392F0"> OrderPage</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#E1E4E8">};</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> const</span><span style="color:#79B8FF"> test</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> base.</span><span style="color:#B392F0">extend</span><span style="color:#E1E4E8">&lt;</span><span style="color:#B392F0">Fixtures</span><span style="color:#E1E4E8">&gt;({</span></span>
-<span class="line"><span style="color:#B392F0">  orders</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">request</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> const</span><span style="color:#79B8FF"> test</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> base.</span><span style="color:#B392F0">extend</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">Fixtures</span><span style="color:#E1E4E8">>({</span></span>
+<span class="line"><span style="color:#B392F0">  orders</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">request</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">    await</span><span style="color:#B392F0"> use</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> OrderDataClient</span><span style="color:#E1E4E8">(request));</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#B392F0">  orderData</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orders</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">  orderData</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">orders</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> order</span><span style="color:#F97583"> =</span><span style="color:#F97583"> await</span><span style="color:#E1E4E8"> orders.</span><span style="color:#B392F0">createPaidOrder</span><span style="color:#E1E4E8">({</span></span>
 <span class="line"><span style="color:#6A737D">      // seed-user、seed-product 必須是不可變的參考資料；訂單本身每次建立新 ID。</span></span>
 <span class="line"><span style="color:#6A737D">      // 如果這些資源會被修改，應改由 data factory 產生唯一資源。</span></span>
@@ -100,7 +100,7 @@
 <span class="line"><span style="color:#F97583">    await</span><span style="color:#E1E4E8"> orders.</span><span style="color:#B392F0">deleteOrder</span><span style="color:#E1E4E8">(order.id);</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#B392F0">  orderPage</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#B392F0">  orderPage</span><span style="color:#E1E4E8">: </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }, </span><span style="color:#FFAB70">use</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#F97583">    await</span><span style="color:#B392F0"> use</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">new</span><span style="color:#B392F0"> OrderPage</span><span style="color:#E1E4E8">(page));</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">});</span></span>
@@ -110,42 +110,42 @@
 <h3 id="fixture-scope-要和資料生命週期一致">Fixture scope 要和資料生命週期一致</h3>
 <p>Playwright fixture 最容易被誤用的地方，是 scope 選錯。</p>
 <p>可以用一個簡單的判斷方式：</p>
-<table>
-<thead>
-<tr>
-<th>資源</th>
-<th>常見生命週期</th>
-<th>原因</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Page</code>、<code>BrowserContext</code></td>
-<td>test fixture</td>
-<td>每個測試都需要獨立瀏覽器狀態</td>
-</tr>
-<tr>
-<td>測試訂單</td>
-<td>test fixture</td>
-<td>測試會修改它的狀態</td>
-</tr>
-<tr>
-<td>測試帳號</td>
-<td>worker 或 test fixture</td>
-<td>取決於帳號是否會被修改</td>
-</tr>
-<tr>
-<td>靜態 seed</td>
-<td>setup project 或 worker fixture</td>
-<td>建立一次即可共用</td>
-</tr>
-<tr>
-<td>開發伺服器或環境</td>
-<td><code>webServer</code> 或 worker-level resource</td>
-<td>不需要每個測試重啟</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>資源</th><th>常見生命週期</th><th>原因</th></tr></thead><tbody><tr><td><code>Page</code>、<code>BrowserContext</code></td><td>test fixture</td><td>每個測試都需要獨立瀏覽器狀態</td></tr><tr><td>測試訂單</td><td>test fixture</td><td>測試會修改它的狀態</td></tr><tr><td>測試帳號</td><td>worker 或 test fixture</td><td>取決於帳號是否會被修改</td></tr><tr><td>靜態 seed</td><td>setup project 或 worker fixture</td><td>建立一次即可共用</td></tr><tr><td>開發伺服器或環境</td><td><code>webServer</code> 或 worker-level resource</td><td>不需要每個測試重啟</td></tr></tbody></table>
 <p>這裡的 <code>test</code> 與 <code>worker</code> 是 fixture 的生命週期；<code>project</code> 則通常代表測試設定或 setup project，不是一般 fixture scope。</p>
 <p>如果把訂單放在 worker scope，第一個測試取消了它，第二個測試就可能收到已取消的訂單。這類錯誤在單獨執行時不一定出現，平行執行或測試順序改變後才會暴露。</p>
 <p>認證狀態也要特別小心。<code>storageState</code> 可以減少每個測試重複登入的成本，但它只代表瀏覽器身分與 session，不代表業務資料已經可以安全共用。若測試不會修改共享的伺服器狀態，可以共用一個帳號；若測試會修改伺服器狀態，則應該讓每個 worker 使用不同帳號。Playwright 官方的 authentication 指南也把認證狀態與測試隔離策略分開處理。<a href="#ref-3">[3]</a></p>
@@ -189,32 +189,32 @@
 <h3 id="test-id-是穩定契約但不是所有元素的預設答案">Test id 是穩定契約，但不是所有元素的預設答案</h3>
 <p>在頁面上加 <code>data-testid</code>、<code>data-test</code> 或其他專用屬性，可以建立穩定而明確的測試契約。Playwright 將 test id 列為內建定位方式，但同時建議優先使用貼近使用者操作的定位器；Testing Library 也把 role、label、text 等語意查找方式排在 test id 前面。<a href="#ref-5">[5]</a> <a href="#ref-6">[6]</a> Playwright 預設讀取 <code>data-testid</code>；如果專案採用 <code>data-test</code>，需要在設定中指定 <code>testIdAttribute</code>。</p>
 <p>可以先用這個順序判斷：</p>
-<table>
-<thead>
-<tr>
-<th>定位方式</th>
-<th>優先使用時機</th>
-<th>主要代價</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>getByRole</code>、<code>getByLabel</code>、<code>getByText</code></td>
-<td>測試在意使用者看見的角色、名稱或文字</td>
-<td>UI 文案或可存取語意改變時，測試也會失敗</td>
-</tr>
-<tr>
-<td><code>getByTestId</code></td>
-<td>元素沒有穩定的語意定位方式，或文字是動態／不屬於測試重點</td>
-<td>它不會驗證可存取角色、名稱或使用者看到的文字</td>
-</tr>
-<tr>
-<td>CSS class、DOM 結構、XPath</td>
-<td>只有在沒有更好選項的遺留情境</td>
-<td>容易因樣式或實作重構而失效</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>定位方式</th><th>優先使用時機</th><th>主要代價</th></tr></thead><tbody><tr><td><code>getByRole</code>、<code>getByLabel</code>、<code>getByText</code></td><td>測試在意使用者看見的角色、名稱或文字</td><td>UI 文案或可存取語意改變時，測試也會失敗</td></tr><tr><td><code>getByTestId</code></td><td>元素沒有穩定的語意定位方式，或文字是動態／不屬於測試重點</td><td>它不會驗證可存取角色、名稱或使用者看到的文字</td></tr><tr><td>CSS class、DOM 結構、XPath</td><td>只有在沒有更好選項的遺留情境</td><td>容易因樣式或實作重構而失效</td></tr></tbody></table>
 <p>因此，按鈕的文字本身是需求的一部分時，應該寫成：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#F97583">await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByRole</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'button'</span><span style="color:#E1E4E8">, { name: </span><span style="color:#9ECBFF">'取消訂單'</span><span style="color:#E1E4E8"> }).</span><span style="color:#B392F0">click</span><span style="color:#E1E4E8">();</span></span></code></pre>
 <p>這不只找到按鈕，也會讓測試對按鈕的可存取角色與名稱保持敏感。如果測試只需要找到一個會顯示動態狀態的區塊，則 <code>data-testid="order-status"</code> 很適合：</p>
@@ -256,32 +256,32 @@
 <li>測試資料的狀態可以精準控制。</li>
 </ul>
 <p>這不代表所有資料都應該直接寫資料庫。可以把準備方式分成三層：</p>
-<table>
-<thead>
-<tr>
-<th>準備方式</th>
-<th>適合情境</th>
-<th>主要代價</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>公開或測試 API</td>
-<td>正常的業務資料與狀態</td>
-<td>API 變更會影響測試支援程式</td>
-</tr>
-<tr>
-<td>Test service</td>
-<td>需要統一建立、查詢與清理的資料</td>
-<td>需要維護一層測試專用介面</td>
-</tr>
-<tr>
-<td>直接寫資料庫</td>
-<td>特殊狀態、大量資料或 API 無法建立的情境</td>
-<td>綁定資料表與 schema</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>準備方式</th><th>適合情境</th><th>主要代價</th></tr></thead><tbody><tr><td>公開或測試 API</td><td>正常的業務資料與狀態</td><td>API 變更會影響測試支援程式</td></tr><tr><td>Test service</td><td>需要統一建立、查詢與清理的資料</td><td>需要維護一層測試專用介面</td></tr><tr><td>直接寫資料庫</td><td>特殊狀態、大量資料或 API 無法建立的情境</td><td>綁定資料表與 schema</td></tr></tbody></table>
 <p>原則是：真正要驗證的業務操作，使用和使用者相同的入口；只是為了準備前置條件的操作，可以使用更快、更精準的測試入口。</p>
 <h3 id="service-不要變成另一個萬能物件">Service 不要變成另一個萬能物件</h3>
 <p>在 E2E 專案裡，Service 通常有兩種意思，最好先命名清楚：</p>
@@ -331,37 +331,37 @@
 <p>例如，所有測試可以共用同一份國家清單或幣別資料，只要測試不會修改它。相反地，使用者、訂單、付款紀錄與購物車通常是可變資料，就不應該讓多個測試共用同一筆。</p>
 <p>Playwright Test 會讓每個測試取得隔離的 page 與 browser context，內建的 <code>request</code> fixture 也會提供隔離的 API request context。<a href="#ref-1">[1]</a> 這解決了瀏覽器狀態的隔離，但不會自動隔離後端資料，因此資料設計仍然是測試框架之外的責任。</p>
 <p>在設計重建策略之前，先把測試會用到的資料分成幾類：</p>
-<table>
-<thead>
-<tr>
-<th>資料類型</th>
-<th>例子</th>
-<th>建議所有權</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>靜態參考資料</td>
-<td>國家、幣別、商品分類</td>
-<td>環境或測試套件共用</td>
-</tr>
-<tr>
-<td>測試前置資料</td>
-<td>可購買商品、測試租戶、角色</td>
-<td>fixture 或 worker 建立</td>
-</tr>
-<tr>
-<td>測試操作資料</td>
-<td>訂單、購物車、付款紀錄</td>
-<td>每個測試自己建立</td>
-</tr>
-<tr>
-<td>外部副作用</td>
-<td>郵件、付款、物流請求</td>
-<td>sandbox、替身或可追蹤的測試資源</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>資料類型</th><th>例子</th><th>建議所有權</th></tr></thead><tbody><tr><td>靜態參考資料</td><td>國家、幣別、商品分類</td><td>環境或測試套件共用</td></tr><tr><td>測試前置資料</td><td>可購買商品、測試租戶、角色</td><td>fixture 或 worker 建立</td></tr><tr><td>測試操作資料</td><td>訂單、購物車、付款紀錄</td><td>每個測試自己建立</td></tr><tr><td>外部副作用</td><td>郵件、付款、物流請求</td><td>sandbox、替身或可追蹤的測試資源</td></tr></tbody></table>
 <p>這張表的重點不是分類本身，而是回答兩個問題：</p>
 <ol>
 <li>哪些測試可以安全地共用這筆資料？</li>
@@ -488,36 +488,36 @@
 <h3 id="失敗後如何處理殘留資料">失敗後如何處理殘留資料</h3>
 <p>清理策略應該在測試設計一開始就決定，而不是等到 CI 環境塞滿資料才補救。</p>
 <p>可以依資源類型選擇不同策略：</p>
-<table>
-<thead>
-<tr>
-<th>資源</th>
-<th>建議策略</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>測試資料庫 entity</td>
-<td>以 test run ID 查詢並刪除</td>
-</tr>
-<tr>
-<td>物件儲存檔案</td>
-<td>使用測試專用 prefix，批次清理</td>
-</tr>
-<tr>
-<td>佇列訊息</td>
-<td>使用測試專用 queue 或 correlation ID</td>
-</tr>
-<tr>
-<td>付款 sandbox</td>
-<td>建立可查詢的測試交易，不依賴立即刪除</td>
-</tr>
-<tr>
-<td>測試帳號</td>
-<td>使用專用租戶或週期性清理</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>資源</th><th>建議策略</th></tr></thead><tbody><tr><td>測試資料庫 entity</td><td>以 test run ID 查詢並刪除</td></tr><tr><td>物件儲存檔案</td><td>使用測試專用 prefix，批次清理</td></tr><tr><td>佇列訊息</td><td>使用測試專用 queue 或 correlation ID</td></tr><tr><td>付款 sandbox</td><td>建立可查詢的測試交易，不依賴立即刪除</td></tr><tr><td>測試帳號</td><td>使用專用租戶或週期性清理</td></tr></tbody></table>
 <p>不要只依賴測試程式中的 <code>afterEach</code>。如果程序被 kill、runner 崩潰或外部 API timeout，teardown 可能無法正常完成。測試資料應該具備可辨識、可重試與可批次清理的特性。</p>
 <h2 id="這些抽象化會帶來什麼代價">這些抽象化會帶來什麼代價</h2>
 <p>把責任拆成五層，確實能讓變更有地方放，但也會增加間接性。這一節要看的不是「拆層好不好」，而是這條關係是否讓測試更容易理解與除錯。</p>
@@ -577,5 +577,4 @@
 <li><a id="ref-4"></a>[4] Playwright，〈<a href="https://playwright.dev/docs/test-parallel">Parallelism</a>〉</li>
 <li><a id="ref-5"></a>[5] Playwright，〈<a href="https://playwright.dev/docs/locators">Locators</a>〉</li>
 <li><a id="ref-6"></a>[6] Testing Library，〈<a href="https://testing-library.com/docs/queries/about/">About Queries</a>〉</li>
-</ul>
-</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-e2e-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</span></a><a href="/blog/ai-era-testing-and-acceptance-acceptance-workflow/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">AI 時代的自動化測試與驗收（九）：測試全綠之後，如何用驗收條件、證據地圖、剩餘風險與責任分工做出交付決策？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-e2e-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</span></a><a href="/blog/ai-era-testing-and-acceptance-acceptance-workflow/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">AI 時代的自動化測試與驗收（九）：測試全綠之後，如何用驗收條件、證據地圖、剩餘風險與責任分工做出交付決策？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

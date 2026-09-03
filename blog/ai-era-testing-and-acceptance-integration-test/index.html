@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><!-- Primary Meta Tags --><title>整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</title><meta name="title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta name="description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="og:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="og:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="twitter:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="twitter:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？","description":"Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。","datePublished":"2026-08-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Ct7ttYwY.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4_Z1gzj0d.webp" alt="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-15T00:00:00.000Z">Aug 15, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">IntegrationTest</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">AIEngineering</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><!-- Primary Meta Tags --><title>整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</title><meta name="title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta name="description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="og:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="og:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-integration-test/"><meta property="twitter:title" content="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？"><meta property="twitter:description" content="Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？","description":"Unit test 綠燈不代表元件接起來後仍然正確。本文從資料庫、transaction、序列化、外部 HTTP 與 outbox 出發，整理 integration test 該保護的邊界、測試隔離與 AI 協作方式，並說明如何按風險分層放進 CI，兼顧可信度與執行速度。","datePublished":"2026-08-15T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BJGPvr3o.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-integration-test.Dpz-FaP4_Z1gzj0d.webp" alt="整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-15T00:00:00.000Z">Aug 15, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">IntegrationTest</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">AIEngineering</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
 <p>系列定位：上一篇用同一張 case table，把 unit test 落到 Python、Java、C++。這一篇往上一層，處理 unit test 通常不負責驗證的系統邊界：HTTP、資料庫、交易、序列化和事件。重點在驗證兩個元件接起來後，仍然遵守同一份契約，不必把所有服務一起啟動。</p>
 </blockquote>
 <p>本系列同時談測試與驗收；本篇只處理自動化測試中的 integration test。驗收會留到後續文章，因為它要回答的是「這次交付是否解決了要解的問題」，不是「元件接起來後是否依照既定規則運作」。</p>
@@ -10,57 +10,57 @@
 <p>整合測試的核心在於測試「元件之間的整合點」，不在於範圍有多大。</p>
 <p>Fowler 對 integration test 的描述很實用：它測試多個元件如何彼此合作，或者測試程式如何和外部服務溝通。這個定義沒有要求一定要跨整個系統，也沒有要求一定要連上 production 依賴。<a href="#ref-1">[1]</a></p>
 <p>可以用被驗證的邊界來分：</p>
-<table>
-<thead>
-<tr>
-<th>測試種類</th>
-<th>主要問題</th>
-<th>常見依賴</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unit test</td>
-<td>單一行為規則對不對？</td>
-<td>純函式、domain object、少量 fake</td>
-</tr>
-<tr>
-<td>Integration test</td>
-<td>目標整合點接起來後，資料和協議對不對？</td>
-<td>依風險選擇真實依賴或 faithful test double</td>
-</tr>
-<tr>
-<td>End-to-end test</td>
-<td>使用者旅程從頭到尾能不能完成？</td>
-<td>多個服務與完整流程；依環境選擇真實或替代依賴</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試種類</th><th>主要問題</th><th>常見依賴</th></tr></thead><tbody><tr><td>Unit test</td><td>單一行為規則對不對？</td><td>純函式、domain object、少量 fake</td></tr><tr><td>Integration test</td><td>目標整合點接起來後，資料和協議對不對？</td><td>依風險選擇真實依賴或 faithful test double</td></tr><tr><td>End-to-end test</td><td>使用者旅程從頭到尾能不能完成？</td><td>多個服務與完整流程；依環境選擇真實或替代依賴</td></tr></tbody></table>
 <p>所以，一個只啟動 OrderService 和 PostgreSQL 的測試，可以是整合測試；一個把所有服務都啟動、卻只 mock 掉真正的資料庫，也不會因為範圍很大就自動變成高價值測試。</p>
 <p>判斷標準是測試是否真的穿過目標整合點，而不是啟動了多少服務。若測試要驗證 PostgreSQL 的 dialect、constraint 或 transaction，卻換成 SQLite，就沒有覆蓋這些風險；若測試要驗證 HTTP client 的協議，則可以使用能重現協議的 fake server。替換依賴本身沒有問題，沒有驗證到目標邊界才是問題。</p>
 <p>這裡先把三種測試的責任分開：</p>
-<table>
-<thead>
-<tr>
-<th>測試</th>
-<th>保護的風險</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Integration test</td>
-<td>目標整合點接起來後能不能運作</td>
-</tr>
-<tr>
-<td>Contract test</td>
-<td>Consumer 和 Provider 的 API 或事件約定是否相容</td>
-</tr>
-<tr>
-<td>End-to-end test</td>
-<td>完整部署拓撲與使用者流程是否成立</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>保護的風險</th></tr></thead><tbody><tr><td>Integration test</td><td>目標整合點接起來後能不能運作</td></tr><tr><td>Contract test</td><td>Consumer 和 Provider 的 API 或事件約定是否相容</td></tr><tr><td>End-to-end test</td><td>完整部署拓撲與使用者流程是否成立</td></tr></tbody></table>
 <p>契約測試不一定要同時啟動 Consumer 和 Provider；它可以讓雙方分別驗證同一份 API 或事件契約。整合測試則要確認選定的 runtime wiring、資料庫、交易或 broker 連線能運作。這些依賴不必全部是真實服務，但 test double 必須忠實重現測試要保護的協議。兩者可能使用相同的案例，但保護的風險不同。</p>
 <p>第一篇用資料庫、queue、框架設定和實際序列化概括 integration test 的風險。本篇沿用這個分類，再把依賴選擇拆開：資料庫 dialect、migration 和 transaction 用 production 同款引擎；第三方 HTTP 則保留真實 client 與 serializer，接上可控制的 fake server。這是測試不同風險，不是和前篇改用另一套定義。</p>
 <h2 id="先定義元件接起來後的觀察結果">先定義元件接起來後的觀察結果</h2>
@@ -69,9 +69,9 @@
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>POST /orders</span></span>
 <span class="line"><span>    |</span></span>
 <span class="line"><span>    v</span></span>
-<span class="line"><span>Order API -&gt; OrderService -&gt; PostgreSQL</span></span>
+<span class="line"><span>Order API -> OrderService -> PostgreSQL</span></span>
 <span class="line"><span>                         |</span></span>
-<span class="line"><span>                         +-&gt; outbox_events</span></span></code></pre>
+<span class="line"><span>                         +-> outbox_events</span></span></code></pre>
 <p>需求看的是：</p>
 <ol>
 <li>合法訂單會回傳 201 Created 和訂單編號。</li>
@@ -81,42 +81,42 @@
 <li>非法輸入不會留下半成品資料。</li>
 </ol>
 <p>把它整理成 case 表：</p>
-<table>
-<thead>
-<tr>
-<th>Case</th>
-<th>輸入</th>
-<th>觀察結果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>建立訂單</td>
-<td>合法商品與數量</td>
-<td>HTTP 201、資料庫有一筆 pending 訂單</td>
-</tr>
-<tr>
-<td>重複請求</td>
-<td>相同 Idempotency-Key</td>
-<td>回傳同一個訂單，不新增資料</td>
-</tr>
-<tr>
-<td>不存在商品</td>
-<td>product_id 不存在</td>
-<td>HTTP 404，資料庫沒有訂單</td>
-</tr>
-<tr>
-<td>非法數量</td>
-<td>quantity = 0</td>
-<td>HTTP 400，資料庫沒有訂單</td>
-</tr>
-<tr>
-<td>事件同步寫入</td>
-<td>合法訂單</td>
-<td>orders 與 outbox_events 各有一筆且使用同一交易</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Case</th><th>輸入</th><th>觀察結果</th></tr></thead><tbody><tr><td>建立訂單</td><td>合法商品與數量</td><td>HTTP 201、資料庫有一筆 pending 訂單</td></tr><tr><td>重複請求</td><td>相同 Idempotency-Key</td><td>回傳同一個訂單，不新增資料</td></tr><tr><td>不存在商品</td><td>product_id 不存在</td><td>HTTP 404，資料庫沒有訂單</td></tr><tr><td>非法數量</td><td>quantity = 0</td><td>HTTP 400，資料庫沒有訂單</td></tr><tr><td>事件同步寫入</td><td>合法訂單</td><td>orders 與 outbox_events 各有一筆且使用同一交易</td></tr></tbody></table>
 <p>這張表就是整合測試的規格。API status code、資料庫狀態和事件 payload 都是可觀察行為；repository 使用哪個 ORM method 則不是。這裡的「契約」是一般意義的業務與技術約定，不等於下一篇要談的 Contract Testing workflow。</p>
 <h2 id="測資料庫整合時優先使用-production-同款引擎">測資料庫整合時，優先使用 production 同款引擎</h2>
 <p>整合測試最常見的捷徑，是用記憶體資料庫或假的 repository 取代正式資料庫。這樣測試很快，但也可能把最重要的差異藏起來：</p>
@@ -252,10 +252,10 @@
 <p>這些問題不應該只靠 unit test 驗證 serializer 函式。整合測試至少要走一次真實的 request 和 response，並使用正式 migration 建立 schema。</p>
 <p>一個有價值的 migration test，不會只重複檢查每個欄位名稱；它會從空資料庫跑完整 migration，再執行一個最小業務流程：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>建立空 PostgreSQL</span></span>
-<span class="line"><span>  -&gt; 執行全部 migration</span></span>
-<span class="line"><span>  -&gt; 啟動 application</span></span>
-<span class="line"><span>  -&gt; 建立一筆訂單</span></span>
-<span class="line"><span>  -&gt; 讀回訂單與事件</span></span></code></pre>
+<span class="line"><span>  -> 執行全部 migration</span></span>
+<span class="line"><span>  -> 啟動 application</span></span>
+<span class="line"><span>  -> 建立一筆訂單</span></span>
+<span class="line"><span>  -> 讀回訂單與事件</span></span></code></pre>
 <p>如果 migration 沒有跑、schema 版本不對或 mapping 錯誤，這條路徑就應該失敗。整合測試的價值正是把「各自看起來合理」的零件，放回它們實際工作的組合裡。</p>
 <h2 id="外部服務真實協議假的世界">外部服務：真實協議，假的世界</h2>
 <p>整合測試不等於把 payment provider、物流服務或第三方 API 真的打出去。那會帶來費用、速度、網路不穩定和不可控資料，而且測試失敗時很難判斷是自己的程式還是外部服務出了問題。這裡的 fake server 用可控制的替代依賴保留 HTTP 協議這個整合點，沒有把整合拿掉。</p>
@@ -267,11 +267,11 @@
 </ul>
 <p>例如 payment adapter 的整合測試可以驗證：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>PaymentClient</span></span>
-<span class="line"><span>  -&gt; HTTP method 是 POST</span></span>
-<span class="line"><span>  -&gt; path 是 /payments</span></span>
-<span class="line"><span>  -&gt; JSON 欄位名稱正確</span></span>
-<span class="line"><span>  -&gt; timeout 和 retry 行為符合規則</span></span>
-<span class="line"><span>  -&gt; 200、409、500、timeout 各自轉成正確的 domain 結果</span></span></code></pre>
+<span class="line"><span>  -> HTTP method 是 POST</span></span>
+<span class="line"><span>  -> path 是 /payments</span></span>
+<span class="line"><span>  -> JSON 欄位名稱正確</span></span>
+<span class="line"><span>  -> timeout 和 retry 行為符合規則</span></span>
+<span class="line"><span>  -> 200、409、500、timeout 各自轉成正確的 domain 結果</span></span></code></pre>
 <p>這和上一篇批評的「mock 某個 method 有沒有被呼叫」不同。這裡保護的是對外 HTTP 協議：method、path、header、payload 和錯誤分類都是整合測試要觀察的結果。實作可以從 requests 換成另一個 HTTP library，只要對外協議不變，測試就不應該跟著碎。</p>
 <p>這裡仍然要和契約測試分開。整合測試驗證我們的 HTTP client、serializer 和 fake server 接起來後能不能運作；契約測試則驗證 Consumer 和 Provider 是否各自遵守同一份 API 契約，通常不需要把雙方同時啟動。</p>
 <h2 id="message-broker-和-outbox-要拆成三種測試">Message broker 和 outbox 要拆成三種測試</h2>
@@ -285,44 +285,44 @@
 <p>第三類屬於契約測試，不應該硬塞進每一個 database integration test。它可以用 Spring Cloud Contract、Pact 或其他 schema／contract tooling，讓 Producer 和 Consumer 分別驗證事件格式；是否真的需要導入，要看服務是否獨立演化、跨團隊協作和事件相容性風險。</p>
 <p>outbox worker 的測試應該觀察可重試行為：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>讀取 pending event</span></span>
-<span class="line"><span>  -&gt; 發布成功</span></span>
-<span class="line"><span>  -&gt; 收到 broker ack</span></span>
-<span class="line"><span>  -&gt; 將 event 標記 published</span></span></code></pre>
+<span class="line"><span>  -> 發布成功</span></span>
+<span class="line"><span>  -> 收到 broker ack</span></span>
+<span class="line"><span>  -> 將 event 標記 published</span></span></code></pre>
 <p>還要有失敗 case：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>發布失敗</span></span>
-<span class="line"><span>  -&gt; event 仍然是 pending</span></span>
-<span class="line"><span>  -&gt; retry_count 增加</span></span>
-<span class="line"><span>  -&gt; next_attempt_at 被設定</span></span></code></pre>
+<span class="line"><span>  -> event 仍然是 pending</span></span>
+<span class="line"><span>  -> retry_count 增加</span></span>
+<span class="line"><span>  -> next_attempt_at 被設定</span></span></code></pre>
 <p>不要在測試裡用 sleep(5) 等待背景 worker。這通常代表測試沒有掌握系統的同步點。改用可觀察的 polling with timeout、注入 clock，或直接把 worker 的一次處理動作暴露成可呼叫的 application operation。非同步系統需要等待，但等待應該有明確條件，不是任意延遲。</p>
 <h2 id="測試資料隔離速度和可信度的取捨">測試資料隔離：速度和可信度的取捨</h2>
 <p>整合測試最容易變 flaky 的地方，通常不是 assertion，而是資料互相污染。</p>
 <p>常見做法有三種：</p>
-<table>
-<thead>
-<tr>
-<th>做法</th>
-<th>優點</th>
-<th>代價</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>每個測試重建 container</td>
-<td>隔離最乾淨</td>
-<td>慢</td>
-</tr>
-<tr>
-<td>共用 container、每個測試清資料</td>
-<td>速度較快</td>
-<td>清理不完整會互相影響</td>
-</tr>
-<tr>
-<td>共用 schema、每個測試 transaction rollback</td>
-<td>快</td>
-<td>無法涵蓋跨 connection 或已提交的背景工作</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>做法</th><th>優點</th><th>代價</th></tr></thead><tbody><tr><td>每個測試重建 container</td><td>隔離最乾淨</td><td>慢</td></tr><tr><td>共用 container、每個測試清資料</td><td>速度較快</td><td>清理不完整會互相影響</td></tr><tr><td>共用 schema、每個測試 transaction rollback</td><td>快</td><td>無法涵蓋跨 connection 或已提交的背景工作</td></tr></tbody></table>
 <p>實務上可以採混合策略：container 以 session scope 共用，migration 只跑一次；每個測試使用唯一的 tenant 或 namespace，測試後清理自己的資料；需要驗證 transaction、worker 或 connection pool 的案例，再使用獨立 schema 或獨立 database。</p>
 <p>清理方式也要有失敗安全性。pytest fixture 的 teardown 不只是整理檔案；它還負責關閉 connection、停止 container 和釋放 port。測試在 setup 失敗時，也要能把已建立的資源清掉。<a href="#ref-3">[3]</a></p>
 <p>另外，Docker Compose 只保證服務依照依賴順序啟動，不代表資料庫已經 ready。若用 Compose 啟動整合環境，應配置 database healthcheck，並讓 application 依賴 service_healthy；Docker 官方文件明確區分了「container 正在執行」和「服務已經可以接受請求」。<a href="#ref-4">[4]</a></p>
@@ -414,5 +414,4 @@
 <li><a id="ref-2"></a>[2] Testcontainers，〈<a href="https://testcontainers.com/guides/getting-started-with-testcontainers/">Getting started with Testcontainers for Python</a>〉</li>
 <li><a id="ref-3"></a>[3] pytest，〈About fixtures〉 <a href="https://docs.pytest.org/en/latest/explanation/fixtures.html">https://docs.pytest.org/en/latest/explanation/fixtures.html</a></li>
 <li><a id="ref-4"></a>[4] Docker，〈Control startup and shutdown order in Compose〉 <a href="https://docs.docker.com/compose/how-tos/startup-order/">https://docs.docker.com/compose/how-tos/startup-order/</a></li>
-</ul>
-</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-unit-test-implementation/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？</span></a><a href="/blog/ai-era-testing-and-acceptance-contract-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-unit-test-implementation/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">AI 時代的自動化測試與驗收（三）：Unit test（下）換一種實作，測試還能留下嗎？</span></a><a href="/blog/ai-era-testing-and-acceptance-contract-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

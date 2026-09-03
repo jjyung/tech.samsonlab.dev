@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><!-- Primary Meta Tags --><title>契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</title><meta name="title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta name="description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="og:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="og:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="twitter:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="twitter:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾","description":"契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。","datePublished":"2026-08-19T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Ct7ttYwY.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1_Z1H8PzJ.webp" alt="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-19T00:00:00.000Z">Aug 19, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ContractTesting</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">AIEngineering</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><!-- Primary Meta Tags --><title>契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</title><meta name="title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta name="description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="og:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="og:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-contract-test/"><meta property="twitter:title" content="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾"><meta property="twitter:description" content="契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾","description":"契約測試驗證 Consumer 與 Provider 對 API 或事件的共同承諾，降低分開部署時的 mock 漂移與晚期整合失敗。本文用 OrderCreated 案例拆解契約範圍、版本演進、CI 流程，以及 AI 能做與不能做的部分，說明何時該用契約測試取代昂貴的跨服務整合驗證。","datePublished":"2026-08-19T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BJGPvr3o.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-contract-test.DiCxPvR1_Z1H8PzJ.webp" alt="契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-19T00:00:00.000Z">Aug 19, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ContractTesting</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">AIEngineering</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">契約測試：AI 時代自動化測試與驗收（五）如何保護 Consumer 與 Provider 的共同承諾</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
 <p>系列定位：前一篇從資料庫、交易、序列化、外部 HTTP 和 outbox 拆解 integration test。這一篇再往跨服務邊界走一步：當 Consumer 和 Provider 分開開發、分開部署時，怎麼確認雙方對同一個 API 或事件仍然有相同理解？</p>
 </blockquote>
 <blockquote>
@@ -9,37 +9,37 @@
 <p>契約測試要處理的是：無法便宜地讓兩個服務一起啟動，但仍想提早驗證跨服務邊界相容性的情況。它把互動中真正重要的承諾寫成可執行的檢查，讓 Consumer 和 Provider 可以分開驗證。</p>
 <h2 id="契約測試保護的是邊界上的共同承諾">契約測試保護的是邊界上的共同承諾</h2>
 <p>先把這幾種測試的責任分開：</p>
-<table>
-<thead>
-<tr>
-<th>測試</th>
-<th>主要問題</th>
-<th>保護的風險</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unit test</td>
-<td>單一行為規則對不對？</td>
-<td>計算、狀態轉換、不變量</td>
-</tr>
-<tr>
-<td>Integration test</td>
-<td>元件接起來後能不能運作？</td>
-<td>資料庫、序列化、transaction、runtime wiring</td>
-</tr>
-<tr>
-<td>Contract test</td>
-<td>Consumer 和 Provider 的約定是否相容？</td>
-<td>API 欄位、事件格式、狀態碼、錯誤語意</td>
-</tr>
-<tr>
-<td>End-to-end test</td>
-<td>完整使用者流程能不能走完？</td>
-<td>多服務拓撲、部署設定、關鍵旅程</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>主要問題</th><th>保護的風險</th></tr></thead><tbody><tr><td>Unit test</td><td>單一行為規則對不對？</td><td>計算、狀態轉換、不變量</td></tr><tr><td>Integration test</td><td>元件接起來後能不能運作？</td><td>資料庫、序列化、transaction、runtime wiring</td></tr><tr><td>Contract test</td><td>Consumer 和 Provider 的約定是否相容？</td><td>API 欄位、事件格式、狀態碼、錯誤語意</td></tr><tr><td>End-to-end test</td><td>完整使用者流程能不能走完？</td><td>多服務拓撲、部署設定、關鍵旅程</td></tr></tbody></table>
 <p>契約測試的單位不是某個 class，也不是整個產品，而是一次跨服務互動。這個互動可能是：</p>
 <ul>
 <li>Consumer 呼叫 <code>GET /orders/{id}</code>，期待收到哪些欄位與狀態碼。</li>
@@ -79,78 +79,78 @@
 <p>Consumer-driven contract（CDC）不是「Consumer 寫完契約，Provider 無條件照做」。它是一種協作流程：Consumer 先把自己真正依賴的互動寫出來，Provider 再驗證自己的實作是否滿足這些需求。</p>
 <p>Consumer 之所以適合先提出契約，是因為它最清楚自己實際使用了哪些欄位。Provider 可能提供一個很大的 response，但 Consumer 只依賴其中五個欄位；契約應該先保護這五個欄位，而不是把整份 response 的每個欄位都鎖死。</p>
 <p>不過，CDC 不是唯一模式：</p>
-<table>
-<thead>
-<tr>
-<th>模式</th>
-<th>誰定義契約</th>
-<th>適合情境</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Consumer-driven</td>
-<td>Consumer 提出需求，Provider 驗證</td>
-<td>Consumer 數量有限，雙方能協作</td>
-</tr>
-<tr>
-<td>Provider-owned contract</td>
-<td>Provider 定義公開介面，Consumer 使用</td>
-<td>外部 Consumer 多，或 Provider 無法逐一協作</td>
-</tr>
-<tr>
-<td>Shared schema</td>
-<td>團隊共同維護 schema 與相容性規則</td>
-<td>事件平台、Schema Registry、跨語言整合</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>模式</th><th>誰定義契約</th><th>適合情境</th></tr></thead><tbody><tr><td>Consumer-driven</td><td>Consumer 提出需求，Provider 驗證</td><td>Consumer 數量有限，雙方能協作</td></tr><tr><td>Provider-owned contract</td><td>Provider 定義公開介面，Consumer 使用</td><td>外部 Consumer 多，或 Provider 無法逐一協作</td></tr><tr><td>Shared schema</td><td>團隊共同維護 schema 與相容性規則</td><td>事件平台、Schema Registry、跨語言整合</td></tr></tbody></table>
 <p>Spring Cloud Contract 同時支援 Consumer-driven contracts 與由 Provider 定義的 contracts。真正重要的不是把某一種模式叫成唯一正解，而是契約的來源、審查責任與驗證流程要清楚。<a href="#ref-2">[2]</a></p>
 <p>Pact 也採用 consumer-driven、以實際互動案例產生契約的方式。這和只驗證 Provider 是否符合一份 schema 或 API 文件不同：後者不一定能證明目前的 Consumer 真的能正確使用它。<a href="#ref-3">[3]</a></p>
 <h2 id="用-ordercreated-看一次完整契約">用 OrderCreated 看一次完整契約</h2>
 <p>沿用前一篇的下單案例。Order Service 建立訂單後，發布 <code>OrderCreated</code> 事件；Payment Service 會消費這個事件，建立或更新付款流程。</p>
 <p>以下假設這個專案約定金額以 decimal string 傳遞，時間一律使用 UTC；實際專案應以自己的 API 與事件規格為準。先不要從 Java class 或 Kafka listener 倒推契約，先寫兩個服務真正同意的互動：</p>
-<table>
-<thead>
-<tr>
-<th>欄位</th>
-<th>Provider 承諾</th>
-<th>Consumer 使用方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>topic</td>
-<td>固定送到 <code>orders</code></td>
-<td>綁定消費來源</td>
-</tr>
-<tr>
-<td><code>event-type</code>（header）</td>
-<td>固定為 <code>OrderCreated</code></td>
-<td>決定事件路由</td>
-</tr>
-<tr>
-<td><code>event_id</code></td>
-<td>UUID 格式；全域唯一由事件生成規則保證</td>
-<td>去重與追蹤</td>
-</tr>
-<tr>
-<td><code>order_id</code></td>
-<td>非空字串，代表訂單</td>
-<td>建立付款關聯</td>
-</tr>
-<tr>
-<td><code>total_amount</code></td>
-<td>使用約定的金額格式</td>
-<td>計算付款金額</td>
-</tr>
-<tr>
-<td><code>occurred_at</code></td>
-<td>RFC 3339 UTC datetime</td>
-<td>記錄處理時間線</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>Provider 承諾</th><th>Consumer 使用方式</th></tr></thead><tbody><tr><td>topic</td><td>固定送到 <code>orders</code></td><td>綁定消費來源</td></tr><tr><td><code>event-type</code>（header）</td><td>固定為 <code>OrderCreated</code></td><td>決定事件路由</td></tr><tr><td><code>event_id</code></td><td>UUID 格式；全域唯一由事件生成規則保證</td><td>去重與追蹤</td></tr><tr><td><code>order_id</code></td><td>非空字串，代表訂單</td><td>建立付款關聯</td></tr><tr><td><code>total_amount</code></td><td>使用約定的金額格式</td><td>計算付款金額</td></tr><tr><td><code>occurred_at</code></td><td>RFC 3339 UTC datetime</td><td>記錄處理時間線</td></tr></tbody></table>
 <p>這張表不是完整的 Order domain model。Payment Service 不需要知道 Order Service 的 repository、資料表或內部狀態機；它只需要知道收到事件後可以安全解析哪些欄位。</p>
 <p>可以把契約寫成接近協議的形式：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>topic: orders</span></span>
@@ -198,111 +198,111 @@
 <h2 id="版本演進新增欄位不一定安全">版本演進：新增欄位不一定安全</h2>
 <p>最常見的說法是「只要向後相容，新增欄位就安全」。這句話少了一個前提：Consumer 是否會拒絕未知欄位，或是否把整個 response 當成完全相等的物件比較。</p>
 <p>可以用這個角度檢查變更：</p>
-<table>
-<thead>
-<tr>
-<th>變更</th>
-<th>常見風險</th>
-<th>處理方向</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>新增 optional 欄位</td>
-<td>舊 Consumer 不接受未知欄位</td>
-<td>先確認 parser 與序列化設定</td>
-</tr>
-<tr>
-<td>移除欄位</td>
-<td>Consumer 仍在使用</td>
-<td>先查契約與使用者，再分階段淘汰</td>
-</tr>
-<tr>
-<td>改變型別</td>
-<td>解析直接失敗</td>
-<td>發新版本或提供相容格式</td>
-</tr>
-<tr>
-<td>改變 enum／狀態語意</td>
-<td>型別沒變，決策卻變了</td>
-<td>視為需要協作的 breaking change</td>
-</tr>
-<tr>
-<td>改變金額、時間或單位</td>
-<td>數值可解析但結果錯</td>
-<td>把單位與語意寫進契約與案例</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>變更</th><th>常見風險</th><th>處理方向</th></tr></thead><tbody><tr><td>新增 optional 欄位</td><td>舊 Consumer 不接受未知欄位</td><td>先確認 parser 與序列化設定</td></tr><tr><td>移除欄位</td><td>Consumer 仍在使用</td><td>先查契約與使用者，再分階段淘汰</td></tr><tr><td>改變型別</td><td>解析直接失敗</td><td>發新版本或提供相容格式</td></tr><tr><td>改變 enum／狀態語意</td><td>型別沒變，決策卻變了</td><td>視為需要協作的 breaking change</td></tr><tr><td>改變金額、時間或單位</td><td>數值可解析但結果錯</td><td>把單位與語意寫進契約與案例</td></tr></tbody></table>
 <p>契約測試的價值不只是在變更後讓 CI 變紅，也是在變更前讓團隊看見「誰依賴這個欄位」。Spring Cloud Contract 的 stubs-per-consumer 模式，就是把不同 Consumer 的契約分開管理，讓 Provider 看見每個 Consumer 實際使用的部分。<a href="#ref-1">[1]</a></p>
 <h2 id="contract-testschema-testintegration-test-怎麼分">Contract test、schema test、integration test 怎麼分</h2>
 <p>這些名稱常常被混在一起，但它們回答的問題不一樣：</p>
-<table>
-<thead>
-<tr>
-<th>測試</th>
-<th>問題</th>
-<th>是否需要完整 Provider</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Schema validation</td>
-<td>payload 是否符合結構與型別？</td>
-<td>不一定</td>
-</tr>
-<tr>
-<td>Contract test</td>
-<td>這個 Consumer 和 Provider 的互動是否相容？</td>
-<td>通常不需要同時啟動</td>
-</tr>
-<tr>
-<td>Integration test</td>
-<td>實際 client、broker、serializer 和依賴能否運作？</td>
-<td>依案例決定</td>
-</tr>
-<tr>
-<td>Acceptance／E2E test</td>
-<td>完整使用者旅程或業務流程是否成立？</td>
-<td>通常需要多個服務</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試</th><th>問題</th><th>是否需要完整 Provider</th></tr></thead><tbody><tr><td>Schema validation</td><td>payload 是否符合結構與型別？</td><td>不一定</td></tr><tr><td>Contract test</td><td>這個 Consumer 和 Provider 的互動是否相容？</td><td>通常不需要同時啟動</td></tr><tr><td>Integration test</td><td>實際 client、broker、serializer 和依賴能否運作？</td><td>依案例決定</td></tr><tr><td>Acceptance／E2E test</td><td>完整使用者旅程或業務流程是否成立？</td><td>通常需要多個服務</td></tr></tbody></table>
 <p>這些測試不是一條嚴格的 <code>unit → contract → integration → E2E</code> 階梯。Unit test 是依賴隔離的行為測試；contract test 是跨服務邊界的相容性測試；integration test 是實際元件、基礎設施與 runtime wiring 的整合測試；acceptance／E2E test 則是完整旅程的測試。它們可以在同一條 CI pipeline 中依序執行，但責任和依賴範圍不同，也不必互相取代。</p>
 <p>以這個系列的敘事順序來說，契約測試放在 integration test 之後、E2E 之前是合適的：上一篇先說明單一服務如何和資料庫、HTTP 或 outbox 接起來，這一篇再處理服務之間如何保持共同理解，下一篇才討論完整拓撲與使用者旅程。但這是由問題範圍安排出的閱讀順序，不代表測試金字塔裡存在唯一的線性層級。</p>
 <p>Schema validation 可以是契約測試的一部分，但單獨通過 schema 不代表 Consumer 的行為正確。反過來，Consumer contract test 也不應該偷偷變成完整 integration test，否則每個 Consumer 都要準備同一套資料庫、broker 和部署環境，契約測試很快就失去快速回饋的優勢。</p>
 <h2 id="不是每個服務邊界都需要契約測試">不是每個服務邊界都需要契約測試</h2>
 <p>契約測試不是測試金字塔裡必須補上的一層，而是用維護成本換取更早跨服務回饋的選擇。是否採用，應該看服務邊界的風險，以及現有測試能不能便宜地發現相同問題：</p>
-<table>
-<thead>
-<tr>
-<th>情境</th>
-<th>建議</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Consumer 和 Provider 分開部署，變更節奏也不同</td>
-<td>值得考慮契約測試</td>
-</tr>
-<tr>
-<td>Consumer 很多，E2E 昂貴又難定位</td>
-<td>值得考慮契約測試</td>
-</tr>
-<tr>
-<td>Consumer mock 經常和真實 Provider 漂移</td>
-<td>值得考慮契約測試</td>
-</tr>
-<tr>
-<td>同一個 repository、一起部署，真實 integration test 很便宜</td>
-<td>優先維護 integration test</td>
-</tr>
-<tr>
-<td>介面穩定且只需要檢查 payload 結構</td>
-<td>Schema validation 可能已經足夠</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>情境</th><th>建議</th></tr></thead><tbody><tr><td>Consumer 和 Provider 分開部署，變更節奏也不同</td><td>值得考慮契約測試</td></tr><tr><td>Consumer 很多，E2E 昂貴又難定位</td><td>值得考慮契約測試</td></tr><tr><td>Consumer mock 經常和真實 Provider 漂移</td><td>值得考慮契約測試</td></tr><tr><td>同一個 repository、一起部署，真實 integration test 很便宜</td><td>優先維護 integration test</td></tr><tr><td>介面穩定且只需要檢查 payload 結構</td><td>Schema validation 可能已經足夠</td></tr></tbody></table>
 <p>如果 integration test 已經能低成本呼叫真實 Provider，契約測試可能只是重複覆蓋。反過來，如果每次驗證跨服務相容性都要啟動完整環境，契約測試的價值就不只是多一個測試種類，而是把回饋提前，並讓失敗更容易歸因到某個 Consumer 或 Provider。</p>
 <p>實務上不需要一次替所有服務邊界導入。可以先挑一個最常變更、Consumer 最多，或一旦不相容就會造成高成本事故的互動，寫一份最小契約，觀察它是否真的減少 mock 漂移與晚期整合失敗。如果團隊沒有契約發布、驗證和退場的責任人，先不要急著引入工具。</p>
 <h2 id="最常見的五個誤區">最常見的五個誤區</h2>
@@ -350,14 +350,14 @@
 <p>以下流程以 CDC、由 Consumer 產生並發布契約為例。若採用 Provider-owned contract 或 shared schema，契約來源與發布流程會不同。</p>
 <p>契約測試的 CI 流程至少要讓兩邊都能收到結果：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Consumer pull request</span></span>
-<span class="line"><span>  -&gt; 產生或更新 Consumer contract</span></span>
-<span class="line"><span>  -&gt; Consumer test 使用 Provider stub</span></span>
-<span class="line"><span>  -&gt; 發布契約或測試資產</span></span>
+<span class="line"><span>  -> 產生或更新 Consumer contract</span></span>
+<span class="line"><span>  -> Consumer test 使用 Provider stub</span></span>
+<span class="line"><span>  -> 發布契約或測試資產</span></span>
 <span class="line"><span></span></span>
 <span class="line"><span>Provider pull request</span></span>
-<span class="line"><span>  -&gt; 讀取已發布的 Consumer contracts</span></span>
-<span class="line"><span>  -&gt; 執行 Provider verifier tests</span></span>
-<span class="line"><span>  -&gt; 通過後才允許發布新版本</span></span></code></pre>
+<span class="line"><span>  -> 讀取已發布的 Consumer contracts</span></span>
+<span class="line"><span>  -> 執行 Provider verifier tests</span></span>
+<span class="line"><span>  -> 通過後才允許發布新版本</span></span></code></pre>
 <p>如果契約資產放在 artifact repository、Git repository 或 registry，版本、來源和 Consumer 名稱都要可追蹤。否則測試失敗時，團隊只知道「某個 stub 不相容」，卻不知道是哪個 Consumer、哪個版本或哪一次變更造成的。</p>
 <p>也不要把每個 Consumer 的契約都當成永遠不能改的法律。契約反映的是目前的使用者與系統需求；當 Consumer 被淘汰、事件版本升級或業務語意改變時，契約也要有審查與退場流程。</p>
 <h2 id="結論">結論</h2>
@@ -371,5 +371,4 @@
 <li><a id="ref-1"></a>[1] Spring Cloud Contract，〈<a href="https://docs.spring.io/spring-cloud-contract/docs/current/reference/html/getting-started.html">Getting Started</a>〉</li>
 <li><a id="ref-2"></a>[2] Spring Cloud Contract，〈<a href="https://docs.spring.io/spring-cloud-contract/docs/current/reference/html/documentation-overview.html">Documentation Overview</a>〉</li>
 <li><a id="ref-3"></a>[3] Pact，〈<a href="https://docs.pact.io/">Introduction</a>〉</li>
-</ul>
-</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-integration-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</span></a><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-integration-test/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">整合測試實戰：AI 時代自動化測試與驗收（四）如何驗證資料庫、交易、序列化、外部 API 與事件邊界？</span></a><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

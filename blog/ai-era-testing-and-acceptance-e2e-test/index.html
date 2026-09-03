@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><!-- Primary Meta Tags --><title>E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</title><meta name="title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta name="description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><meta property="og:title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta property="og:description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><meta property="twitter:title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta property="twitter:description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？","description":"單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。","datePublished":"2026-08-24T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Ct7ttYwY.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt_ZslcL7.webp" alt="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-24T00:00:00.000Z">Aug 24, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">E2E</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Acceptance</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><!-- Primary Meta Tags --><title>E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</title><meta name="title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta name="description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><meta property="og:title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta property="og:description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-era-testing-and-acceptance-e2e-test/"><meta property="twitter:title" content="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？"><meta property="twitter:description" content="單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？","description":"單元、整合與契約測試都通過，使用者旅程仍可能在真實拓撲中斷掉。本文整理如何用少量 E2E 保護高風險旅程，並區分 Exploratory Testing（探索式測試）、API／Browser-level E2E 與 deployment smoke。","datePublished":"2026-08-24T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BJGPvr3o.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-era-testing-and-acceptance-e2e-test.BTsJ8aSt_ZslcL7.webp" alt="E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-08-24T00:00:00.000Z">Aug 24, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Testing</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">E2E</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">Acceptance</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">E2E 測試：AI 時代的自動化測試與驗收（七）如何保護關鍵使用者旅程、前端 API 與非同步流程？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
 <p><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/">上一篇：契約測試的三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</a></p>
 </blockquote>
 <p>前幾篇把測試責任逐層拆開：單元測試驗證規則，整合測試驗證元件接在一起後能不能運作，契約測試驗證服務之間約定的邊界沒有被悄悄改掉。</p>
@@ -11,42 +11,42 @@
 <p>當 AI 可以快速產生更多程式碼與測試時，真正稀缺的，是團隊是否知道哪些旅程值得保護，以及什麼結果才算完成。</p>
 <h2 id="e2e-測試保護的是旅程不是所有功能">E2E 測試保護的是旅程，不是所有功能</h2>
 <p>把前幾篇的分層放在一起，責任大致可以這樣看：</p>
-<table>
-<thead>
-<tr>
-<th>測試關注點</th>
-<th>主要問題</th>
-<th>常見範圍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>單元測試</td>
-<td>這個規則算對嗎？</td>
-<td>函式、類別、單一決策</td>
-</tr>
-<tr>
-<td>整合測試</td>
-<td>元件接在一起能運作嗎？</td>
-<td>資料庫、佇列、序列化、設定</td>
-</tr>
-<tr>
-<td>契約測試</td>
-<td>兩個系統對邊界的約定一致嗎？</td>
-<td>API、事件、Schema、錯誤格式</td>
-</tr>
-<tr>
-<td>E2E 測試</td>
-<td>使用者的關鍵旅程走得完嗎？</td>
-<td>前端、後端、資料與部署拓撲</td>
-</tr>
-<tr>
-<td>驗收測試</td>
-<td>這次交付值得接受嗎？</td>
-<td>業務目標、使用者價值、風險</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>測試關注點</th><th>主要問題</th><th>常見範圍</th></tr></thead><tbody><tr><td>單元測試</td><td>這個規則算對嗎？</td><td>函式、類別、單一決策</td></tr><tr><td>整合測試</td><td>元件接在一起能運作嗎？</td><td>資料庫、佇列、序列化、設定</td></tr><tr><td>契約測試</td><td>兩個系統對邊界的約定一致嗎？</td><td>API、事件、Schema、錯誤格式</td></tr><tr><td>E2E 測試</td><td>使用者的關鍵旅程走得完嗎？</td><td>前端、後端、資料與部署拓撲</td></tr><tr><td>驗收測試</td><td>這次交付值得接受嗎？</td><td>業務目標、使用者價值、風險</td></tr></tbody></table>
 <p>E2E 關心的是跨邊界後的整體結果。例如「使用者成功下單」可能同時經過：</p>
 <ol>
 <li>瀏覽器載入前端頁面。</li>
@@ -71,36 +71,36 @@
 <p>這樣做不代表降低測試標準，而是把較昂貴的測試用在低層測試無法回答的問題上。</p>
 <h2 id="怎麼挑值得保護的旅程">怎麼挑值得保護的旅程</h2>
 <p>一條旅程是否值得成為 E2E，通常可以從幾個角度判斷：</p>
-<table>
-<thead>
-<tr>
-<th>判斷角度</th>
-<th>要問的問題</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>業務影響</td>
-<td>這條流程失敗，會不會直接影響收入、留存或核心服務？</td>
-</tr>
-<tr>
-<td>跨邊界程度</td>
-<td>它是否經過多個服務、資料儲存或非同步流程？</td>
-</tr>
-<tr>
-<td>失敗代價</td>
-<td>問題是否可能直到使用者操作時才被發現？</td>
-</tr>
-<tr>
-<td>使用頻率</td>
-<td>這是不是使用者最常走的主流程？</td>
-</tr>
-<tr>
-<td>代表性</td>
-<td>通過這條流程，能否代表一整類重要能力仍然可用？</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>判斷角度</th><th>要問的問題</th></tr></thead><tbody><tr><td>業務影響</td><td>這條流程失敗，會不會直接影響收入、留存或核心服務？</td></tr><tr><td>跨邊界程度</td><td>它是否經過多個服務、資料儲存或非同步流程？</td></tr><tr><td>失敗代價</td><td>問題是否可能直到使用者操作時才被發現？</td></tr><tr><td>使用頻率</td><td>這是不是使用者最常走的主流程？</td></tr><tr><td>代表性</td><td>通過這條流程，能否代表一整類重要能力仍然可用？</td></tr></tbody></table>
 <p>例如，電商系統可以優先保護：</p>
 <ul>
 <li>使用者可以登入並查看自己的訂單。</li>
@@ -124,47 +124,47 @@
 <p>換句話說，Exploratory Testing 用來發現未知風險；E2E 用來長期守住已確認的重要旅程。兩者分開管理，才能讓 E2E 保持少量、穩定，而且有明確目的。</p>
 <h2 id="用下單流程畫出一條關鍵旅程">用下單流程畫出一條關鍵旅程</h2>
 <p>延續前幾篇的訂單例子，一條「使用者下單並看到處理結果」的 E2E 旅程，可以先畫成下面這樣：</p>
-<table>
-<thead>
-<tr>
-<th>步驟</th>
-<th>使用者或系統行為</th>
-<th>E2E 要觀察的結果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>使用者登入</td>
-<td>頁面顯示已登入狀態，後續請求使用正確身分</td>
-</tr>
-<tr>
-<td>2</td>
-<td>使用者選擇可購買商品</td>
-<td>商品資訊與可用狀態能從實際服務取得</td>
-</tr>
-<tr>
-<td>3</td>
-<td>使用者送出訂單</td>
-<td>頁面顯示訂單已建立，不是只顯示按鈕被點擊</td>
-</tr>
-<tr>
-<td>4</td>
-<td>訂單服務寫入資料並發布事件</td>
-<td>訂單編號可被查詢，訂單進入可觀察的處理狀態</td>
-</tr>
-<tr>
-<td>5</td>
-<td>付款或庫存流程完成</td>
-<td>訂單狀態符合這個測試環境的預期</td>
-</tr>
-<tr>
-<td>6</td>
-<td>使用者重新查看訂單</td>
-<td>前端顯示與後端狀態一致</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>步驟</th><th>使用者或系統行為</th><th>E2E 要觀察的結果</th></tr></thead><tbody><tr><td>1</td><td>使用者登入</td><td>頁面顯示已登入狀態，後續請求使用正確身分</td></tr><tr><td>2</td><td>使用者選擇可購買商品</td><td>商品資訊與可用狀態能從實際服務取得</td></tr><tr><td>3</td><td>使用者送出訂單</td><td>頁面顯示訂單已建立，不是只顯示按鈕被點擊</td></tr><tr><td>4</td><td>訂單服務寫入資料並發布事件</td><td>訂單編號可被查詢，訂單進入可觀察的處理狀態</td></tr><tr><td>5</td><td>付款或庫存流程完成</td><td>訂單狀態符合這個測試環境的預期</td></tr><tr><td>6</td><td>使用者重新查看訂單</td><td>前端顯示與後端狀態一致</td></tr></tbody></table>
 <p>這條測試不需要斷言每一個 HTTP header，也不需要檢查資料庫的每一個欄位或直接驗證內部事件是否發布。那些是契約或整合測試更適合處理的責任。</p>
 <p>E2E 應該斷言的是使用者能辨認的結果，以及足以代表旅程完成的業務狀態。例如：</p>
 <ul>
@@ -225,7 +225,7 @@
 </ul>
 <p>更可靠的做法是等待可觀察的業務條件，例如輪詢訂單狀態直到進入預期狀態，或讓測試框架使用帶有 timeout 的 assertion。Playwright 的 web-first assertions 會在條件未滿足時自動重試，適合用來等待畫面上的最終狀態，而不是等待一段沒有業務意義的時間。<a href="#ref-2">[2]</a></p>
 <p>示意上，測試應該表達「等待訂單變成已確認」：</p>
-<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can complete the order journey'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=&gt;</span><span style="color:#E1E4E8"> {</span></span>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="ts"><code><span class="line"><span style="color:#B392F0">test</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'customer can complete the order journey'</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">async</span><span style="color:#E1E4E8"> ({ </span><span style="color:#FFAB70">page</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#6A737D">  // 建立測試資料與登入狀態的方式依專案而定。</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">goto</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'/orders/new'</span><span style="color:#E1E4E8">);</span></span>
 <span class="line"><span style="color:#F97583">  await</span><span style="color:#E1E4E8"> page.</span><span style="color:#B392F0">getByLabel</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'商品'</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">selectOption</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">'test-product'</span><span style="color:#E1E4E8">);</span></span>
@@ -238,42 +238,42 @@
 <p>如果非同步狀態只能透過 API 觀察，也可以讓測試輪詢 API 的業務結果。重點仍然是等待明確條件，並讓 timeout 反映合理的系統上限，而不是任意加長等待時間。</p>
 <h2 id="e2e-失敗時先判斷是不是-flaky">E2E 失敗時，先判斷是不是 flaky</h2>
 <p>E2E 失敗不代表一定是產品 bug。收到失敗結果時，可以先按來源分類：</p>
-<table>
-<thead>
-<tr>
-<th>失敗類型</th>
-<th>常見訊號</th>
-<th>下一步</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>產品邏輯錯誤</td>
-<td>相同資料與環境下穩定重現</td>
-<td>回到負責該行為的服務或前端修正</td>
-</tr>
-<tr>
-<td>環境未準備好</td>
-<td>服務啟動慢、連線拒絕、依賴尚未 ready</td>
-<td>補 readiness check 或調整環境啟動流程</td>
-</tr>
-<tr>
-<td>資料互相污染</td>
-<td>單獨執行通過，平行或重跑失敗</td>
-<td>隔離 fixture、帳號與測試資料</td>
-</tr>
-<tr>
-<td>定位或時序問題</td>
-<td>元素偶爾找不到、固定等待後仍不穩</td>
-<td>改用穩定 locator 與條件式等待</td>
-</tr>
-<tr>
-<td>外部依賴不穩</td>
-<td>第三方 sandbox timeout 或限流</td>
-<td>使用可控替身，或把外部依賴風險獨立監控</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>失敗類型</th><th>常見訊號</th><th>下一步</th></tr></thead><tbody><tr><td>產品邏輯錯誤</td><td>相同資料與環境下穩定重現</td><td>回到負責該行為的服務或前端修正</td></tr><tr><td>環境未準備好</td><td>服務啟動慢、連線拒絕、依賴尚未 ready</td><td>補 readiness check 或調整環境啟動流程</td></tr><tr><td>資料互相污染</td><td>單獨執行通過，平行或重跑失敗</td><td>隔離 fixture、帳號與測試資料</td></tr><tr><td>定位或時序問題</td><td>元素偶爾找不到、固定等待後仍不穩</td><td>改用穩定 locator 與條件式等待</td></tr><tr><td>外部依賴不穩</td><td>第三方 sandbox timeout 或限流</td><td>使用可控替身，或把外部依賴風險獨立監控</td></tr></tbody></table>
 <p>每次失敗至少應保留足夠的診斷資料：測試步驟、瀏覽器截圖、console 與 network log、請求 correlation ID，以及服務端 log。Playwright 的 Trace Viewer 可以在測試失敗後重看操作步驟、DOM、network 與 assertion 狀態；官方文件也提供在第一次 retry 時保留 trace 的設定方式。<a href="#ref-3">[3]</a></p>
 <p>Retry 可以幫助我們判斷偶發性，但不能拿來掩蓋不穩定。若一個測試常常第一次失敗、第二次成功，這本身就是系統或測試設計需要處理的訊號。</p>
 <h2 id="ai-可以產生骨架但人要決定通過條件">AI 可以產生骨架，但人要決定通過條件</h2>
@@ -298,42 +298,42 @@
 <p>很多團隊的實際做法是：CI 先跑完單元、整合與契約測試，部署到測試環境後，再由腳本執行 E2E。這是合理的部署後 E2E 模式，因為它驗證的是已經組合好的服務、設定、網路、佇列與外部依賴。</p>
 <p>它的代價是回饋比較晚。問題可能要等到部署完成後才會被發現，甚至已經進入某個環境。因此，部署後 E2E 適合驗證實際部署拓撲；部署前則可以保留少量、快速的核心旅程，提早阻擋明顯回歸。</p>
 <p>E2E 的執行策略可以依回饋速度與風險分層：</p>
-<table>
-<thead>
-<tr>
-<th>時機</th>
-<th>建議執行內容</th>
-<th>目的</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Pull Request</td>
-<td>單元、整合、契約測試，加上少量最關鍵的 API 或 browser journey</td>
-<td>快速阻擋核心流程回歸</td>
-</tr>
-<tr>
-<td>合併後／部署到測試環境</td>
-<td>較完整的服務旅程與主要瀏覽器</td>
-<td>驗證整合環境中的跨邊界行為</td>
-</tr>
-<tr>
-<td>Nightly 或排程</td>
-<td>更多旅程、瀏覽器版本與資料組合</td>
-<td>找出較低頻但重要的回歸</td>
-</tr>
-<tr>
-<td>部署到正式環境後</td>
-<td>最小 deployment smoke</td>
-<td>確認新環境真的可用</td>
-</tr>
-<tr>
-<td>發布前</td>
-<td>與本次變更相關的高風險旅程</td>
-<td>提供發布決策所需的信心</td>
-</tr>
-</tbody>
-</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>時機</th><th>建議執行內容</th><th>目的</th></tr></thead><tbody><tr><td>Pull Request</td><td>單元、整合、契約測試，加上少量最關鍵的 API 或 browser journey</td><td>快速阻擋核心流程回歸</td></tr><tr><td>合併後／部署到測試環境</td><td>較完整的服務旅程與主要瀏覽器</td><td>驗證整合環境中的跨邊界行為</td></tr><tr><td>Nightly 或排程</td><td>更多旅程、瀏覽器版本與資料組合</td><td>找出較低頻但重要的回歸</td></tr><tr><td>部署到正式環境後</td><td>最小 deployment smoke</td><td>確認新環境真的可用</td></tr><tr><td>發布前</td><td>與本次變更相關的高風險旅程</td><td>提供發布決策所需的信心</td></tr></tbody></table>
 <p>如果團隊目前的流程是 CI 完成、部署後再執行 E2E，不需要為了追求新的分層方式而全部重寫。比較重要的是確認腳本真的驗證了完整業務結果，而不是只檢查首頁或一個 API 有回應。若部署後 E2E 失敗，管線也要事先定義是阻擋後續發布、觸發 rollback，還是只發出警告。</p>
 <p>不要把所有 E2E 都放進 Pull Request，也不要把所有 E2E 都延後到發布後。PR 上應該留下能快速回饋的核心路徑；較慢、較廣的矩陣可以排程執行，但失敗結果仍然要有明確的負責人與處理期限。</p>
 <p>E2E 的執行結果最好能和部署版本、測試資料、環境與 commit 綁在一起。否則看到「下單流程失敗」時，團隊還要先猜是哪個版本、哪個環境或哪批資料造成的。</p>
@@ -353,5 +353,4 @@
 <li>
 <p><a id="ref-3"></a>[3] Playwright，〈<a href="https://playwright.dev/docs/trace-viewer">Trace Viewer</a>〉</p>
 </li>
-</ul>
-</div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</span></a><a href="/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ai-era-testing-and-acceptance-contract-test-tools/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">契約測試：AI 時代自動化測試與驗收（六）三種方案：OpenAPI + Schemathesis、Pact 與 Spring Cloud Contract</span></a><a href="/blog/ai-era-testing-and-acceptance-playwright-e2e-architecture/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">E2E 測試：AI 時代的自動化測試與驗收（八）如何設計資料隔離與可維護的 Playwright 架構？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
