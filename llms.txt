@@ -104,6 +104,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Gartner IT Score 現況分析：用重要性、成熟度與 Priority Index 找出能力缺口
+
+**Description:** 本文說明 Gartner IT Score 如何用重要性、成熟度與 Priority Index 排出改善優先順序，並整理評估範圍、參與方式、證據留存、結果解讀與分數限制。重點不是追逐最低分，而是找出對策略重要、成熟度卻還跟不上的活動，再決定下一步蒐證。
+
+**URL:** https://tech.samsonlab.dev/blog/current-state-it-score/
+
+---
+
 ### 當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力
 
 **Description:** 從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。
@@ -246,4 +254,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-02T08:57:33.416Z
+Last updated: 2026-09-03T02:41:47.188Z
