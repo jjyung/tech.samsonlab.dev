@@ -104,7 +104,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### Gartner IT Score 現況分析：用重要性、成熟度與 Priority Index 找出能力缺口
+### 企業架構實務（二）：如何用 Gartner IT Score 與 Priority Index 找出能力缺口？
 
 **Description:** 本文說明 Gartner IT Score 如何用重要性、成熟度與 Priority Index 排出改善優先順序，並整理評估範圍、參與方式、證據留存、結果解讀與分數限制。重點不是追逐最低分，而是找出對策略重要、成熟度卻還跟不上的活動，再決定下一步蒐證。
 
@@ -254,4 +254,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-03T02:41:47.188Z
+Last updated: 2026-09-03T02:48:04.488Z
