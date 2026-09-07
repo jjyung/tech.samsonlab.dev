@@ -1,0 +1,392 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/it-score-restaurant-case-study/"><!-- Primary Meta Tags --><title>案例演練：用七個 IT Score 維度看見好味餐飲的能力差距</title><meta name="title" content="案例演練：用七個 IT Score 維度看見好味餐飲的能力差距"><meta name="description" content="以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/it-score-restaurant-case-study/"><meta property="og:title" content="案例演練：用七個 IT Score 維度看見好味餐飲的能力差距"><meta property="og:description" content="以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/it-score-restaurant-case-study.BpdJtpAA.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/it-score-restaurant-case-study/"><meta property="twitter:title" content="案例演練：用七個 IT Score 維度看見好味餐飲的能力差距"><meta property="twitter:description" content="以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/it-score-restaurant-case-study.BpdJtpAA.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"案例演練：用七個 IT Score 維度看見好味餐飲的能力差距","description":"以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。","datePublished":"2026-09-07T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/it-score-restaurant-case-study.BpdJtpAA.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.BJGPvr3o.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/it-score-restaurant-case-study.BpdJtpAA_ZWLA6G.webp" alt="案例演練：用七個 IT Score 維度看見好味餐飲的能力差距" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-07T00:00:00.000Z">Sep 7, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ITScore</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">MaturityAssessment</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">案例演練：用七個 IT Score 維度看見好味餐飲的能力差距</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><p>本文使用<a href="/blog/restaurant-transformation-scenario/">好味餐飲的轉型情境</a>做案例演練，參考 Gartner IT Score 七個維度的評估方式，示範如何從情境證據整理活動、對照重要性與成熟度，辨識能力和理想表現之間的差距。活動名稱與理想表現會依案例調整，分數只用來協助團隊檢查判斷是否一致。IT Score 的基本定位可參考<a href="/blog/current-state-it-score/">前一篇方法說明</a>。</p>
+<p>本文涵蓋的七個維度是 <code>CIO</code>、<code>DA</code>、<code>EA</code>、<code>EArch</code>、<code>IO</code>、<code>SRM</code>、<code>SE</code>。每個維度各自有功能目標、功能活動與 maturity marker；本文不把七個維度合併成一份總分，而是分別回到各維度的原始活動，再用共同的業務問題對照。</p>
+<p>看到好味餐飲的事故，第一個直覺可能是調整資料庫、拆開 OneFood，或直接換一套新的 POS 平台。這些都可能成為後續方案，但它們不是現況分析一開始就能回答的問題。</p>
+<p>更該先問的是：在好味未來一年的成長計畫裡，哪些 IT 活動最重要？目前的成熟度距離這些活動應有的狀態還有多遠？</p>
+<h2 id="先界定這次要評估什麼">先界定這次要評估什麼</h2>
+<p>好味的資料很多：有事故時間線、訂單影響、系統模組、團隊分工、外部依賴與兩年成長目標。但資料多不代表可以把整家公司壓成一個總分。IT Score 的評估角色、範圍與時間點不同，結果就不應直接混在一起比較。</p>
+<p>這次案例演練先把範圍固定如下：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>項目</th><th>本次設定</th></tr></thead><tbody><tr><td>重要性期間</td><td>基線後 12 個月；把兩年成長計畫中必須先準備的能力列入考量</td></tr><tr><td>要回答的問題</td><td>各項 IT 活動和好味的成長目標有多相關，現況成熟度距離理想表現有多遠</td></tr><tr><td>評估範圍</td><td>七個維度涉及 OneFood 的應用、營運、交付、資料、風險與治理議題；下文只列出和案例直接相關的原始活動</td></tr><tr><td>不包含</td><td>金流、ERP、電子發票與外送平台供應商本身的成熟度</td></tr><tr><td>證據來源</td><td>轉型情境提供的事故、指標、系統現況、組織限制與業務目標</td></tr></tbody></table>
+<p>本次先從七個維度各選出和案例直接相關的原始活動，不把整家公司壓成一個總分。活動名稱沿用各維度摘要，案例目標與證據則從好味的情境出發。</p>
+<h2 id="七個維度在案例中的分工">七個維度在案例中的分工</h2>
+<p>同一場事故會同時暴露多個維度的問題。這次先用下表說明各維度在好味案例中的觀察角度；這是本文的分析對應關係（mapping），不宣稱它等同於 Gartner 對各維度的官方定義或一對一題目對照。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>維度</th><th>本案例先觀察的問題</th></tr></thead><tbody><tr><td><code>CIO</code></td><td>兩年成長目標、投資成果、半年檢視與尚未降低的業務風險</td></tr><tr><td><code>DA</code></td><td>訂單、付款、退款、發票與報表資料的可信度、責任與時效</td></tr><tr><td><code>EA</code></td><td>應用能力、服務邊界、應用組合與跨系統責任的治理</td></tr><tr><td><code>EArch</code></td><td>OneFood、舊 POS 與外部系統的目標架構、過渡方式與演進路徑</td></tr><tr><td><code>IO</code></td><td>尖峰韌性、可用性、監控、事件應變、容量與服務治理</td></tr><tr><td><code>SRM</code></td><td>加盟與批次帳號的權限、資安風險、稽核與責任追蹤</td></tr><tr><td><code>SE</code></td><td>交付週期、測試、變更、分批發布與回復能力</td></tr></tbody></table>
+<p>下面的 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span> 是根據情境證據做出的案例示範判讀，不是好味的正式 Gartner 成熟度結果。若證據不足，就降低判斷信心，而不是用數字掩蓋未知。</p>
+<h2 id="把事故和成長目標對回原始活動">把事故和成長目標對回原始活動</h2>
+<p>同一個事故可能同時涉及多個維度，但計算時仍要回到各維度的原始活動。資料庫變慢是觀察，所有通路一起逾時是影響；至於「應該拆成微服務」則是解法假設，不能直接寫成成熟度結論。下表先把情境證據對回活動，再討論重要性與成熟度。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>維度</th><th>原始活動</th><th>情境證據</th><th>案例目標</th></tr></thead><tbody><tr><td><code>CIO</code></td><td><code>Develop the Technology Roadmap</code></td><td>兩年內要從 42 家展店到 80 家、推出新品牌並開放加盟，但尚未描述分階段依賴、投資與切換路線</td><td>把成長目標拆成可驗證的階段、依賴、投資與回顧點</td></tr><tr><td><code>CIO</code></td><td><code>Measure IT Performance</code></td><td>董事會要求用業務結果檢視投資；現況主要看到主機、JVM 與資料庫指標</td><td>每個階段都能用展店時間、尖峰服務、交易查明、對帳與交付結果檢查投資成效</td></tr><tr><td><code>DA</code></td><td><code>Improve Data Quality</code></td><td>每月約 320 筆交易需要人工核對，還有付款狀態不明與 18 家門市負庫存</td><td>將人工核對降至每月 50 筆以下，並能追蹤資料錯誤的來源與修正結果</td></tr><tr><td><code>DA</code></td><td><code>Integrate and Operationalize Data</code></td><td>訂單、付款、退款、發票與廚房單的狀態分散在不同流程，客服與財務需要人工比對</td><td>用一致的交易識別碼串起狀態，讓營運資料在 5 分鐘內可查</td></tr><tr><td><code>EA</code></td><td><code>Integrate applications</code></td><td>OneFood 的模組共用資料庫，並和金流、發票、ERP、物流及外送平台整合</td><td>清楚定義應用責任、整合契約與資料交換路徑，支援新品牌和新通路共存</td></tr><tr><td><code>EA</code></td><td><code>Establish governance model</code></td><td>團隊按前端、後端、資料庫與維運分工，沒有端到端負責單一業務能力的團隊；加盟權限仍在盤點</td><td>明確定義交易、資料、例外與加盟權限的決策責任和負責人</td></tr><tr><td><code>EArch</code></td><td><code>Develop Future-State Architecture</code></td><td>OneFood 同時承擔訂單、付款、庫存、廚房、會員與報表，情境尚未提供目標架構或能力邊界</td><td>定義能支援成長、故障隔離與外部系統共存的目標架構</td></tr><tr><td><code>EArch</code></td><td><code>Develop &#x26; Maintain Roadmaps</code></td><td>舊 POS 至少共存三年，ERP、發票、金流與外送平台不能同步改造，但尚未看見分批切換與回復路徑</td><td>建立包含過渡狀態、依賴、切換條件與回復條件的路線圖</td></tr><tr><td><code>IO</code></td><td><code>Monitor I&#x26;O Performance</code></td><td>正式環境只有主機、JVM 與資料庫監控，沒有跨通路、模組與外部服務的交易追蹤</td><td>同時觀察服務、交易與業務結果，能定位訂單卡在哪個環節</td></tr><tr><td><code>IO</code></td><td><code>Ensure Future Service Availability</code></td><td>資料庫壅塞後 App、官網與部分 POS 一起逾時；重啟 OneFood 時所有門市與自有通路停止接單</td><td>尖峰或局部故障時，未受影響的門市與通路仍能接單，並以演練證明容量與降級行為</td></tr><tr><td><code>SRM</code></td><td><code>Secure Applications</code></td><td>部分批次與報表帳號可直接存取大量正式資料表，情境沒有提供應用層授權與權限檢查的證據</td><td>透過應用與批次的最小權限控制加盟、報表與維運操作</td></tr><tr><td><code>SRM</code></td><td><code>Secure Data</code></td><td>資料庫操作紀錄保留帳號與時間，但沒有業務作業或負責單位；加盟店也不能取得不必要的會員與他店資料</td><td>保護會員、付款與跨店資料，並讓正式資料異動可追溯到業務負責人</td></tr><tr><td><code>SE</code></td><td><code>Drive Software Quality</code></td><td>自動化測試以單元測試為主，跨模組回歸由 QA 手動執行，完整回歸約需五個工作天</td><td>以關鍵交易流程的自動化測試、回歸證據與發布條件支援快速且可回復的交付</td></tr><tr><td><code>SE</code></td><td><code>Reduce Technical Debt</code></td><td>一項優惠規則平均會改動六個模組，兩位資深工程師掌握交錯規則，大部分緊急變更都需要其中一人</td><td>降低變更耦合與關鍵人物依賴，並用可追蹤的債務項目與改善結果檢查進度</td></tr></tbody></table>
+<p>兩張表都使用上面同一組 14 個原始活動，第一張表放情境證據與案例目標，下一張表再放重要性、成熟度與 Activity Priority Index。這樣可以回查每個數字對應的活動與證據，而不會把同一個跨職能問題誤當成一個新的 Gartner 活動。</p>
+<h2 id="這次怎麼計算-activity-priority-index">這次怎麼計算 Activity Priority Index</h2>
+<p>Gartner 的公開範例報告將活動優先度稱為 Activity Priority Index，用來指出成熟度和重要性沒有對齊的活動，並依差距排列改善優先度。CIO、Data &#x26; Analytics、I&#x26;O 與 Enterprise Architecture 的公開範例報告，都能看到這個名稱或相同的活動優先度概念：<a href="#ref-1">[1]</a> <a href="#ref-4">[4]</a> <a href="#ref-5">[5]</a> <a href="#ref-6">[6]</a> <a href="#ref-7">[7]</a></p>
+<p>本案例回到各維度原始活動，沿用課程教材中的公式做透明的示範計算。這不是好味的正式 Gartner 報告結果；完整報告的欄位與計算方式仍應以該維度、該版本的正式報告為準。</p>
+<ul>
+<li><strong>重要性（Importance，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span></span></span></span>）</strong>：活動對基線後 12 個月策略目標的重要程度。本案例的 <code>5</code> 代表直接支援不中斷營運、交易可信度、展店／新品牌／加盟或董事會投資檢視；<code>4</code> 代表重要的支援活動，但不是目前明確業務結果的直接衡量點。每列的理由放在下一張表，不把數字當成客觀事實。</li>
+<li><strong>成熟度（Maturity，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span>）</strong>：根據情境證據做出的案例假設。<code>1</code> 代表目前主要依賴人工、個人或事故後處理，尚未看到可重複的跨團隊做法；<code>2</code> 代表已有部分工具、流程或局部做法，但尚未證明能穩定跨團隊運作。本案例沒有足夠證據判定 <code>3</code>～<code>5</code>，因此不自行補造更高成熟度。</li>
+<li><strong>信心</strong>：<code>中</code> 代表情境有直接觀察或數字支持；<code>低（暫定）</code> 代表情境只描述限制或缺少 marker 證據。低信心列仍列出示範值，但在補證據前不應用來和同維度活動排序。</li>
+</ul>
+<p>案例計算式如下；<code>Activity Priority Index</code> 是完整名稱，本文不另外縮寫：<a href="#ref-2">[2]</a> <a href="#ref-3">[3]</a></p>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mrow><mi mathvariant="normal">A</mi><mi mathvariant="normal">c</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">v</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">y</mi><mtext> </mtext><mi mathvariant="normal">P</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">y</mi><mtext> </mtext><mi mathvariant="normal">I</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">x</mi></mrow><mo>=</mo><mo stretchy="false">(</mo><mi>I</mi><mo>−</mo><mi>M</mi><mo stretchy="false">)</mo><mo>×</mo><mi>I</mi></mrow><annotation encoding="application/x-tex">\mathrm{Activity\ Priority\ Index} = (I - M) \times I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathrm" style="margin-right:0.0139em;">Activity</span><span class="mspace"> </span><span class="mord mathrm" style="margin-right:0.0139em;">Priority</span><span class="mspace"> </span><span class="mord mathrm">Index</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span></span></span></span></span>
+<p>它是活動層級的改善訊號，不是風險分數、投資金額或跨維度總分。本文只在同一維度的原始活動內閱讀它，不把七個維度的數字相加，也不把所有維度排成一條總排行榜。</p>
+<h2 id="好味的案例版差距表">好味的案例版差距表</h2>
+<p>下表沿用上一張表的 14 個原始活動與相同順序。分數的作用是讓團隊檢查判斷是否一致，不是製造比證據更精確的數字。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>維度</th><th>原始活動</th><th align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span></span></span></span></th><th>重要性依據</th><th align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></th><th>成熟度判讀</th><th align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>−</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">I-M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span></th><th align="right">Activity Priority Index</th><th>信心</th></tr></thead><tbody><tr><td><code>CIO</code></td><td><code>Develop the Technology Roadmap</code></td><td align="right">5</td><td>直接支撐展店、新品牌與加盟的成長計畫</td><td align="right">2</td><td>已有兩年成長計畫，但沒有分階段依賴、切換與回顧路線</td><td align="right">3</td><td align="right">15</td><td>低（暫定）</td></tr><tr><td><code>CIO</code></td><td><code>Measure IT Performance</code></td><td align="right">5</td><td>董事會要求用業務結果和未降低的風險檢視投資</td><td align="right">1</td><td>現況主要是主機、JVM 與資料庫指標，未見業務結果迴路</td><td align="right">4</td><td align="right">20</td><td>中</td></tr><tr><td><code>DA</code></td><td><code>Improve Data Quality</code></td><td align="right">5</td><td>人工對帳、負庫存與狀態不明直接影響交易可信度</td><td align="right">2</td><td>已有人工對帳，但每月仍約 320 筆，且事故出現負庫存與狀態不明</td><td align="right">3</td><td align="right">15</td><td>中</td></tr><tr><td><code>DA</code></td><td><code>Integrate and Operationalize Data</code></td><td align="right">5</td><td>交易狀態與營運資料時效是成長與每日結帳的必要條件</td><td align="right">1</td><td>訂單、付款與廚房狀態需要人工比對，沒有端到端交易追蹤</td><td align="right">4</td><td align="right">20</td><td>中</td></tr><tr><td><code>EA</code></td><td><code>Integrate applications</code></td><td align="right">5</td><td>新品牌、新通路與外部系統共存都依賴整合責任</td><td align="right">1</td><td>模組共用資料庫，外部整合仍受單體與直接資料存取牽制</td><td align="right">4</td><td align="right">20</td><td>中</td></tr><tr><td><code>EA</code></td><td><code>Establish governance model</code></td><td align="right">4</td><td>是加盟與跨系統責任的必要支援，但不是單一交易結果的直接衡量點</td><td align="right">1</td><td>團隊按技術職能分工，未見端到端負責人，加盟邊界仍在盤點</td><td align="right">3</td><td align="right">12</td><td>低（暫定）</td></tr><tr><td><code>EArch</code></td><td><code>Develop Future-State Architecture</code></td><td align="right">5</td><td>決定兩年成長能否分段落地並維持不中斷營運</td><td align="right">1</td><td>情境描述現況與限制，尚未提供目標架構或能力邊界</td><td align="right">4</td><td align="right">20</td><td>低（暫定）</td></tr><tr><td><code>EArch</code></td><td><code>Develop &#x26; Maintain Roadmaps</code></td><td align="right">5</td><td>舊 POS 和外部系統至少共存三年，必須先有過渡路徑</td><td align="right">1</td><td>尚未看到分批切換、契約與回復條件的路線圖</td><td align="right">4</td><td align="right">20</td><td>低（暫定）</td></tr><tr><td><code>IO</code></td><td><code>Monitor I&#x26;O Performance</code></td><td align="right">5</td><td>尖峰不中斷與 30 分鐘內查明交易是直接業務目標</td><td align="right">1</td><td>只有主機、JVM 與資料庫指標，沒有端到端交易追蹤</td><td align="right">4</td><td align="right">20</td><td>中</td></tr><tr><td><code>IO</code></td><td><code>Ensure Future Service Availability</code></td><td align="right">5</td><td>未受影響的門市與通路仍能接單是事故檢討的核心結果</td><td align="right">1</td><td>資料庫事故擴大成多通路中斷，尚未證明降級或隔離可行</td><td align="right">4</td><td align="right">20</td><td>中</td></tr><tr><td><code>SRM</code></td><td><code>Secure Applications</code></td><td align="right">4</td><td>加盟與批次操作需要受控權限，但案例未顯示直接資安事件</td><td align="right">1</td><td>批次與報表帳號可直接存取正式資料，沒有應用層控制證據</td><td align="right">3</td><td align="right">12</td><td>低（暫定）</td></tr><tr><td><code>SRM</code></td><td><code>Secure Data</code></td><td align="right">5</td><td>會員、付款與跨店資料邊界直接影響加盟營運與稽核</td><td align="right">2</td><td>有權限清單與資料庫紀錄，但存取範圍大且沒有業務負責人</td><td align="right">3</td><td align="right">15</td><td>中</td></tr><tr><td><code>SE</code></td><td><code>Drive Software Quality</code></td><td align="right">5</td><td>十個工作天內變更與不中斷發布都需要可驗證的品質能力</td><td align="right">2</td><td>有單元測試，但跨模組回歸仍手動，完整回歸約五個工作天</td><td align="right">3</td><td align="right">15</td><td>中</td></tr><tr><td><code>SE</code></td><td><code>Reduce Technical Debt</code></td><td align="right">4</td><td>支援變更速度與團隊韌性，是重要的改善支援活動</td><td align="right">1</td><td>優惠規則平均牽動六個模組，且緊急變更依賴兩位資深工程師</td><td align="right">3</td><td align="right">12</td><td>低（暫定）</td></tr></tbody></table>
+<p>Activity Priority Index 只在同一維度的原始活動內作為改善訊號；不同維度的數字不直接相加，也不排成一條跨維度總排行榜。</p>
+<h2 id="怎麼讀這張差距表">怎麼讀這張差距表</h2>
+<p>表格現在按七個維度分組，每一列都是該維度的原始活動。Activity Priority Index 應先在同一維度內閱讀；例如同一維度中，<code>20</code> 比 <code>15</code> 代表在本案例假設下有較大的重要性／成熟度落差，但不代表它一定比另一個維度的 <code>15</code> 更該先做。</p>
+<p>低（暫定）信心的列不能直接拿來排序。它們的數字只是把目前情境轉成可討論的假設，下一步要先補齊 maturity marker、流程紀錄、負責人或演練結果，再決定是否保留這個 Activity Priority Index。法規、資安事件、契約要求、依賴與團隊承擔能力，也可能讓較低的指標先處理。</p>
+<p>案例目標欄把好味的業務目標翻成可觀察的狀態，讓成熟度判斷有一個對照方向。若把這套方法帶到其他案例，應重新選擇各維度的原始活動，重新定義重要性期間與案例目標，再保留每一項判斷的證據。</p>
+<h2 id="這輪評估留下什麼">這輪評估留下什麼</h2>
+<p>這輪演練留下的是兩張可回查的表：第一張把七個維度的原始活動對回情境證據與案例目標，第二張記錄重要性、成熟度、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mo>−</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">I-M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span>、Activity Priority Index 與判斷信心。它可以成為後續各維度正式填答、缺口分析、方案比較與路線圖的輸入，但本篇不替後續章節決定方案或執行順序。</p>
+<h2 id="這個方法的邊界">這個方法的邊界</h2>
+<p>這個案例演練可以協助好味建立共同語言，也能指出現況距離理想表現的落差，但它有幾個明確限制：</p>
+<ul>
+<li><strong>不能把低成熟度等同於換平台</strong>：低分只表示目前做法距離理想表現有落差，根因可能是資料責任、流程、權限、技能、架構或治理。</li>
+<li><strong>不能把 Activity Priority Index 當成風險或執行順序</strong>：急迫性、法規、依賴、成本、團隊承擔能力與不中斷營運的限制，都要另外判斷。</li>
+<li><strong>不能把缺少證據誤當成低成熟度</strong>：案例資訊不足時，應降低判斷信心並保留待確認狀態，不應用漂亮的分數掩蓋未知。</li>
+</ul>
+<p>若要把這輪工作帶進正式的七維度評估，我會把每個維度的範圍、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi></mrow><annotation encoding="application/x-tex">I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span></span></span></span> 的策略依據、maturity marker 答案、證據來源、評估者分歧、信心與下一個檢查分開保留。這樣分數被挑戰時，團隊可以回到當時的問題與證據，而不是重新爭論誰的直覺比較有說服力。</p>
+<h2 id="結語">結語</h2>
+<p>好味現在面對的不是單一「舊系統問題」。它同時面對尖峰故障、交易狀態不明、展店速度、交付週期、資料可信度、人才依賴與外部系統共存。把七個 IT Score 維度分開看，才能讓這些問題回到各自的活動脈絡，再透過對應關係看見它們如何共同影響同一個業務結果。</p>
+<p>但分數不會替好味選出目標架構。真正的架構判斷仍要回到一筆交易怎麼走、資料由誰負責、故障要隔離到哪裡，以及轉型期間如何持續營業。對這個案例來說，先讓高重要性的活動變得可觀察、可追查、可驗收，比先宣布要換哪一套平台更接近問題本身。</p>
+<h2 id="參考資料">參考資料</h2>
+<!-- markdownlint-disable MD013 MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] Gartner，〈<a href="https://www.gartner.com/en/research/methodologies/gartner-score-diagnostic-family">Gartner Score Diagnostic Family Research Methodology</a>〉。</li>
+<li><a id="ref-2"></a>[2] Gartner，〈<a href="https://static.gartner.com/assets/pdf/score/RO_635300_EUP_Gartner_Score_FAQ_R2.pdf">Gartner Score Diagnostic Maturity Assessments: Frequently Asked Questions</a>〉。</li>
+<li><a id="ref-3"></a>[3] Gartner，〈<a href="https://www.gartner.com/en/software-engineering/research/gartner-score-software-engineering">Software Engineering Score — Benchmark Your Performance</a>〉。</li>
+<li><a id="ref-4"></a>[4] Gartner，〈<a href="https://emt.gartnerweb.com/ngw/globalassets/en/information-technology/documents/insights/cio-score-sample-report-reskin.pdf">CIO Score sample report</a>〉。</li>
+<li><a id="ref-5"></a>[5] Gartner，〈<a href="https://emt.gartnerweb.com/ngw/globalassets/en/information-technology/documents/benchmarks/gartner-it-score-for-data-analytics-sample-excerpt.pdf">IT Score for Data &#x26; Analytics sample excerpt</a>〉。</li>
+<li><a id="ref-6"></a>[6] Gartner，〈<a href="https://emt.gartnerweb.com/ngw/globalassets/en/information-technology/documents/benchmarks/gartner-it-score-for-infrastructure-and-operations-sample-excerpt.pdf">IT Score for Infrastructure &#x26; Operations sample excerpt</a>〉。</li>
+<li><a id="ref-7"></a>[7] Gartner，〈<a href="https://emt.gartnerweb.com/ngw/globalassets/en/information-technology/documents/benchmarks/gartner-it-score-for-enterprise-architecture-and-technology-innovation-sample-excerpt-2025.pdf">IT Score for Enterprise Architecture and Technology Innovation sample excerpt</a>〉。</li>
+</ul>
+<!-- markdownlint-enable MD013 MD033 --></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/current-state-it-score/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">現況分析：用 Gartner IT Score 找出該先補的能力缺口</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.Dn7QBulC.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

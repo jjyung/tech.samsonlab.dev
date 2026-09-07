@@ -104,9 +104,9 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### 企業架構實務（二）：如何用 Gartner IT Score 與 Priority Index 找出能力缺口？
+### 現況分析：用 Gartner IT Score 找出該先補的能力缺口
 
-**Description:** 本文說明 Gartner IT Score 如何用重要性、成熟度與 Priority Index 排出改善優先順序，並整理評估範圍、參與方式、證據留存、結果解讀與分數限制。重點不是追逐最低分，而是找出對策略重要、成熟度卻還跟不上的活動，再決定下一步蒐證。
+**Description:** 本文說明 Gartner IT Score 如何用成熟度標記、重要性與 Activity Priority Index 排出改善優先順序，並整理評估範圍、參與方式、證據留存、結果解讀與分數限制。重點不是追逐最低分，而是找出對策略重要、成熟度卻還跟不上的活動，再決定下一步蒐證。
 
 **URL:** https://tech.samsonlab.dev/blog/current-state-it-score/
 
@@ -141,6 +141,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 **Description:** Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。
 
 **URL:** https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing/
+
+---
+
+### 案例演練：用七個 IT Score 維度看見好味餐飲的能力差距
+
+**Description:** 以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。
+
+**URL:** https://tech.samsonlab.dev/blog/it-score-restaurant-case-study/
 
 ---
 
@@ -254,4 +262,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-03T03:36:38.503Z
+Last updated: 2026-09-07T02:07:47.274Z
