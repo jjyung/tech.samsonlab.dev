@@ -144,9 +144,9 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### 企業架構實務（三）：用七個 IT Score 維度看見好味餐飲的能力差距
+### 企業架構實務（三）：用七個 IT Score 角色看見好味餐飲的能力差距
 
-**Description:** 以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個維度，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。
+**Description:** 以好味餐飲的尖峰事故、展店計畫與 OneFood 現況，示範如何參考 Gartner IT Score 七個角色，從情境證據對照重要性、成熟度與 Activity Priority Index，找出跨職能能力差距，並說明案例分數的用途與限制。
 
 **URL:** https://tech.samsonlab.dev/blog/it-score-restaurant-case-study/
 
@@ -262,4 +262,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-07T02:33:47.334Z
+Last updated: 2026-09-07T03:16:34.408Z
