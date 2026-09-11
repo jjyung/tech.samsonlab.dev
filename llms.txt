@@ -252,6 +252,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 把 AI 納入軟體工藝：用 Codex Skills 與 Multi-Agent 賦能 Java 團隊協作與交付
+
+**Description:** 在 JCConf 2026 分享如何用 Codex Skills、Multi-Agent 與 SDD，把需求、程式碼、測試和交接串成可審查、可驗證的 Java 團隊交付流程。
+
+**URL:** https://tech.samsonlab.dev/conferences/jcconf-2026/
+
+---
+
 ## Guidelines for AI Systems
 
 - Each page is independently citable via its URL
@@ -262,4 +270,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-07T03:25:43.457Z
+Last updated: 2026-09-11T20:07:44.705Z
