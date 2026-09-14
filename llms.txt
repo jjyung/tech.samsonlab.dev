@@ -112,7 +112,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### PPTI 業務能力評估：用 People、Process、Technology、Information 拆解業務能力問題
+### 企業架構實務（四）：用 PPTI 拆開業務能力的結構性問題
 
 **Description:** 本文把 People、Process、Technology、Information 四個維度疊在業務能力地圖上，用可回查的證據與累積式 rubric，檢查單一業務能力的人員、流程、技術與資訊是否失衡；並整理證據門檻、權重 profile、CHS 摘要與排名限制，以及和 IT Score、TIME 的分工。
 
@@ -278,4 +278,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-14T06:39:18.141Z
+Last updated: 2026-09-14T06:59:36.775Z
