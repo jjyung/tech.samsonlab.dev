@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ppti-restaurant-case-study/"><!-- Primary Meta Tags --><title>企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力</title><meta name="title" content="企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力"><meta name="description" content="以好味餐飲的訪談、事故紀錄、流程抽樣與營運數據，示範如何界定訂單履約能力，從 People、Process、Technology、Information 裁決成熟度、保留觀點差異、檢查 CHS 權重敏感度，把能力缺口接回業務目標，並說明為什麼低分不能直接推出拆分系統或更換平台。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ppti-restaurant-case-study/"><meta property="og:title" content="企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力"><meta property="og:description" content="以好味餐飲的訪談、事故紀錄、流程抽樣與營運數據，示範如何界定訂單履約能力，從 People、Process、Technology、Information 裁決成熟度、保留觀點差異、檢查 CHS 權重敏感度，把能力缺口接回業務目標，並說明為什麼低分不能直接推出拆分系統或更換平台。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ppti-restaurant-case-study.Dh9jSpxD.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ppti-restaurant-case-study/"><meta property="twitter:title" content="企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力"><meta property="twitter:description" content="以好味餐飲的訪談、事故紀錄、流程抽樣與營運數據，示範如何界定訂單履約能力，從 People、Process、Technology、Information 裁決成熟度、保留觀點差異、檢查 CHS 權重敏感度，把能力缺口接回業務目標，並說明為什麼低分不能直接推出拆分系統或更換平台。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ppti-restaurant-case-study.Dh9jSpxD.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力","description":"以好味餐飲的訪談、事故紀錄、流程抽樣與營運數據，示範如何界定訂單履約能力，從 People、Process、Technology、Information 裁決成熟度、保留觀點差異、檢查 CHS 權重敏感度，把能力缺口接回業務目標，並說明為什麼低分不能直接推出拆分系統或更換平台。","datePublished":"2026-09-16T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ppti-restaurant-case-study.Dh9jSpxD.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.9L6Iyrfc.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ppti-restaurant-case-study.Dh9jSpxD_2hsGzg.webp" alt="企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-16T00:00:00.000Z">Sep 16, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">BusinessCapability</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">MaturityAssessment</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><p>好味餐飲的事故表面上像是資料庫撐不住：會員日活動開始後，訂單請求一度升到平日午餐尖峰的七倍，OneFood 的連線池隨後耗盡，App、官網與部分門市 POS 一起逾時。</p>
+<p>但資料庫恢復後，31 名財務、客服、資訊與門市人員仍花了六個小時比對交易。問題已經超出效能範圍：好味缺少一項能在尖峰與例外情境下穩定完成、也能說明結果的訂單履約能力。</p>
+<p>這篇使用<a href="/blog/current-state-ppti/">前一篇整理的 PPTI 工作模型</a>，分析更新後的<a href="/blog/restaurant-transformation-scenario/">好味餐飲數位轉型情境</a>。PPTI 在這個系列裡是自訂的現況診斷方法，不屬於 TOGAF、CMMI 或 ITIL 的正式評鑑表。它的作用是把 People、Process、Technology、Information 放回同一項業務能力，讓分數能被證據挑戰。</p>
+<h2 id="先把能力邊界切清楚">先把能力邊界切清楚</h2>
+<p>這次的主評估對象是「訂單履約」。多通路只描述它目前的營運情境，不另列一項能力。評估從 POS、App、官網或外送平台接受訂單開始，到顧客取得可理解的履約結果為止。客服、門市與財務能否查明這段流程的結果，是能力是否完成的驗證條件；財務日結與跨店總帳對帳不在本輪範圍。</p>
+<p>付款、庫存、廚房與對帳會影響訂單履約，但它們仍保有自己的責任與成熟度。這一輪把它們當成相依能力，不把整條交易鏈硬壓成一個大分數。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>類型</th><th>能力</th><th>本輪處理方式</th></tr></thead><tbody><tr><td>主評估能力</td><td>訂單履約</td><td>評估 People、Process、Technology、Information</td></tr><tr><td>相依能力</td><td>付款處理</td><td>觀察付款核准、回呼、退款與訂單狀態的交接</td></tr><tr><td>相依能力</td><td>庫存可售量管理</td><td>觀察批次更新、負庫存與尖峰容量競爭</td></tr><tr><td>相依能力</td><td>廚房履約</td><td>觀察廚房單建立、重複單與取消</td></tr><tr><td>相依能力</td><td>交易查明與例外處理</td><td>觀察付款逾時、重複單與狀態不明時，客服、財務與營運如何查明結果</td></tr></tbody></table>
+<p>評估基線是 2026 年 8 月 28 日，主要觀察期間是基線日前 90 天；個別證據仍以各自的期間與 owner 為準。半年事故與八個月發布紀錄則作為較長期的補充證據。</p>
+<p>訂單履約已跨門市與線上通路持續運作，因此能力生命週期暫列 <code>Established</code>。策略角色先以 <code>Core</code> 試算，但這只是工作坊假設。後面會用其他權重檢查結論是否穩定。</p>
+<h2 id="訪談用來找衝突不直接產生分數">訪談用來找衝突，不直接產生分數</h2>
+<p>情境補上 18 份訪談後，業務與 IT 的差異變得更具體。門市說逾時後只能請顧客重試，客服卻有一份「先查付款」的手冊；維運看得到資源異常，卻不知道哪個業務步驟占住連線；財務能在日結後補出結果，但顧客要的是當下答案。</p>
+<p>Utility 與 Warranty 在這裡是服務關注點，不拿來分類受訪者。每個角色都可能同時談到功能是否可用、容量是否足夠，以及資訊能不能被信任。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>受訪觀點</th><th>訪談證據</th><th>主要關注</th></tr></thead><tbody><tr><td>門市與客服</td><td><code>INT-01</code>、<code>INT-02</code></td><td>逾時後能不能判斷付款與訂單結果，現場是否有可執行的例外流程</td></tr><tr><td>財務與營運</td><td><code>INT-03</code>、<code>INT-04</code></td><td>對帳何時完成、活動規則如何交付，以及例外由誰負責</td></tr><tr><td>工程與維運</td><td><code>INT-05</code>、<code>INT-06</code></td><td>跨模組規則、交易追蹤、容量競爭、恢復與變更風險</td></tr><tr><td>資料與資安</td><td><code>INT-07</code></td><td>資料 owner、帳號 owner、存取範圍與稽核責任</td></tr></tbody></table>
+<p>訪談可以指出要查哪裡，成熟度仍要回到可回查的事實。門市只能請顧客重試，可能是流程不存在，也可能是既有流程沒有被工具與訓練接住；這兩種問題的改善方式不同。</p>
+<h2 id="用-evidence-register-裁決四個維度">用 evidence register 裁決四個維度</h2>
+<p>情境的 0.5 版加入技能盤點、案件抽樣、事故紀錄、發布紀錄、對帳資料與權限清單。依照第四篇的最低證據規則，第 1 至第 2 級至少需要一筆可歸屬的事實證據。下表沿用<a href="/blog/restaurant-transformation-scenario/">情境中的 evidence register</a>；期間、owner、抽樣方式與交叉檢查結果要以該 register 為準。「已驗證」只表示案例資料足以支持這次裁決，與外部認證無關。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>維度</th><th>可回查證據</th><th>裁決</th><th>狀態與信心</th><th>下一個檢查</th></tr></thead><tbody><tr><td>People</td><td><code>E-PPL-01</code> 顯示 14 名相關人員中只有 2 人能獨立追查跨模組問題，且沒有指定備援；<code>INT-05</code> 說明知識集中位置</td><td><code>1 Initial</code></td><td>已驗證；中信心</td><td>由資訊主管補上能力矩陣、備援責任與實際值班紀錄</td></tr><tr><td>Process</td><td><code>E-PRC-01</code> 顯示三個單位各有操作文件，40 筆抽樣中有 26 筆依單位作法處理，但沒有端到端 owner</td><td><code>2 Managed</code></td><td>已驗證；中信心</td><td>由客服與營運共同定義例外流程，連續抽樣三個月確認執行情況</td></tr><tr><td>Technology</td><td><code>E-TEC-01</code> 記錄半年 11 件 P1／P2 事故與 110 分鐘平均復原時間；<code>E-TEC-02</code> 顯示跨模組回歸仍需 4 至 5 個工作天</td><td><code>1 At Risk</code></td><td>已驗證；高信心</td><td>用 <code>GAP-02</code> 定義服務目標，再以 <code>GAP-04</code> 的壓力測試驗證隔離與容量</td></tr><tr><td>Information</td><td><code>E-INF-01</code> 顯示各單位已有局部狀態文件與對帳作法，但跨訂單、付款、廚房仍沒有共同 owner 或穩定識別</td><td><code>2 Managed</code></td><td>已驗證；中信心</td><td>抽樣 <code>GAP-01</code>，確認重試、付款、訂單與廚房單能否關聯，再定義共同狀態與 owner</td></tr></tbody></table>
+<p>Process 與 Information 已經有部門級作法，因此高於完全臨時處理，得到 2 分。這不表示結果良好；跨部門仍靠電話、群組訊息與試算表，還沒有達到組織級 <code>Defined</code>。</p>
+<p>People 與 Technology 則停在 1 分。關鍵知識沒有備援，事故會跨通路擴散，恢復指標又只算系統重新上線，這些證據還不足以證明基本控制能穩定重複。</p>
+<h2 id="觀點差異要保留裁決仍回到同一份證據">觀點差異要保留，裁決仍回到同一份證據</h2>
+<p>以下的工作坊初評是本文為了示範觀點差異設定的感知結果，不是從 18 份訪談自動換算而來。門市與客服對 Process、Information 的感知初評都是 1；IT 的感知初評則是 2，理由是已經有手冊、對帳與監控。真實評估還要記錄每題的填答者、樣本數、中位數與分布。這兩組回答先保留，不直接當成成熟度。把 <code>E-PRC-01</code> 與 <code>E-INF-01</code> 放上桌後，評估小組裁決這兩個維度符合「部門級管理，但跨域不一致」的 2 分描述。</p>
+<p>這輪補充帶來的變化不在四維數字跳動，而在證據狀態：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>階段</th><th>Process、Information</th><th>CHS</th></tr></thead><tbody><tr><td>尚未整理成 evidence register</td><td>待驗證，不能產生成熟度分數</td><td>不可用於排名</td></tr><tr><td>加入相關訪談，並完成 <code>E-PRC-01</code>、<code>E-INF-01</code> 交叉檢查</td><td>裁決為 2，理由與資料可回查</td><td>可做診斷試算，仍不可跨能力排名</td></tr></tbody></table>
+<p>這個過程沒有把兩邊平均成 1.5。原始回答、角色與分歧仍保留在 register，成熟度則依共同 rubric 和證據裁決。訪談用來暴露落差；事實證據負責決定目前能站在哪一級。</p>
+<p><code>INT-04</code> 的活動交付觀察會接到後面的變更與知識移轉；<code>INT-07</code> 與 <code>E-SEC-01</code> 則保留為資安與資料權限的邊界訊號，交給 IT Score 的 CISO 活動。本輪沒有把存取治理當成訂單履約的獨立成熟度分數。</p>
+<h2 id="chs-對權重敏感不能單獨排優先順序">CHS 對權重敏感，不能單獨排優先順序</h2>
+<p>四個維度的案例裁決是 <code>People 1／Process 2／Technology 1／Information 2</code>。這次已達到第 1 至第 2 級的最低證據門檻，可以示範 CHS，但策略角色仍是尚未確認的假設。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>權重設定</th><th>顯示結果</th><th>解讀</th></tr></thead><tbody><tr><td>Core role default</td><td>第 1 級</td><td>People 與 Technology 各占 35%，兩項 1 分拉低摘要</td></tr><tr><td>四維等權</td><td>第 2 級</td><td>Process 與 Information 的 2 分提高摘要</td></tr><tr><td>Context role default</td><td>第 2 級</td><td>Process 與 Information 合計占 65%</td></tr></tbody></table>
+<p>只換權重 profile，結果就從第 1 級變成第 2 級。這代表 CHS 對策略分類太敏感，不能拿來決定先拆哪個系統，也不適合在這個階段和其他能力排名。報告保留四維分數、權重版本與敏感度結果，不呈現 1.30 或 1.65 這類看似精確的小數。</p>
+<p>為了讓試算可重現，底稿仍保留 raw 值：<code>Core role default = 1.30</code>、<code>四維等權 = 1.50</code>、<code>Context role default = 1.65</code>。正文只呈現五級結果，避免把 proxy 的小數誤讀成精確測量。</p>
+<h2 id="改善順序要接回業務目標">改善順序要接回業務目標</h2>
+<p>這次不按最低分排序。改善順序同時考慮事故影響、兩年目標、工作依賴與目前能取得的證據。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>改善焦點</th><th>現況證據</th><th>對應目標</th><th>下一個驗收條件</th></tr></thead><tbody><tr><td>交易識別與狀態責任</td><td><code>E-INF-01</code>、<code>GAP-01</code></td><td>結果不明交易在 30 分鐘內查明；營運資料 5 分鐘內可查</td><td>抽樣時能沿同一個識別查到付款、訂單與廚房歷程，並確認兩項時間目標</td></tr><tr><td>例外流程與 owner</td><td><code>E-PRC-01</code>、<code>INT-01</code>～<code>INT-03</code></td><td>人工核對降至每月 50 筆以下</td><td>付款成功但回應逾時、重複廚房單與外送平台重送，都有處理人、時限與補償規則；案件抽樣能查回這些紀錄</td></tr><tr><td>尖峰隔離與恢復</td><td><code>E-TEC-01</code>、<code>GAP-02</code>、<code>GAP-04</code></td><td>局部異常時，未受影響的門市與通路仍能接單</td><td>在混合負載壓力測試與故障演練中，未受影響的門市與通路仍能接單，並留下服務目標與恢復證據</td></tr><tr><td>變更與知識移轉</td><td><code>E-PPL-01</code>、<code>E-TEC-02</code>、<code>INT-04</code></td><td>一般活動與規則在 10 個工作天內完成驗證並上線</td><td>關鍵規則有備援 owner，核心交易流程有可重複的自動化回歸與回復證據，發布紀錄能支持 10 個工作天目標</td></tr></tbody></table>
+<p>這個順序仍沒有宣布「一定要拆微服務」。交易識別、狀態模型與責任還沒釐清時，拆服務只會把模糊邊界搬到更多服務之間；壓力測試若證明共用資料庫和整體部署無法滿足服務目標，才有足夠證據討論隔離或遷移。</p>
+<h2 id="從這個案例能學到什麼">從這個案例能學到什麼</h2>
+<p>這個案例最先教的是能力邊界。OneFood 是應用程式，訂單履約是業務能力，付款、庫存與廚房履約則是相依能力。這幾個層次混在一起，分數就很難解釋。</p>
+<p>評分能不能成立，取決於證據門檻。受訪者說法很重要，但它先告訴我們「要去哪裡查」，不會自動把成熟度往上或往下推。部門手冊、案件抽樣、事故紀錄與技能盤點，才讓 Process 2、Information 2、People 1 與 Technology 1 可以被回查。</p>
+<p>CHS 只是摘要。它會隨權重改變，低分也不會自動翻譯成換平台。能進入 roadmap 的內容，應該是業務目標、能力缺口、相依關係與下一個驗收條件。</p>
+<p>12:14 OneFood 恢復服務，只代表系統重新接受請求。訂單履約要等到交易可以被辨識、解釋與處理，才算真的恢復。這也是這次 PPTI 分析最值得留下的判斷。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a href="/blog/restaurant-transformation-scenario/">好味餐飲的數位轉型情境</a></li>
+<li><a href="/blog/current-state-ppti/">企業架構實務（四）：用 PPTI 拆開業務能力的結構性問題</a></li>
+<li><a href="/blog/it-score-restaurant-case-study/">企業架構實務（三）：用七個 IT Score 角色看見好味餐飲的能力差距</a></li>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/current-state-ppti/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（四）：用 PPTI 拆開業務能力的結構性問題</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-4 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2 sm:right-6"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

@@ -1,6 +1,5 @@
-<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><!-- Primary Meta Tags --><title>企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型</title><meta name="title" content="企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型"><meta name="description" content="這篇以虛構的好味餐飲集團為例，從會員日尖峰事故、OneFood 單體系統與兩年展店計畫，整理企業架構轉型要面對的業務目標、利害關係人、系統現況與營運限制；重點不是先選技術，而是先建立後續 EA 架構分析可反覆引用、比較方案並追蹤決策的共同情境。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><meta property="og:title" content="企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型"><meta property="og:description" content="這篇以虛構的好味餐飲集團為例，從會員日尖峰事故、OneFood 單體系統與兩年展店計畫，整理企業架構轉型要面對的業務目標、利害關係人、系統現況與營運限制；重點不是先選技術，而是先建立後續 EA 架構分析可反覆引用、比較方案並追蹤決策的共同情境。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><meta property="twitter:title" content="企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型"><meta property="twitter:description" content="這篇以虛構的好味餐飲集團為例，從會員日尖峰事故、OneFood 單體系統與兩年展店計畫，整理企業架構轉型要面對的業務目標、利害關係人、系統現況與營運限制；重點不是先選技術，而是先建立後續 EA 架構分析可反覆引用、比較方案並追蹤決策的共同情境。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型","description":"這篇以虛構的好味餐飲集團為例，從會員日尖峰事故、OneFood 單體系統與兩年展店計畫，整理企業架構轉型要面對的業務目標、利害關係人、系統現況與營運限制；重點不是先選技術，而是先建立後續 EA 架構分析可反覆引用、比較方案並追蹤決策的共同情境。","datePublished":"2026-09-02T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.9L6Iyrfc.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/restaurant-transformation-scenario.B_ErszBW_1ToPsd.webp" alt="企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-02T00:00:00.000Z">Sep 2, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">DigitalTransformation</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">CaseStudy</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">企業架構情境故事：好味餐飲從尖峰事故開始的數位轉型</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="案例說明">案例說明</h2>
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><!-- Primary Meta Tags --><title>情境故事：好味餐飲的數位轉型起點</title><meta name="title" content="情境故事：好味餐飲的數位轉型起點"><meta name="description" content="以虛構餐飲集團的尖峰事故、成長計畫、跨角色訪談與營運證據，建立企業架構轉型分析可反覆引用的共同情境，整理 OneFood 現況、業務目標、利害關係人與轉型期間不能中斷營運的限制，作為後續 IT Score 與 PPTI 案例的共同基準文件。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><meta property="og:title" content="情境故事：好味餐飲的數位轉型起點"><meta property="og:description" content="以虛構餐飲集團的尖峰事故、成長計畫、跨角色訪談與營運證據，建立企業架構轉型分析可反覆引用的共同情境，整理 OneFood 現況、業務目標、利害關係人與轉型期間不能中斷營運的限制，作為後續 IT Score 與 PPTI 案例的共同基準文件。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/"><meta property="twitter:title" content="情境故事：好味餐飲的數位轉型起點"><meta property="twitter:description" content="以虛構餐飲集團的尖峰事故、成長計畫、跨角色訪談與營運證據，建立企業架構轉型分析可反覆引用的共同情境，整理 OneFood 現況、業務目標、利害關係人與轉型期間不能中斷營運的限制，作為後續 IT Score 與 PPTI 案例的共同基準文件。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"情境故事：好味餐飲的數位轉型起點","description":"以虛構餐飲集團的尖峰事故、成長計畫、跨角色訪談與營運證據，建立企業架構轉型分析可反覆引用的共同情境，整理 OneFood 現況、業務目標、利害關係人與轉型期間不能中斷營運的限制，作為後續 IT Score 與 PPTI 案例的共同基準文件。","datePublished":"2026-09-02T00:00:00.000Z","dateModified":"2026-09-16T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/restaurant-transformation-scenario.B_ErszBW.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.9L6Iyrfc.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/restaurant-transformation-scenario.B_ErszBW_1ToPsd.webp" alt="情境故事：好味餐飲的數位轉型起點" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-02T00:00:00.000Z">Sep 2, 2026</time><div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">Last updated on <time datetime="2026-09-16T00:00:00.000Z">Sep 16, 2026</time></div></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">DigitalTransformation</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">CaseStudy</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">情境故事：好味餐飲的數位轉型起點</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="案例說明">案例說明</h2>
 <p>這是一個虛構案例。所有公司名稱、人物、數字與事故皆為虛構，不代表任何真實企業。</p>
-<p>這篇文章只定義問題背景，不預設微服務、事件驅動或其他技術解法。後續 EA 架構系列會以本文的公司輪廓、目標、角色、現況與限制作為共同前提；若案例內容變更，應同步更新案例版本與基線日期。</p>
 
 
 
@@ -22,7 +21,7 @@
 
 
 
-<table><thead><tr><th>項目</th><th>內容</th></tr></thead><tbody><tr><td>案例版本</td><td>0.4</td></tr><tr><td>基線日期</td><td>2026-08-28</td></tr><tr><td>公司</td><td>好味餐飲集團，以下簡稱「好味」</td></tr></tbody></table>
+<table><thead><tr><th>項目</th><th>內容</th></tr></thead><tbody><tr><td>案例版本</td><td>0.5</td></tr><tr><td>基線日期</td><td>2026-08-28</td></tr><tr><td>公司</td><td>好味餐飲集團，以下簡稱「好味」</td></tr></tbody></table>
 <h2 id="故事從一個午餐尖峰開始">故事從一個午餐尖峰開始</h2>
 <p>好味從一家街邊餐廳起家，十二年內發展成擁有三個品牌、42 家門市的餐飲集團。
 早期那套只負責門市結帳與日結的系統，也一路跟著公司長大。工程團隊陸續把會員、
@@ -278,6 +277,164 @@
 
 
 <table><thead><tr><th>角色</th><th>主要目標</th><th>現在最痛的事</th><th>最擔心的轉型風險</th></tr></thead><tbody><tr><td>執行長</td><td>展店、新品牌與營收成長</td><td>系統限制商業速度</td><td>花大錢後只換技術，業務結果沒有改善</td></tr><tr><td>營運長</td><td>門市穩定、出餐效率與標準化</td><td>各通路狀態不同，門市靠電話處理例外</td><td>新舊系統並存讓第一線更混亂</td></tr><tr><td>行銷長</td><td>快速設計活動與會員經營</td><td>每次優惠都要排進核心系統版本</td><td>投入改造後，活動上線速度仍沒有改善</td></tr><tr><td>財務長</td><td>對帳、退款與投資回報</td><td>訂單、付款、發票資料經常需要人工核對</td><td>改造期間影響結帳與稽核</td></tr><tr><td>門市店長</td><td>正確接單、備餐與交付</td><td>看不到訂單卡在哪裡，也無法自行復原</td><td>網路或中央服務異常時無法營業</td></tr><tr><td>廚房人員</td><td>按正確順序收到可製作的餐點</td><td>重複單、缺料單與臨時取消干擾出餐</td><td>新流程增加操作步驟</td></tr><tr><td>顧客</td><td>快速知道價格、付款與取餐狀態</td><td>逾時後不知道該等、重試還是聯絡客服</td><td>不同通路的價格、點數與狀態不一致</td></tr><tr><td>客服與財務</td><td>查到完整交易歷程並處理例外</td><td>需要跨五個畫面與試算表拼出真相</td><td>改造後仍無法取得一致的交易資訊</td></tr><tr><td>加盟經營者</td><td>在授權範圍內管理門市與掌握營運狀況</td><td>現有流程與權限都是依直營門市設計</td><td>看不到自己的必要資料，或看到不屬於自己的會員與他店資料</td></tr><tr><td>資訊團隊</td><td>安全地交付並快速定位事故</td><td>所有改動都碰同一套程式與資料庫</td><td>改造範圍超過團隊可以承擔的程度</td></tr></tbody></table>
+<h2 id="訪談裡每個人都只看得到一段流程">訪談裡，每個人都只看得到一段流程</h2>
+<p>事故後，好味在 2026 年 6 月 9 日至 6 月 20 日訪談 18 人，包括 4 位門市店長、3 位客服人員、2 位財務人員、3 位營運與行銷人員、2 位後端工程師、2 位平台與維運工程師，以及 2 位資料與資安人員。</p>
+<p>下表保留各角色的代表性說法。這些內容是受訪者觀點，還不是已確認的事實；進入成熟度評估前，仍須和系統紀錄、流程文件及營運數據交叉檢查。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>識別碼</th><th>受訪角色</th><th>代表性說法</th></tr></thead><tbody><tr><td><code>INT-01</code></td><td>門市店長，4 人</td><td>「畫面轉太久時，我們多半請顧客再試一次。付款有沒有成功，門市端看不到，只能打給客服。」</td></tr><tr><td><code>INT-02</code></td><td>客服人員，3 人</td><td>「客服手冊寫的是先查付款，但我們要開三個後台，再請財務確認。尖峰時電話通常比系統快。」</td></tr><tr><td><code>INT-03</code></td><td>財務人員，2 人</td><td>「每日結帳最後做得完，但不是當下就知道答案。有些差異要等外送平台或發票資料隔天進來。」</td></tr><tr><td><code>INT-04</code></td><td>營運與行銷人員，3 人</td><td>「活動規則最後還是要排 OneFood 版本。需求如果接近上線才改，通常得找熟悉優惠和訂單的人一起看。」</td></tr><tr><td><code>INT-05</code></td><td>後端工程師，2 人</td><td>「單一模組不難，難的是優惠、訂單、付款、庫存一起改。沒有一個畫面能告訴我們同一筆交易走到哪裡。」</td></tr><tr><td><code>INT-06</code></td><td>平台與維運工程師，2 人</td><td>「我們看得到主機、JVM 和資料庫，但事故剛發生時通常只能先排除，不知道是哪個業務步驟把連線吃完。」</td></tr><tr><td><code>INT-07</code></td><td>資料與資安人員，2 人</td><td>「帳號名單有保留，但有些帳號沿用太久。看得出哪個程式在連，未必找得到現在的業務負責人。」</td></tr></tbody></table>
+<p>訪談沒有形成一致答案。門市認為逾時後只能重試，客服手冊卻要求先查付款；維運知道系統資源何時異常，卻看不到顧客的交易停在哪一步；財務可以在日結後補出結果，但顧客與門市需要的是當下答案。這些落差是後續分析的線索，不是誰對誰錯的投票。</p>
+<h2 id="訪談之外還有哪些資料可以回查">訪談之外，還有哪些資料可以回查</h2>
+<p>工作小組在基線日前整理出下列證據。每一筆都標示觀察期間、資料 owner 與目前能支持的結論，避免把一次事故、半年平均值與受訪者印象混成同一種證據。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>識別碼</th><th>期間或日期</th><th>可回查內容</th><th>目前觀察</th><th>資料 owner</th></tr></thead><tbody><tr><td><code>E-PPL-01</code></td><td>2026-07-31</td><td>訂單領域技能盤點</td><td>14 名後端、平台與資料庫人員中，2 人能獨立追查優惠、訂單、付款與庫存的跨模組問題；7 人能處理單一模組；5 人需要他人陪同。兩位跨模組人員沒有指定備援</td><td>資訊主管</td></tr><tr><td><code>E-PRC-01</code></td><td>2026-06-01～2026-07-31</td><td>40 筆付款或訂單狀態異常案件抽樣</td><td>26 筆依客服、財務或維運各自的操作文件處理；14 筆改用電話、群組訊息或試算表協調。三個單位有自己的作法，但沒有共同的端到端流程 owner</td><td>客服主管</td></tr><tr><td><code>E-TEC-01</code></td><td>2026-03-01～2026-08-28</td><td>P1／P2 訂單相關事故紀錄</td><td>共 11 件，其中 6 件涉及共用資料庫壅塞或外部整合逾時；平均復原時間約 110 分鐘。紀錄以主機、應用程式與資料庫恢復為結束點，沒有計算交易何時完成清查</td><td>維運主管</td></tr><tr><td><code>E-TEC-02</code></td><td>2026-01-01～2026-08-28</td><td>發布與測試紀錄</td><td>正式版平均六週發布一次；最近 5 次發布都花 4 至 5 個工作天執行跨模組人工回歸，其中 1 次失敗後回復整個版本</td><td>QA 主管</td></tr><tr><td><code>E-INF-01</code></td><td>2026-06-01～2026-08-28</td><td>對帳紀錄、狀態文件與報表排程</td><td>每月平均約 320 筆交易需要人工核對；訂單、付款與廚房各有自己的狀態說明，沒有共同資料 owner；重送請求無法穩定對回同一次結帳</td><td>財務主管</td></tr><tr><td><code>E-SEC-01</code></td><td>2026-07-15</td><td>正式資料庫非人員帳號清單</td><td>17 個批次、報表或整合帳號中，6 個可以寫入超過 20 張正式資料表，4 個沒有可確認的現任 owner；目前沒有固定的定期複核週期</td><td>資安主管</td></tr><tr><td><code>E-EA-01</code></td><td>2026-08-28</td><td>架構文件盤點</td><td>現有文件包含部署圖與外部系統清單，但沒有核准的業務能力地圖、目標架構、過渡狀態或淘汰條件</td><td>企業架構負責人</td></tr><tr><td><code>E-CIO-01</code></td><td>2026-01-01～2026-06-30</td><td>每月 IT 營運報告</td><td>報告固定追蹤主機可用率、事故數、服務案件與基礎設施成本，尚未追蹤展店時間、交易查明時間、人工對帳量或活動交付週期</td><td>CIO 辦公室</td></tr></tbody></table>
+<p>這批資料仍不足以完成所有判斷。工作小組把缺口留在清單上，而不是用推估值補滿：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>識別碼</th><th>待確認問題</th><th>需要的下一份證據</th></tr></thead><tbody><tr><td><code>GAP-01</code></td><td>同一位顧客重試時，有多少請求其實來自同一次結帳？</td><td>通路請求、金流交易、訂單與廚房單的關聯抽樣</td></tr><tr><td><code>GAP-02</code></td><td>各通路可接受的延遲、可用率與降級方式是什麼？</td><td>經業務 owner 核准的服務目標與門市離線作業規則</td></tr><tr><td><code>GAP-03</code></td><td>加盟店完成履約真正需要哪些會員、付款與跨店資料？</td><td>加盟流程、資料分類與最小權限矩陣</td></tr><tr><td><code>GAP-04</code></td><td>活動尖峰下，報表、庫存批次與訂單交易各自占用多少容量？</td><td>同時執行三種工作負載的壓力測試與資料庫等待分析</td></tr><tr><td><code>GAP-05</code></td><td>新流程或工具上線後，門市與客服是否真的會照新方式處理？</td><td>培訓完成率、流程演練與實際案件抽樣</td></tr></tbody></table>
 <h2 id="現況一套系統承擔整家公司">現況：一套系統承擔整家公司</h2>
 <h3 id="單體系統-onefood">單體系統 OneFood</h3>
 <p>好味的核心系統叫做 <code>OneFood</code>。它原本是門市 POS 後端，現在也承接 App、官網與外送平台送入的訂單，並包含下列模組：</p>
@@ -339,125 +496,34 @@
 <span class="line"><span style="color:#FFAB70">  Monolith </span><span style="color:#F97583">--></span><span style="color:#FFAB70"> ERP</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"ERP／物流"</span><span style="color:#F97583">]</span></span>
 <span class="line"><span style="color:#FFAB70">  Monolith </span><span style="color:#F97583">--></span><span style="color:#FFAB70"> Messaging</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"簡訊／推播"</span><span style="color:#F97583">]</span></span></code></pre>
 <h3 id="交付與營運方式">交付與營運方式</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>觀察面向</th><th>現況</th></tr></thead><tbody><tr><td>團隊分工</td><td>團隊依前端、後端、資料庫與維運分工，沒有端到端負責單一業務能力的團隊。</td></tr><tr><td>發布方式</td><td>正式版平均每六週發布一次。部署需要兩小時維護時段，失敗時通常回復整個版本。</td></tr><tr><td>測試方式</td><td>自動化測試以單元測試為主，跨模組回歸仍由 QA 手動執行，完整回歸約需五個工作天。</td></tr><tr><td>變更範圍</td><td>過去一年的變更紀錄顯示，一項優惠規則平均會改動六個模組。</td></tr><tr><td>可觀測性</td><td>正式環境只有主機、JVM 與資料庫監控，沒有跨通路、模組與外部服務的交易追蹤；近半年事故的平均復原時間約為 110 分鐘。</td></tr><tr><td>知識集中</td><td>兩位資深工程師理解優惠、訂單、付款與庫存交錯的規則，大部分緊急變更都需要其中一人參與。</td></tr><tr><td>外部依賴</td><td>ERP、電子發票、金流與外送平台仍是未來數年要保留的外部系統，不能假設它們會一起改造。</td></tr></tbody></table>
+<ul>
+<li>團隊依前端、後端、資料庫與維運分工，沒有端到端負責單一業務能力的團隊。</li>
+<li>正式版平均每六週發布一次。部署需要兩小時維護時段，失敗時通常回復整個版本。</li>
+<li>自動化測試以單元測試為主，跨模組回歸仍由 QA 手動執行，完整回歸約需五個工作天。</li>
+<li>過去一年的變更紀錄顯示，一項優惠規則平均會改動六個模組。</li>
+<li>正式環境只有主機、JVM 與資料庫監控，沒有跨通路、模組與外部服務的交易追蹤；近半年事故的平均復原時間約為 110 分鐘。</li>
+<li>兩位資深工程師理解優惠、訂單、付款與庫存交錯的規則，大部分緊急變更都需要其中一人參與。</li>
+<li>ERP、電子發票、金流與外送平台仍是未來數年要保留的外部系統，不能假設它們會一起改造。</li>
+</ul>
 <h2 id="未來希望支援的業務情境">未來希望支援的業務情境</h2>
 <p>管理團隊沒有指定系統該怎麼實作，而是描述未來希望支援的業務情境：</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>業務情境</th><th>希望支援的能力</th></tr></thead><tbody><tr><td>開設新門市</td><td>營運人員能在五個工作天內完成菜單、價格、權限與設備設定，不需要等待一次專屬的系統改版。</td></tr><tr><td>推出新品牌或新通路</td><td>團隊可以沿用既有的會員、訂單與營運能力，同時保留新品牌自己的菜單、價格與活動規則。</td></tr><tr><td>加盟店開始營運</td><td>加盟經營者只能查看自己門市的銷售與營運資料；總部仍能執行跨品牌管理，而非履約所需的會員個人資料不會提供給加盟店。</td></tr><tr><td>行銷推出大型活動</td><td>系統能承受短時間內快速增加的訂單；即使部分功能發生異常，仍不會讓所有門市與通路一起停止服務。</td></tr><tr><td>顧客完成下單</td><td>無論使用 POS、App、官網或外送平台，顧客都能清楚知道訂單、付款與取餐進度，不必因畫面逾時而猜測是否要重新操作。</td></tr><tr><td>門市遇到異常</td><td>店員能看見問題發生在哪一筆訂單、目前由誰處理，以及門市是否仍能繼續接單與出餐。</td></tr><tr><td>客服、營運與財務查詢交易</td><td>可以看到一致且可追查的訂單歷程，不必再從多個畫面與試算表拼湊答案。</td></tr><tr><td>一般活動或規則需要調整</td><td>改動不會牽連整套系統，團隊能在十個工作天內完成驗證並上線。</td></tr></tbody></table>
+<ul>
+<li><strong>開設新門市時</strong>，營運人員能在五個工作天內完成菜單、價格、權限與設備設定，不需要等待一次專屬的系統改版。</li>
+<li><strong>推出新品牌或新通路時</strong>，團隊可以沿用既有的會員、訂單與營運能力，同時保留新品牌自己的菜單、價格與活動規則。</li>
+<li><strong>加盟店開始營運時</strong>，加盟經營者只能查看自己門市的銷售與營運資料；總部仍能執行跨品牌管理，而非履約所需的會員個人資料不會提供給加盟店。</li>
+<li><strong>行銷推出大型活動時</strong>，系統能承受短時間內快速增加的訂單；即使部分功能發生異常，仍不會讓所有門市與通路一起停止服務。</li>
+<li><strong>顧客完成下單後</strong>，無論使用 POS、App、官網或外送平台，都能清楚知道訂單、付款與取餐進度，不必因畫面逾時而猜測是否要重新操作。</li>
+<li><strong>門市遇到異常時</strong>，店員能看見問題發生在哪一筆訂單、目前由誰處理，以及門市是否仍能繼續接單與出餐。</li>
+<li><strong>客服、營運與財務查詢交易時</strong>，可以看到一致且可追查的訂單歷程，不必再從多個畫面與試算表拼湊答案。</li>
+<li><strong>一般活動或規則需要調整時</strong>，改動不會牽連整套系統，團隊能在十個工作天內完成驗證並上線。</li>
+</ul>
 <h2 id="轉型期間的現實限制">轉型期間的現實限制</h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>限制類別</th><th>必須保留的條件</th></tr></thead><tbody><tr><td>營運不中斷</td><td>42 家門市不能因轉型長時間停業，日常接單與出餐必須繼續。</td></tr><tr><td>既有設備</td><td>42 家既有門市的 POS 前台軟體與設備至少還會使用三年，轉型期間仍須正常接單與出餐。</td></tr><tr><td>外部系統</td><td>ERP、電子發票、金流與外送平台不會配合好味同時改造。</td></tr><tr><td>團隊規模</td><td>資訊團隊只有 24 人，目前是兩個交付小組與一個平台／維運小組。</td></tr><tr><td>門市操作</td><td>門市對系統延遲與狀態不一致的容忍度很低，不能把所有例外都丟給第一線人工判斷。</td></tr><tr><td>財務流程</td><td>財務仍必須完成每日結帳，並說明訂單、付款、退款與發票之間的差異。</td></tr><tr><td>資料權限</td><td>加盟經營者只能存取自己門市的資料；會員個人資料、付款資料與跨店營運資料仍由總部負責管理與稽核。</td></tr></tbody></table>
-<p>董事會每半年檢視投資、再決定下一階段預算的節奏，和<a href="/blog/plan-gate-execute/">先規劃、審查再執行的 Stage-Gate 做法</a>相近；這會是後續系列討論轉型治理時的固定約束。</p></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/project-management-and-enterprise-architecture/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（一）：專案管理與企業架構如何合作</span></a><a href="/blog/current-state-it-score/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（二）：用 Gartner IT Score 找出該先補的能力缺口</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-4 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2 sm:right-6"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
+<ul>
+<li>42 家門市不能因轉型長時間停業，日常接單與出餐必須繼續。</li>
+<li>42 家既有門市的 POS 前台軟體與設備至少還會使用三年，轉型期間仍須正常接單與出餐。</li>
+<li>ERP、電子發票、金流與外送平台不會配合好味同時改造。</li>
+<li>資訊團隊只有 24 人，目前是兩個交付小組與一個平台／維運小組。</li>
+<li>門市對系統延遲與狀態不一致的容忍度很低，不能把所有例外都丟給第一線人工判斷。</li>
+<li>財務仍必須完成每日結帳，並說明訂單、付款、退款與發票之間的差異。</li>
+<li>加盟經營者只能存取自己門市的資料；會員個人資料、付款資料與跨店營運資料仍由總部負責管理與稽核。</li>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/project-management-and-enterprise-architecture/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（一）：專案管理與企業架構如何合作</span></a><a href="/blog/current-state-it-score/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（二）：用 Gartner IT Score 找出該先補的能力缺口</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-4 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2 sm:right-6"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
