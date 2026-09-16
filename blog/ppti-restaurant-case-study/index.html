@@ -43,7 +43,7 @@
 <p>評估基線是 2026 年 8 月 28 日，主要觀察期間是基線日前 90 天；個別證據仍以各自的期間與 owner 為準。半年事故與八個月發布紀錄則作為較長期的補充證據。</p>
 <p>訂單履約已跨門市與線上通路持續運作，因此能力生命週期暫列 <code>Established</code>。策略角色先以 <code>Core</code> 試算，但這只是工作坊假設。後面會用其他權重檢查結論是否穩定。</p>
 <h2 id="訪談用來找衝突不直接產生分數">訪談用來找衝突，不直接產生分數</h2>
-<p>情境補上 18 份訪談後，業務與 IT 的差異變得更具體。門市說逾時後只能請顧客重試，客服卻有一份「先查付款」的手冊；維運看得到資源異常，卻不知道哪個業務步驟占住連線；財務能在日結後補出結果，但顧客要的是當下答案。</p>
+<p>門市說逾時後只能請顧客重試，客服卻有一份「先查付款」的手冊；維運看得到資源異常，卻不知道哪個業務步驟占住連線；財務能在日結後補出結果，但顧客要的是當下答案。</p>
 <p>Utility 與 Warranty 在這裡是服務關注點，不拿來分類受訪者。每個角色都可能同時談到功能是否可用、容量是否足夠，以及資訊能不能被信任。</p>
 
 
@@ -78,7 +78,7 @@
 <table><thead><tr><th>受訪觀點</th><th>訪談證據</th><th>主要關注</th></tr></thead><tbody><tr><td>門市與客服</td><td><code>INT-01</code>、<code>INT-02</code></td><td>逾時後能不能判斷付款與訂單結果，現場是否有可執行的例外流程</td></tr><tr><td>財務與營運</td><td><code>INT-03</code>、<code>INT-04</code></td><td>對帳何時完成、活動規則如何交付，以及例外由誰負責</td></tr><tr><td>工程與維運</td><td><code>INT-05</code>、<code>INT-06</code></td><td>跨模組規則、交易追蹤、容量競爭、恢復與變更風險</td></tr><tr><td>資料與資安</td><td><code>INT-07</code></td><td>資料 owner、帳號 owner、存取範圍與稽核責任</td></tr></tbody></table>
 <p>訪談可以指出要查哪裡，成熟度仍要回到可回查的事實。門市只能請顧客重試，可能是流程不存在，也可能是既有流程沒有被工具與訓練接住；這兩種問題的改善方式不同。</p>
 <h2 id="用-evidence-register-裁決四個維度">用 evidence register 裁決四個維度</h2>
-<p>情境的 0.5 版加入技能盤點、案件抽樣、事故紀錄、發布紀錄、對帳資料與權限清單。依照第四篇的最低證據規則，第 1 至第 2 級至少需要一筆可歸屬的事實證據。下表沿用<a href="/blog/restaurant-transformation-scenario/">情境中的 evidence register</a>；期間、owner、抽樣方式與交叉檢查結果要以該 register 為準。「已驗證」只表示案例資料足以支持這次裁決，與外部認證無關。</p>
+<p>依照第四篇的最低證據規則，第 1 至第 2 級至少需要一筆可歸屬的事實證據。下表沿用<a href="/blog/restaurant-transformation-scenario/">情境中的 evidence register</a>；期間、owner、抽樣方式與交叉檢查結果要以該 register 為準。「已驗證」只表示案例資料足以支持這次裁決，與外部認證無關。</p>
 
 
 
@@ -148,36 +148,9 @@
 <table><thead><tr><th>階段</th><th>Process、Information</th><th>CHS</th></tr></thead><tbody><tr><td>尚未整理成 evidence register</td><td>待驗證，不能產生成熟度分數</td><td>不可用於排名</td></tr><tr><td>加入相關訪談，並完成 <code>E-PRC-01</code>、<code>E-INF-01</code> 交叉檢查</td><td>裁決為 2，理由與資料可回查</td><td>可做診斷試算，仍不可跨能力排名</td></tr></tbody></table>
 <p>這個過程沒有把兩邊平均成 1.5。原始回答、角色與分歧仍保留在 register，成熟度則依共同 rubric 和證據裁決。訪談用來暴露落差；事實證據負責決定目前能站在哪一級。</p>
 <p><code>INT-04</code> 的活動交付觀察會接到後面的變更與知識移轉；<code>INT-07</code> 與 <code>E-SEC-01</code> 則保留為資安與資料權限的邊界訊號，交給 IT Score 的 CISO 活動。本輪沒有把存取治理當成訂單履約的獨立成熟度分數。</p>
-<h2 id="chs-對權重敏感不能單獨排優先順序">CHS 對權重敏感，不能單獨排優先順序</h2>
-<p>四個維度的案例裁決是 <code>People 1／Process 2／Technology 1／Information 2</code>。這次已達到第 1 至第 2 級的最低證據門檻，可以示範 CHS，但策略角色仍是尚未確認的假設。</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>權重設定</th><th>顯示結果</th><th>解讀</th></tr></thead><tbody><tr><td>Core role default</td><td>第 1 級</td><td>People 與 Technology 各占 35%，兩項 1 分拉低摘要</td></tr><tr><td>四維等權</td><td>第 2 級</td><td>Process 與 Information 的 2 分提高摘要</td></tr><tr><td>Context role default</td><td>第 2 級</td><td>Process 與 Information 合計占 65%</td></tr></tbody></table>
-<p>只換權重 profile，結果就從第 1 級變成第 2 級。這代表 CHS 對策略分類太敏感，不能拿來決定先拆哪個系統，也不適合在這個階段和其他能力排名。報告保留四維分數、權重版本與敏感度結果，不呈現 1.30 或 1.65 這類看似精確的小數。</p>
-<p>為了讓試算可重現，底稿仍保留 raw 值：<code>Core role default = 1.30</code>、<code>四維等權 = 1.50</code>、<code>Context role default = 1.65</code>。正文只呈現五級結果，避免把 proxy 的小數誤讀成精確測量。</p>
+<h2 id="chs-只是摘要權重依情境調整">CHS 只是摘要，權重依情境調整</h2>
+<p>CHS 把四個維度的成熟度彙整成一個摘要，方便快速判讀。它不是新的評估維度，也不能取代 People、Process、Technology、Information 的分數。</p>
+<p>不同企業、不同階段重視的維度可能不同，權重應依業務目標與風險設定。這個案例先用 <code>Core</code> 權重試算；如果換一組合理權重就讓 CHS 跨級變動，表示摘要對權重敏感，判讀時要回到四維分數與業務目標，不能只看 CHS 排優先順序。</p>
 <h2 id="改善順序要接回業務目標">改善順序要接回業務目標</h2>
 <p>這次不按最低分排序。改善順序同時考慮事故影響、兩年目標、工作依賴與目前能取得的證據。</p>
 
