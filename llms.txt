@@ -236,7 +236,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ### Codex Subagent Delivery Demo
 
-**Description:** 以 Java Library Console 示範 SDD、Codex Skills、Multi-Agent 與 Workflow State，從 spec-ready commit 到前後端平行開發、測試與 QA rework，提供可操作的起始狀態與完整解答對照。
+**Description:** 以 Java Library Console 示範 Codex subagent 如何透過 AGENTS.md、角色設定、可重用 Skills 與 Workflow State，依 SDD 推進需求、前後端實作、測試與 QA rework。
 
 **URL:** https://tech.samsonlab.dev/projects/codex-subagent-delivery-demo/
 
@@ -294,4 +294,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-17T09:22:46.741Z
+Last updated: 2026-09-17T09:47:09.346Z
