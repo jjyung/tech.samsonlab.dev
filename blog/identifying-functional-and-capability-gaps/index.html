@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/identifying-functional-and-capability-gaps/"><!-- Primary Meta Tags --><title>Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）</title><meta name="title" content="Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）"><meta name="description" content="Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/identifying-functional-and-capability-gaps/"><meta property="og:title" content="Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）"><meta property="og:description" content="Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/identifying-functional-and-capability-gaps.BMeZdgJa.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/identifying-functional-and-capability-gaps/"><meta property="twitter:title" content="Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）"><meta property="twitter:description" content="Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/identifying-functional-and-capability-gaps.BMeZdgJa.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）","description":"Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。","datePublished":"2026-09-18T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/identifying-functional-and-capability-gaps.BMeZdgJa.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.9L6Iyrfc.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/identifying-functional-and-capability-gaps.BMeZdgJa_Z27D0nO.webp" alt="Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-18T00:00:00.000Z">Sep 18, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">BusinessCapability</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">DigitalTransformation</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="這篇要回答的問題">這篇要回答的問題</h2>
+<p>完成現況分析與願景具象化後，下一步通常會列出一張 gap list。最直覺的寫法是：</p>
+<ul>
+<li>缺一個資料平台</li>
+<li>缺一組 API</li>
+<li>缺一個報表功能</li>
+<li>缺一套工作流工具</li>
+</ul>
+<p>但這些多半已經是解法，不一定是缺口本身。真正需要回答的是：</p>
+<blockquote>
+<p>目前的能力和目標行為之間，差距究竟在哪裡？這個差距造成什麼影響，又需要補哪一種能力？</p>
+</blockquote>
+<p>如果一開始就把 gap 寫成產品或技術，後續的優先順序會變成比較採購項目，企業真正要處理的問題反而會被藏起來。</p>
+<h2 id="feature-gap-與-capability-gap">Feature gap 與 capability gap</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層次</th><th>描述</th><th>例子</th></tr></thead><tbody><tr><td>Feature gap</td><td>缺少一項明確的功能或行為，通常接近產品 backlog。</td><td>客服畫面無法查詢案件歷程。</td></tr><tr><td>Capability gap</td><td>缺少持續完成某種結果的組織能力，可能同時涉及 People、Process、Technology 與 Information。</td><td>沒有可靠地管理跨系統客戶資料的能力。</td></tr></tbody></table>
+<p>兩者可以同時成立。Feature 可能是補足 capability 的手段，但分析時要先知道自己正在描述哪一層。Business capability 描述組織需要具備的能力，不等於某個系統或產品。<a href="#ref-1">[1]</a></p>
+<h2 id="缺口識別的四個步驟">缺口識別的四個步驟</h2>
+<ol>
+<li><strong>定義目標條件</strong>：根據前一階段的 target state，列出目標能力與可觀察的 target behavior。</li>
+<li><strong>比較 current 與 target</strong>：用證據確認現況已具備什麼、尚未具備什麼，以及哪些地方不一致。</li>
+<li><strong>寫出 gap 與原因</strong>：說清楚差異造成的影響、責任與依賴，不把第一個解法直接當成答案。</li>
+<li><strong>提出改善選項</strong>：針對關鍵缺口保留多個可行方向，交給後續的影響力、優先順序與 roadmap 分析。</li>
+</ol>
+<p>這四步的產出不是「系統要換掉」的清單，而是可以被證據支持、被責任人確認、也能連到後續決策的 gap register。TOGAF 也把 baseline、target architecture 與 gap report 放在同一條架構分析流程中。<a href="#ref-2">[2]</a></p>
+<h3 id="先定義目標條件再寫-gap">先定義目標條件，再寫 gap</h3>
+<p>目標能力仍然太抽象時，要先拆成可觀察的 target criteria。例如「開發與工具整合能力」可以拆成：</p>
+<ul>
+<li>Repo 與版本管理有一致的使用方式</li>
+<li>CI/CD 接入同一套驗證與部署流程</li>
+<li>技術文件可以被搜尋、引用與維護</li>
+<li>變更可以留下可回查的驗證紀錄</li>
+</ul>
+<p>接著找 baseline evidence，逐項比較符合程度，再寫 gap statement：</p>
+<blockquote>
+<p>現況已有多套開發與交付工具，但 Repo、CI/CD 與技術文件尚未形成一致的整合流程，因此變更驗證依賴人工轉述與個別經驗，影響交付速度與品質。</p>
+</blockquote>
+<p>這種寫法把焦點放在缺少的能力，工具只是後續可能採用的方案。</p>
+<h3 id="gap-statement-要寫什麼">Gap statement 要寫什麼</h3>
+<p>一個可用的 gap statement 至少要交代：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>部分</th><th>要回答的問題</th></tr></thead><tbody><tr><td>Current state</td><td>現在發生什麼事？依據哪個證據？</td></tr><tr><td>Target behavior</td><td>未來需要能做什麼？如何驗收？</td></tr><tr><td>Gap</td><td>中間少了哪個能力、約束或責任？</td></tr><tr><td>Impact</td><td>這個差異造成什麼業務、技術、交付或營運後果？</td></tr><tr><td>Owner／dependency</td><td>誰需要確認或處理？依賴哪些其他缺口？</td></tr></tbody></table>
+<p>例如，不要只寫「缺少客戶資料平台」，可以寫成：</p>
+<blockquote>
+<p>目前三個系統各自保存客戶聯絡資料，更新後需要人工對帳；目標是讓客服在可接受延遲內取得可信任的資料，且有明確的來源與修改責任。因此目前缺少的是資料 ownership、欄位語意與跨系統同步能力，平台只是後續可能採用的方案。這個缺口影響客服作業、資料品質、個資稽核與後續通路接入。</p>
+</blockquote>
+<p>這種寫法仍然可以導向平台方案，但不會預先把平台當成唯一答案。</p>
+<h2 id="缺口類型與原因">缺口類型與原因</h2>
+<p>分類的用途是幫助團隊快速定位缺口，不需把它變成另一套評分標準。可以先用以下七種類型分類：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>類型</th><th>判斷重點</th></tr></thead><tbody><tr><td>業務功能</td><td>目標流程缺少必要的申請、查詢、核准、通知或追蹤行為。</td></tr><tr><td>流程與交付</td><td>從需求到上線、營運或事故改善，無法穩定完成結果。</td></tr><tr><td>資料與資訊</td><td>資料的語意、品質、來源、責任或使用限制不清楚。</td></tr><tr><td>整合</td><td>系統之間缺少穩定契約、錯誤處理、觀測性或相容性驗證。</td></tr><tr><td>品質屬性</td><td>效能、可用性、安全性、可維護性或復原能力不符合目標情境。</td></tr><tr><td>治理與責任</td><td>缺少 owner、決策紀錄、生命週期管理或例外處理機制。</td></tr><tr><td>People 與能力</td><td>缺少技能、決策權、協作方式或維護關鍵能力的人員。</td></tr></tbody></table>
+<p>如果原因不明，可以從策略與價值、組織治理、流程、資料、應用、技術、資安、人才與衡量等角度快速檢查，再收斂成兩到三個主要原因。這九個角度只是工作提示，不是固定標準，也不用每次填滿。</p>
+<p>若需要表達差距程度，可以用 0 至 3 級作為工作分級；但分級描述的是差距大小，不等於優先順序。優先順序仍要另外看影響、急迫性、依賴與執行可行性。</p>
+<h2 id="gap-register">Gap register</h2>
+<p>Gap register 不必收進所有分析細節；只要能讓缺口被追蹤、確認，並接到後續決策即可：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>要記錄的內容</th></tr></thead><tbody><tr><td>Gap</td><td>gap id、類型，以及阻礙的 capability 或 outcome</td></tr><tr><td>Current／Target／Evidence</td><td>現況、目標行為，以及支持判斷的文件、指標、紀錄或訪談</td></tr><tr><td>Impact</td><td>業務、風險、交付或營運影響</td></tr><tr><td>Owner／Dependency</td><td>責任人，以及相依的能力、系統、專案或決策</td></tr><tr><td>Decision</td><td>改善選項、重要假設與處理狀態</td></tr></tbody></table>
+<p>若目前的 workaround 會影響判斷，可以補在 <code>Current</code> 或 <code>Impact</code> 中；不必為每個 gap 另外建立欄位。</p>
+<h2 id="從-gap-走到改善方案">從 gap 走到改善方案</h2>
+<p>完成缺口與原因分析後，才提出多個改善選項。每個選項至少說明適用範圍、預期效益、成本、整合與治理風險，以及尚未驗證的假設。方案比較要先建立候選集合，讓後續能比較價值、風險、可行性與投資順序。</p>
+<p>在送進優先順序評估前，可以先問四個問題：</p>
+<ul>
+<li>這是目標狀態必要的能力，還是某個人偏好的方案？</li>
+<li>如果不處理，哪個具體結果會持續失敗？</li>
+<li>有沒有量測、紀錄或跨角色訪談支持這個判斷？</li>
+<li>有沒有低成本、可逆的方式先取得更多證據？</li>
+</ul>
+<p>Gap 的處理不必一律從大型轉型開始。有些問題可以先透過 instrumentation、contract test、資料盤點或小範圍流程改善取得更多證據。</p>
+<h2 id="一個案例沿用好味餐飲的情境故事">一個案例：沿用好味餐飲的情境故事</h2>
+<p>本節沿用<a href="/blog/restaurant-transformation-scenario/">〈情境故事：好味餐飲的數位轉型起點〉</a>。這個案例先看不同通路的顧客、門市、客服與財務能否取得一致、可追查的交易狀態，以及能否在 30 分鐘內查明結果不明的交易，再決定是否需要建置平台。</p>
+<p>根據故事中的目標、訪談與營運證據，可以先整理出：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Gap</th><th>類型</th><th>目前問題</th><th>目標差異</th><th>可能影響</th></tr></thead><tbody><tr><td>G-01</td><td>資訊／治理</td><td>訂單、付款與廚房各自有狀態說明，沒有共同資料 owner；每月約 320 筆交易需要人工核對</td><td>不同角色看到一致且可追查的交易歷程</td><td>對帳成本、客服處理時間與狀態誤判</td></tr><tr><td>G-02</td><td>整合</td><td>重送請求無法穩定對回同一次結帳；付款、訂單與廚房單的關聯不完整</td><td>能辨識同一次交易，並在跨通路間維持一致狀態</td><td>重複訂單、付款成功但訂單狀態不明</td></tr><tr><td>G-03</td><td>品質／技術</td><td>目前主要監控主機、JVM 與資料庫，看不到交易走到哪一步；共用資料庫也可能被批次與報表拖慢</td><td>局部異常不會拖垮所有通路，結果不明的交易可在 30 分鐘內查明</td><td>全面中斷、事故診斷延遲與人工清查</td></tr><tr><td>G-04</td><td>流程／交付</td><td>正式版平均六週發布，跨模組回歸需 4 至 5 個工作天；異常案件常靠電話、群組或試算表協調</td><td>一般活動與規則變更可在 10 個工作天內完成驗證並上線</td><td>交付速度慢、變更風險高、責任不清</td></tr><tr><td>G-05</td><td>People／能力</td><td>14 名相關人員中只有 2 人能獨立追查跨模組問題，且沒有指定備援</td><td>關鍵交易能力有足夠的維護與事故處理能力</td><td>知識集中、處理等待與單點風險</td></tr></tbody></table>
+<p>這張表把既有情境中的業務目標與證據接成 gap register，也沒有預設產品或平台方案。若 G-01 與 G-04 尚未處理，先建平台可能只是把不一致的資料集中到另一個地方。</p>
+<h2 id="小結">小結</h2>
+<p>Gap analysis 要先說清楚現況與目標之間少了什麼，以及這個差距造成什麼影響。當 gap 有證據、責任與候選處理方向後，才適合進入優先順序與 roadmap 分析。</p>
+<h2 id="參考資料">參考資料</h2>
+<p>本文的 gap 分類、四步流程、0 至 3 分級、九個分析角度與 gap register 欄位，都是本文的工作模型。以下資料只支撐 business capability 與 baseline／target／gap analysis 等概念，不代表任何單一來源定義了整份模型。</p>
+<!-- markdownlint-disable MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] The Open Group，〈<a href="https://publications.opengroup.org/g211">TOGAF® Series Guide: Business Capabilities, Version 2</a>〉。</li>
+<li><a id="ref-2"></a>[2] The Open Group，〈<a href="https://www.opengroup.org/architecture/togaf7-doc/arch/p2/p2_ios.htm">ADM Input and Output Descriptions</a>〉，TOGAF documentation。</li>
+</ul>
+<!-- markdownlint-enable MD033 --></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/making-vision-concrete/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-4 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2 sm:right-6"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

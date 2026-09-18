@@ -152,6 +152,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）
+
+**Description:** Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。
+
+**URL:** https://tech.samsonlab.dev/blog/identifying-functional-and-capability-gaps/
+
+---
+
 ### 企業架構實務（三）：用七個 IT Score 角色看見好味餐飲的能力差距
 
 **Description:** 以好味餐飲的跨角色訪談、事故紀錄、流程抽樣與營運數據，示範如何參考 Gartner IT Score 七個角色，分開判斷活動重要性與成熟度、計算 Activity Priority Index，並保留證據狀態、分數限制與跨角色不可直接排名的理由。
@@ -302,4 +310,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-18T07:49:03.470Z
+Last updated: 2026-09-18T08:19:42.178Z
