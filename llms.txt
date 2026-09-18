@@ -152,7 +152,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### Gap Analysis：從功能缺口辨識能力缺口，整理證據、影響、改善選項與優先順序｜企業架構實務（七）
+### 企業架構實務（七）：功能缺口不一定是少一個功能
 
 **Description:** Gap Analysis 如何從功能缺口辨識能力缺口？本文用 target state、baseline evidence 與 gap register，整理四步缺口分析、七種常見類型與改善選項，並以好味餐飲案例說明如何把證據、影響、責任與依賴接到優先順序與 roadmap。
 
@@ -310,4 +310,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-18T08:19:42.178Z
+Last updated: 2026-09-18T08:27:21.652Z
