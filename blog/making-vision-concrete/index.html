@@ -1,0 +1,284 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/making-vision-concrete/"><!-- Primary Meta Tags --><title>企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法</title><meta name="title" content="企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法"><meta name="description" content="從企業願景推導 outcome、SMART goal、target state 與 target architecture，並以好味餐飲情境說明如何整理能力、責任、限制與驗收證據，讓企業架構能支援差距分析與分階段交付，避免從願景直接跳到技術選型。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/making-vision-concrete/"><meta property="og:title" content="企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法"><meta property="og:description" content="從企業願景推導 outcome、SMART goal、target state 與 target architecture，並以好味餐飲情境說明如何整理能力、責任、限制與驗收證據，讓企業架構能支援差距分析與分階段交付，避免從願景直接跳到技術選型。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/making-vision-concrete.CbjfDfFS.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/making-vision-concrete/"><meta property="twitter:title" content="企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法"><meta property="twitter:description" content="從企業願景推導 outcome、SMART goal、target state 與 target architecture，並以好味餐飲情境說明如何整理能力、責任、限制與驗收證據，讓企業架構能支援差距分析與分階段交付，避免從願景直接跳到技術選型。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/making-vision-concrete.CbjfDfFS.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法","description":"從企業願景推導 outcome、SMART goal、target state 與 target architecture，並以好味餐飲情境說明如何整理能力、責任、限制與驗收證據，讓企業架構能支援差距分析與分階段交付，避免從願景直接跳到技術選型。","datePublished":"2026-09-18T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/making-vision-concrete.CbjfDfFS.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.9L6Iyrfc.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/making-vision-concrete.CbjfDfFS_Z1OY674.webp" alt="企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-18T00:00:00.000Z">Sep 18, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">enterprise-architecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">business-capability</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">digital-transformation</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="這篇要回答的問題">這篇要回答的問題</h2>
+<p>企業願景通常很容易說出口：更以客戶為中心、更敏捷、更資料驅動、更能支援創新。問題是，這些句子很難直接幫助專案做選擇。</p>
+<p>當團隊問「所以這次要改哪個系統？資料要怎麼流？哪些能力要先建？」時，如果只能再重複一次願景，代表願景還沒有被轉成可分析的目標狀態。</p>
+<blockquote>
+<p>願景提供方向；可觀察、可驗收的 target state，才能讓現況、缺口與行動計畫有對照基準。</p>
+</blockquote>
+<h2 id="先分清楚幾個層次">先分清楚幾個層次</h2>
+<p>這些詞很容易被混用，但它們回答的問題不同：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層次</th><th>回答的問題</th><th>例子</th></tr></thead><tbody><tr><td>Vision</td><td>組織想創造什麼結果？</td><td>讓客戶在不同通路取得一致且即時的服務</td></tr><tr><td>Principles</td><td>做選擇時遵循哪些長期原則？</td><td>資料責任清楚、能力可重用、重要操作可稽核</td></tr><tr><td>Outcome</td><td>組織希望改善什麼結果？</td><td>新通路可以更快接入</td></tr><tr><td>SMART goal</td><td>如何把結果寫成有基準、門檻與期限的目標？</td><td>兩年內讓新通路第一版上線時間由四個月縮短至四週</td></tr><tr><td>Target state</td><td>未來希望具備哪些可觀察的能力、行為與限制條件？</td><td>客戶資料有明確來源，查詢能在尖峰期間的指定延遲內完成</td></tr><tr><td>Target architecture</td><td>應用、資料、整合、技術與治理如何支撐目標？</td><td>來源系統、讀模型、API、事件與權限邊界的配置</td></tr><tr><td>Initiative</td><td>要投入哪些變更才能靠近目標？</td><td>建立資料 ownership、改造查詢整合、補上契約測試</td></tr><tr><td>Measure</td><td>如何知道結果真的改善？</td><td>新通路接入時間、查詢 p95 延遲、人工對帳筆數</td></tr></tbody></table>
+<p>可以把它們看成一條推導鏈：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Vision</span></span>
+<span class="line"><span>  → Desired outcomes</span></span>
+<span class="line"><span>  → SMART goals</span></span>
+<span class="line"><span>  → Target capabilities + behaviors + constraints</span></span>
+<span class="line"><span>  → Target architecture</span></span>
+<span class="line"><span>  → Initiatives / roadmap</span></span>
+<span class="line"><span>  → Outcome, leading and guardrail measures</span></span></code></pre>
+<p>其中，Outcome 描述希望改善的結果；SMART goal 把結果寫成有基準、門檻與期限的目標；target state 則把目標拆成後續可以分析、設計與驗收的能力和行為。三者相關，但不是同一份清單。</p>
+<p>如果直接從 vision 跳到 target architecture，中間缺少結果、能力與行為的推導，最後很容易變成「先選一套技術，再想辦法把願景套上去」。</p>
+<h2 id="願景具象化的四步方法">願景具象化的四步方法</h2>
+<p>可以透過四個步驟，把願景轉成具體、可衡量、可溝通的業務目標，再進一步整理成 target state：</p>
+<ol>
+<li><strong>讀懂願景</strong>：釐清 Why、Who、What、Where 與 When；技術方案的 How 延後到架構設計，但限制條件要及早記錄。</li>
+<li><strong>找出利害關係人</strong>：確認誰受益、誰直接使用、誰參與、誰提供支持，以及誰負責決策。<a href="#ref-3">[3]</a></li>
+<li><strong>轉成使用者故事或業務情境</strong>：用角色的語言描述需求與價值，不先把產品或技術當成答案。<a href="#ref-4">[4]</a></li>
+<li><strong>定義 SMART 目標</strong>：讓目標具體、可衡量、可達成、相關且有時限。<a href="#ref-5">[5]</a> <a href="#ref-6">[6]</a></li>
+</ol>
+<p>這四步先處理「為什麼值得做」與「誰會受影響」，再把需求轉成可驗證的結果；架構與方案則回答在這些條件下可以怎麼做。</p>
+<h3 id="1-讀懂願景先問-5w1h">1. 讀懂願景：先問 5W1H</h3>
+<p>EA 在讀懂願景時，可以先問：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>問題</th><th>要釐清的內容</th></tr></thead><tbody><tr><td>Why</td><td>為什麼現在要做？不做會怎樣？希望創造什麼價值？</td></tr><tr><td>Who</td><td>哪些客戶、員工、夥伴或其他利害關係人會受到影響？</td></tr><tr><td>What</td><td>要改善的業務問題是什麼？成功的樣子是什麼？</td></tr><tr><td>Where</td><td>問題發生在哪些流程、部門、系統或業務範圍？</td></tr><tr><td>When</td><td>有沒有期限、里程碑與優先順序？</td></tr><tr><td>How</td><td>暫不急著選技術方案；在架構階段再比較如何實現。</td></tr></tbody></table>
+<p>「延後 How」不是排斥技術，而是避免技術偏好過早決定問題邊界。不過，法遵要求、既有契約、服務水準、預算、團隊能力與不能中斷營運等限制，仍然要在這個階段留下紀錄。<a href="#ref-1">[1]</a></p>
+<h3 id="2-找出利害關係人">2. 找出利害關係人</h3>
+<p>「受益角色」與「利害關係人」不完全相同。前者關心誰得到價值，後者還包含受影響、參與、支援與決策的人。可以先用四類整理：</p>
+<ul>
+<li><strong>Primary users</strong>：直接使用服務完成工作的主要使用者。</li>
+<li><strong>Key participants</strong>：參與需求、設計、建置、測試或營運的人員。</li>
+<li><strong>Supporters</strong>：提供平台、工具、教育訓練、資安或法遵支援的角色。</li>
+<li><strong>Decision makers</strong>：負責策略方向、資源核准與風險接受的角色。</li>
+</ul>
+<p>接著再標註每個角色是「受益者、受影響者、參與者」或「決策者」，避免把所有利害關係人都誤稱為受益者。分析時也要記錄角色的需求、影響力與重要性，而不是只列出職稱。<a href="#ref-3">[3]</a></p>
+<h3 id="3-轉成使用者故事或業務情境">3. 轉成使用者故事或業務情境</h3>
+<p>使用者故事可以先寫成：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>作為 [使用者]</span></span>
+<span class="line"><span>我希望 [功能或能力]</span></span>
+<span class="line"><span>以便 [價值或好處]</span></span></code></pre>
+<p>例如：</p>
+<blockquote>
+<p>作為門市店長，我希望在訂單狀態不明時看見交易目前的處理階段與可採取的處置，以便在不重複接單的情況下完成出餐或聯絡客服。</p>
+</blockquote>
+<p>這個故事描述的是使用情境與價值，不預先指定要使用哪個產品。它不是完整需求規格，但能把後續能力、資料、流程與驗收討論拉回實際工作。</p>
+<h3 id="4-用-smart-定義結果">4. 用 SMART 定義結果</h3>
+<p>SMART 在本文中只是目標書寫的檢查表；這是本文的使用界線，不主張它能取代完整的目標設定理論。Doran 1981 年的原始版本使用 Specific、Measurable、Assignable、Realistic、Time-related；本文採用常見的 Specific、Measurable、Achievable、Relevant、Time-bound 版本。<a href="#ref-5">[5]</a> 這個版本也出現在 CDC 的評估指引中。<a href="#ref-6">[6]</a></p>
+<p>如果還需要向決策者說明為什麼值得投入，可以另外問三個問題：目前的問題是什麼？解決後的價值是什麼？如何證明結果？這只是工作提示，不列入本文的四步方法。</p>
+<p>以好味餐飲集團的成長情境為例，可以先寫出：</p>
+<blockquote>
+<p>在兩年內，將新通路第一版上線時間由約四個月縮短至四週，同時維持既有門市的日常接單與出餐，不要求 ERP、金流、電子發票與外送平台同步改造。</p>
+</blockquote>
+<p>這個目標至少交代了結果、時間、基準、限制與範圍。正式使用前，仍應補上「上線時間」的起訖定義、適用的新通路類型，以及資料來源。</p>
+<h2 id="把業務目標轉成-target-state">把業務目標轉成 target state</h2>
+<p>四步方法產生的是目標；EA 還要把目標轉成可以拿來做差距分析的 target state。重點不是列出更多系統，而是固定未來要具備的能力、行為、責任與驗收方式。</p>
+<h3 id="1-從結果描述目標能力而不是先列系統">1. 從結果描述目標能力，而不是先列系統</h3>
+<p>先列出達成結果所需要的 business capability，例如客戶與交易資料查詢、通路與服務編排、資料品質與 ownership 管理，以及權限、稽核與異常處理。這裡沿用 EA 常見的 business capability 概念：描述組織需要具備的能力，不等於特定系統或產品。<a href="#ref-2">[2]</a></p>
+<h3 id="2-定義目標行為品質與邊界">2. 定義目標行為、品質與邊界</h3>
+<p>每個重要能力至少要補上四件事：誰在什麼流程中使用、資料與更新責任歸誰、需要什麼品質與例外處理，以及哪些限制、依賴與假設會影響落地。沒有責任、品質條件與限制的能力清單，仍然只是另一種口號。</p>
+<h3 id="3-再映射到應用資料與技術">3. 再映射到應用、資料與技術</h3>
+<p>能力與目標行為清楚後，才確認既有應用能否繼續支援、資料是否需要指定 system of record 或建立 read model、介面是否需要穩定契約，以及平台、安全、可觀測性與災難復原能力是否足夠。此時的 target architecture 是支撐目標行為的配置，不是脫離交付順序的理想藍圖。</p>
+<h3 id="4-加上可觀察的結果">4. 加上可觀察的結果</h3>
+<p>重要的目標狀態至少要有可觀察或可驗收的證據；不能量化時，也要說明判斷方式。記錄時至少要交代測量對象、baseline、target 或 threshold、適用範圍、觀察期間、資料來源與負責人。這裡借用方案評估對 inputs、activities、outputs 與 outcomes 的區分，避免把交付物誤當成業務結果。<a href="#ref-7">[7]</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>目標行為</th><th>可觀察結果</th><th>驗證方式示例</th></tr></thead><tbody><tr><td>客服取得一致的客戶資料</td><td>重要欄位有明確來源、更新責任與品質門檻</td><td>欄位 ownership 對照表、資料品質檢查、缺陷關閉時間</td></tr><tr><td>新通路可以較快接入</td><td>在指定範圍內，從需求核准到第一批正式交易可用不超過四週</td><td>交付時間紀錄、核心系統變更數、contract test</td></tr><tr><td>重要查詢不壓垮 legacy system</td><td>尖峰期間查詢成功率與 p95 延遲達到預先設定的門檻</td><td>latency、error rate、容量與壓測結果</td></tr><tr><td>敏感資料被正確保護</td><td>未授權角色無法取得資料，且所有敏感查詢都能追溯</td><td>權限測試、稽核紀錄、定期事件抽查</td></tr></tbody></table>
+<p>如果目標只有「可接受」「更快」或「更穩」，卻沒有門檻與測量方式，後續的 gap 仍會變成「目前還不夠好」這種無法排序的描述。</p>
+<h2 id="一個假想案例從願景到目標狀態">一個假想案例：從願景到目標狀態</h2>
+<p>以下沿用 <a href="/blog/restaurant-transformation-scenario/">好味餐飲集團的情境故事</a>。完整的事故、現況與角色資料留在情境故事，本文只保留能說明推導鏈的摘錄：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>層次</th><th>好味案例中的摘錄</th></tr></thead><tbody><tr><td>Vision</td><td>持續開設新門市、測試新品牌與新通路；局部異常時，未受影響的門市與通路仍能營運。</td></tr><tr><td>Outcome／SMART goal</td><td>新通路第一版由約四個月縮短至四週；結果不明的交易在 30 分鐘內查明。</td></tr><tr><td>Target behavior</td><td>新通路沿用既有會員、訂單與營運能力；客服、營運與財務看見一致且可追查的交易歷程。</td></tr><tr><td>Constraint</td><td>金流、ERP、電子發票與外送平台維持既有整合；轉型期間不能停止接單。</td></tr><tr><td>Measure</td><td>上線時間、交易查明時間、狀態不一致事件、查詢成功率與 p95 延遲。</td></tr></tbody></table>
+<p>下面的圖只示範交易狀態查詢與資料更新的一個切片，表達一種待驗證的配置，不是預先決定的唯一方案：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="mermaid"><code><span class="line"><span style="color:#F97583">flowchart</span><span style="color:#B392F0"> LR</span></span>
+<span class="line"><span style="color:#FFAB70">  Channels</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"POS／App／官網／外送平台"</span><span style="color:#F97583">]</span><span style="color:#F97583"> --></span><span style="color:#FFAB70"> Auth</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"權限與稽核"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Auth </span><span style="color:#F97583">--></span><span style="color:#FFAB70"> Query</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"交易查詢編排／API layer"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Query </span><span style="color:#F97583">--></span><span style="color:#FFAB70"> ReadModel</span><span style="color:#F97583">[(</span><span style="color:#9ECBFF">"交易查詢 read model"</span><span style="color:#F97583">)]</span></span>
+<span class="line"><span style="color:#FFAB70">  Query </span><span style="color:#F97583">-->|</span><span style="color:#9ECBFF">少量必要即時欄位</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> Source</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"既有來源系統&#x3C;br/>OneFood／金流／外送平台"</span><span style="color:#F97583">]</span></span>
+<span class="line"><span style="color:#FFAB70">  Source </span><span style="color:#F97583">-->|</span><span style="color:#9ECBFF">資料更新事件或批次同步</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> ReadModel</span></span>
+<span class="line"><span style="color:#FFAB70">  Query </span><span style="color:#F97583">-.-></span><span style="color:#FFAB70"> Audit</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"查詢與交易稽核紀錄"</span><span style="color:#F97583">]</span></span></code></pre>
+<p>真正需要決定的還包括哪些欄位允許延遲、read model 如何更新、來源資料如何修正、介面由誰維護，以及錯誤與缺資料時如何呈現。同一個願景可以導出不同架構方案；具象化的目的，是讓方案對照相同的結果、品質門檻與限制。</p>
+<h2 id="target-state-應該記錄哪些欄位">Target state 應該記錄哪些欄位</h2>
+<p>可以先建立一份輕量的目標狀態表。若已有獨立的 baseline 或 gap register，這張表不必重複所有現況資料，但至少要能指出目標、驗收方式與責任：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位群組</th><th>要記錄的內容</th></tr></thead><tbody><tr><td>outcome / capability / target behavior</td><td>希望改善的結果、支援結果所需的能力，以及未來應該看見的行為</td></tr><tr><td>baseline / target / threshold / measure</td><td>現況基準、目標值、品質門檻、驗收方式與資料來源</td></tr><tr><td>owner / governance</td><td>能力、資料、系統或決策的責任人，以及必須遵守的治理規則</td></tr><tr><td>information / application / service</td><td>所需資料、定義、品質條件，以及支援行為的系統或服務</td></tr><tr><td>scope / constraint</td><td>適用範圍、觀察期間，以及平台、整合、安全、效能或可用性限制</td></tr><tr><td>dependency / assumption</td><td>依賴的能力、專案或外部條件，以及目前仍未證實的前提</td></tr></tbody></table>
+<p>這張表會成為下一篇 gap analysis 的對照端。每個 gap 都應該指出它阻礙了哪個 target behavior，而不是只說某個系統「不夠現代」。</p>
+<h2 id="目標狀態常見的失敗方式">目標狀態常見的失敗方式</h2>
+<p>最常見的問題有三個：</p>
+<ul>
+<li><strong>只寫形容詞或方案</strong>：「敏捷」「雲原生」「導入資料湖」都不能代替結果、目標行為與驗收方式。</li>
+<li><strong>只畫未來架構</strong>：架構圖能表達元件關係，卻不一定說明資料責任、團隊 ownership、營運模式與轉型順序。</li>
+<li><strong>把所有 How 延後，或只定義終點</strong>：技術選型可以延後，但既有契約、法遵、團隊能力與不能中斷的營運，應先成為 target state 的限制或假設。過渡狀態則留給後續 roadmap 設計。</li>
+</ul>
+<h2 id="小結">小結</h2>
+<p>願景具象化不是提前選定一套技術，而是把結果、能力、行為、責任、限制與證據放在同一個可對照的 target state 中。之後才能用它做 gap analysis，再決定哪些變更值得投入、如何分階段抵達。這也接上<a href="/blog/project-management-and-enterprise-architecture/">專案管理與企業架構的分工</a>，把目標狀態轉成可排程、可驗收的交付承諾。</p>
+<h2 id="參考資料">參考資料</h2>
+<p>本文的推導鏈、四步方法、target state 欄位與案例整理，都是本文的工作模型。以下資料只支撐各段明確標示的概念，不代表任何單一來源定義了整份模型。</p>
+<!-- markdownlint-disable MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] The Open Group，〈<a href="https://www.opengroup.org/architecture/togaf7-doc/arch/p4/bus_scen/bus_scen.htm">Business Scenarios</a>〉，TOGAF documentation。</li>
+<li><a id="ref-2"></a>[2] The Open Group，〈<a href="https://www.opengroup.org/certifications/togaf-business-architecture-level1">TOGAF Business Architecture Level 1</a>〉。</li>
+<li><a id="ref-3"></a>[3] Larry W. Smith，〈<a href="https://www.pmi.org/learning/library/stakeholder-analysis-pivotal-practice-projects-8905">Stakeholder analysis: a pivotal practice of successful projects</a>〉，Project Management Institute，2000。</li>
+<li><a id="ref-4"></a>[4] Agile Alliance，〈<a href="https://agilealliance.org/glossary/user-stories/">User Stories</a>〉，Agile Glossary。</li>
+<li><a id="ref-5"></a>[5] George T. Doran，〈<a href="https://www.decisionskills.com/uploads/5/1/6/0/5160560/doran_1981_s.m.a.r.t-way-management-review.pdf">There’s a S.M.A.R.T. way to write management’s goals and objectives</a>〉，《Management Review》，70(11)，35–36，1981。</li>
+<li><a id="ref-6"></a>[6] U.S. CDC，〈<a href="https://www.cdc.gov/evaluation/php/evaluation-framework-action-guide/step-4-gather-credible-evidence.html">Step 4 – Gather Credible Evidence</a>〉，Program Evaluation Framework Action Guide。</li>
+<li><a id="ref-7"></a>[7] U.S. CDC，〈<a href="https://www.cdc.gov/evaluation/php/evaluation-framework-action-guide/step-2-describe-the-program.html">Step 2 – Describe the Program</a>〉，Program Evaluation Framework Action Guide。</li>
+</ul>
+<!-- markdownlint-enable MD033 --></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/ppti-restaurant-case-study/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" style="bottom: calc(1rem + env(safe-area-inset-bottom));" class="fixed right-4 z-20 hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2 sm:right-6"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

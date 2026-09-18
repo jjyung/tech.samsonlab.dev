@@ -160,6 +160,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 企業架構實務（六）：從願景推導 SMART Goal、Target State、目標架構與差距分析方法
+
+**Description:** 從企業願景推導 outcome、SMART goal、target state 與 target architecture，並以好味餐飲情境說明如何整理能力、責任、限制與驗收證據，讓企業架構能支援差距分析與分階段交付，避免從願景直接跳到技術選型。
+
+**URL:** https://tech.samsonlab.dev/blog/making-vision-concrete/
+
+---
+
 ### MCP Toolbox for Databases：把 Agent 接資料庫這件事標準化
 
 **Description:** MCP 解的是協定，MCP Toolbox 解的是資料接入落地。這篇文章整理它如何把資料庫能力收斂成可重用、可治理的工具層。
@@ -294,4 +302,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-17T09:47:09.346Z
+Last updated: 2026-09-18T07:02:45.292Z
