@@ -4,69 +4,21 @@
 <blockquote>
 <p>願景提供方向；可觀察、可驗收的 target state，才能讓現況、缺口與行動計畫有對照基準。</p>
 </blockquote>
-<h2 id="先分清楚幾個層次">先分清楚幾個層次</h2>
-<p>這些詞很容易被混用，但它們回答的問題不同：</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>層次</th><th>回答的問題</th><th>例子</th></tr></thead><tbody><tr><td>Vision</td><td>組織想創造什麼結果？</td><td>讓客戶在不同通路取得一致且即時的服務</td></tr><tr><td>Principles</td><td>做選擇時遵循哪些長期原則？</td><td>資料責任清楚、能力可重用、重要操作可稽核</td></tr><tr><td>Outcome</td><td>組織希望改善什麼結果？</td><td>新通路可以更快接入</td></tr><tr><td>SMART goal</td><td>如何把結果寫成有基準、門檻與期限的目標？</td><td>兩年內讓新通路第一版上線時間由四個月縮短至四週</td></tr><tr><td>Target state</td><td>未來希望具備哪些可觀察的能力、行為與限制條件？</td><td>客戶資料有明確來源，查詢能在尖峰期間的指定延遲內完成</td></tr><tr><td>Target architecture</td><td>應用、資料、整合、技術與治理如何支撐目標？</td><td>來源系統、讀模型、API、事件與權限邊界的配置</td></tr><tr><td>Initiative</td><td>要投入哪些變更才能靠近目標？</td><td>建立資料 ownership、改造查詢整合、補上契約測試</td></tr><tr><td>Measure</td><td>如何知道結果真的改善？</td><td>新通路接入時間、查詢 p95 延遲、人工對帳筆數</td></tr></tbody></table>
-<p>可以把它們看成一條推導鏈：</p>
+<h2 id="先抓住四個核心概念">先抓住四個核心概念</h2>
+<p>本文只需要先分清楚四件事：</p>
+<ul>
+<li><strong>Vision</strong>：想往哪裡去。</li>
+<li><strong>Outcome／SMART goal</strong>：希望改善什麼，以及何時算達成。</li>
+<li><strong>Target state</strong>：達成目標後，組織應該具備哪些能力、行為與限制。</li>
+<li><strong>Target architecture</strong>：應用、資料、整合與技術如何支撐這個目標狀態。</li>
+</ul>
+<p>後面的 initiative 是靠近目標的變更，measure 則是驗證結果的方式；這兩者會在後文出現，不必先塞進這裡。</p>
+<p>可以把這四個概念看成一條推導鏈：</p>
 <pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>Vision</span></span>
-<span class="line"><span>  → Desired outcomes</span></span>
-<span class="line"><span>  → SMART goals</span></span>
-<span class="line"><span>  → Target capabilities + behaviors + constraints</span></span>
-<span class="line"><span>  → Target architecture</span></span>
-<span class="line"><span>  → Initiatives / roadmap</span></span>
-<span class="line"><span>  → Outcome, leading and guardrail measures</span></span></code></pre>
-<p>其中，Outcome 描述希望改善的結果；SMART goal 把結果寫成有基準、門檻與期限的目標；target state 則把目標拆成後續可以分析、設計與驗收的能力和行為。三者相關，但不是同一份清單。</p>
-<p>如果直接從 vision 跳到 target architecture，中間缺少結果、能力與行為的推導，最後很容易變成「先選一套技術，再想辦法把願景套上去」。</p>
+<span class="line"><span>  → Outcome／SMART goal</span></span>
+<span class="line"><span>  → Target state</span></span>
+<span class="line"><span>  → Target architecture</span></span></code></pre>
+<p>其中，Outcome／SMART goal 說明要改善什麼、何時算達成；target state 把目標拆成後續可以分析、設計與驗收的能力和行為；target architecture 再回答要如何支撐這些目標。如果直接從 vision 跳到 target architecture，中間缺少結果、能力與行為的推導，最後很容易變成「先選一套技術，再想辦法把願景套上去」。</p>
 <h2 id="願景具象化的四步方法">願景具象化的四步方法</h2>
 <p>可以透過四個步驟，把願景轉成具體、可衡量、可溝通的業務目標，再進一步整理成 target state：</p>
 <ol>
@@ -223,43 +175,7 @@
 <span class="line"><span style="color:#FFAB70">  Source </span><span style="color:#F97583">-->|</span><span style="color:#9ECBFF">資料更新事件或批次同步</span><span style="color:#F97583">|</span><span style="color:#FFAB70"> ReadModel</span></span>
 <span class="line"><span style="color:#FFAB70">  Query </span><span style="color:#F97583">-.-></span><span style="color:#FFAB70"> Audit</span><span style="color:#F97583">[</span><span style="color:#9ECBFF">"查詢與交易稽核紀錄"</span><span style="color:#F97583">]</span></span></code></pre>
 <p>真正需要決定的還包括哪些欄位允許延遲、read model 如何更新、來源資料如何修正、介面由誰維護，以及錯誤與缺資料時如何呈現。同一個願景可以導出不同架構方案；具象化的目的，是讓方案對照相同的結果、品質門檻與限制。</p>
-<h2 id="target-state-應該記錄哪些欄位">Target state 應該記錄哪些欄位</h2>
-<p>可以先建立一份輕量的目標狀態表。若已有獨立的 baseline 或 gap register，這張表不必重複所有現況資料，但至少要能指出目標、驗收方式與責任：</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>欄位群組</th><th>要記錄的內容</th></tr></thead><tbody><tr><td>outcome / capability / target behavior</td><td>希望改善的結果、支援結果所需的能力，以及未來應該看見的行為</td></tr><tr><td>baseline / target / threshold / measure</td><td>現況基準、目標值、品質門檻、驗收方式與資料來源</td></tr><tr><td>owner / governance</td><td>能力、資料、系統或決策的責任人，以及必須遵守的治理規則</td></tr><tr><td>information / application / service</td><td>所需資料、定義、品質條件，以及支援行為的系統或服務</td></tr><tr><td>scope / constraint</td><td>適用範圍、觀察期間，以及平台、整合、安全、效能或可用性限制</td></tr><tr><td>dependency / assumption</td><td>依賴的能力、專案或外部條件，以及目前仍未證實的前提</td></tr></tbody></table>
-<p>這張表會成為下一篇 gap analysis 的對照端。每個 gap 都應該指出它阻礙了哪個 target behavior，而不是只說某個系統「不夠現代」。</p>
+<p>實務上，target state 至少要寫清楚目標行為、驗收證據、責任人，以及限制與依賴；應用、資料與服務配置，則在確認這些條件後再補上。</p>
 <h2 id="目標狀態常見的失敗方式">目標狀態常見的失敗方式</h2>
 <p>最常見的問題有三個：</p>
 <ul>
@@ -270,7 +186,7 @@
 <h2 id="小結">小結</h2>
 <p>願景具象化不是提前選定一套技術，而是把結果、能力、行為、責任、限制與證據放在同一個可對照的 target state 中。之後才能用它做 gap analysis，再決定哪些變更值得投入、如何分階段抵達。這也接上<a href="/blog/project-management-and-enterprise-architecture/">專案管理與企業架構的分工</a>，把目標狀態轉成可排程、可驗收的交付承諾。</p>
 <h2 id="參考資料">參考資料</h2>
-<p>本文的推導鏈、四步方法、target state 欄位與案例整理，都是本文的工作模型。以下資料只支撐各段明確標示的概念，不代表任何單一來源定義了整份模型。</p>
+<p>本文的推導鏈、四步方法、target state 定義與案例整理，都是本文的工作模型。以下資料只支撐各段明確標示的概念，不代表任何單一來源定義了整份模型。</p>
 <!-- markdownlint-disable MD033 -->
 <ul>
 <li><a id="ref-1"></a>[1] The Open Group，〈<a href="https://www.opengroup.org/architecture/togaf7-doc/arch/p4/bus_scen/bus_scen.htm">Business Scenarios</a>〉，TOGAF documentation。</li>
