@@ -160,7 +160,7 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-### 影響評估與優先排序：企業架構實務（八）如何決定先做什麼？
+### 企業架構實務（八）：影響評估與優先排序，如何決定先做什麼？
 
 **Description:** 企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。
 
@@ -318,4 +318,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-21T05:13:00.252Z
+Last updated: 2026-09-21T05:35:39.268Z
