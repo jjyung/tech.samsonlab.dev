@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/impact-assessment-and-prioritization/"><!-- Primary Meta Tags --><title>影響評估與優先排序：企業架構實務（八）如何決定先做什麼？</title><meta name="title" content="影響評估與優先排序：企業架構實務（八）如何決定先做什麼？"><meta name="description" content="企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/impact-assessment-and-prioritization/"><meta property="og:title" content="影響評估與優先排序：企業架構實務（八）如何決定先做什麼？"><meta property="og:description" content="企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/impact-assessment-and-prioritization.94upG_WA.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/impact-assessment-and-prioritization/"><meta property="twitter:title" content="影響評估與優先排序：企業架構實務（八）如何決定先做什麼？"><meta property="twitter:description" content="企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/impact-assessment-and-prioritization.94upG_WA.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"影響評估與優先排序：企業架構實務（八）如何決定先做什麼？","description":"企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。","datePublished":"2026-09-21T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/impact-assessment-and-prioritization.94upG_WA.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.Du233e_q.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-[rgb(var(--black))] font-semibold">Blog</a><a href="/projects" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/impact-assessment-and-prioritization.94upG_WA_1f3YpN.webp" alt="影響評估與優先排序：企業架構實務（八）如何決定先做什麼？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-21T00:00:00.000Z">Sep 21, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">EnterpriseArchitecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">BusinessCapability</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">DigitalTransformation</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">影響評估與優先排序：企業架構實務（八）如何決定先做什麼？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="缺口清單變長後怎麼決定先做什麼">缺口清單變長後，怎麼決定先做什麼？</h2>
+<p>有了 gap register 之後，清單通常會快速變長。每個單位都能提出自己的重要問題：資料品質很重要、核心系統升級很急、法遵風險不能等、某個客戶需求下季就要上線。</p>
+<p>如果只問「哪一項最重要」，最後常常變成職位、聲量或最近一次事故的競賽。先分開問兩件事：</p>
+<ul>
+<li><strong>Impact assessment</strong>：如果這個 gap 不處理，會造成什麼影響？</li>
+<li><strong>Prioritization</strong>：在資源、依賴與時間有限的情況下，現在應該先採取什麼行動？</li>
+</ul>
+<blockquote>
+<p>影響力描述不處理的代價；優先級描述限制下的行動順序，兩者要分開記錄。</p>
+</blockquote>
+<h2 id="先分開兩種判斷">先分開兩種判斷</h2>
+<p>Impact assessment 提供優先級判斷的輸入，還不足以直接形成投資決策。它要把 gap、target behavior、證據與不處理的後果連在一起；priority 則再加入時機、相依性、投入與可逆性，決定現在要做、先驗證、延後，或接受風險。</p>
+<p>TOGAF Version 7 的 ADM 文件分別列出 gap report 與「prioritized list of impacted projects」，也涵蓋成本效益分析及風險資訊。這些輸出彼此相關，但本文把 gap 與排序分開記錄，方便回查判斷依據。<a href="#ref-1">[1]</a></p>
+<p>PMI 2013 年第三版的 portfolio guidance 將策略對齊、預期 ROI、投資風險與相依性列為優先排序模型可採用的條件，也提供 scoring／weighting 範例；實際模型仍需依組織情境設定。<a href="#ref-2">[2]</a></p>
+<h2 id="impact-要描述不處理的代價">Impact 要描述不處理的代價</h2>
+<p>不需要讓每個 gap 都在每個面向打分。先選和該 gap 有關的面向，留下能回查的證據：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>面向</th><th>要回答的問題</th><th>證據例子</th></tr></thead><tbody><tr><td>Business／customer</td><td>是否阻礙關鍵流程、收入、客戶體驗或新通路？</td><td>target behavior、交易紀錄、客服案件、業務指標</td></tr><tr><td>Risk／compliance／resilience</td><td>是否增加資料、權限、法遵、稽核、復原或服務中斷風險？</td><td>事故紀錄、稽核結果、風險事件、復原演練</td></tr><tr><td>Technical／operational</td><td>是否限制系統演進，或增加延遲、容量、值班、除錯與人工處理成本？</td><td>latency、容量、變更紀錄、維運工時、對帳量</td></tr><tr><td>Delivery／organizational</td><td>是否卡住共同依賴、稀缺技能、決策或跨團隊交付？</td><td>lead time、等待時間、技能盤點、責任與依賴紀錄</td></tr></tbody></table>
+<p>「很多人會用到」不一定等於高影響力。還要看這個使用情境是否關係到核心結果，以及失敗時的後果。對風險相關 gap，可以另外記錄 likelihood、severity 與判斷理由；NIST SP 800-30 將 impact 與 likelihood 作為風險評估的重要因素。該文件處理的是資安風險評估，本文提出的排序條件則是工作模型。<a href="#ref-3">[3]</a></p>
+<h2 id="priority-要判斷現在的行動順序">Priority 要判斷現在的行動順序</h2>
+<p>Impact 高不代表一定第一個做。排序時可以先看以下五組條件：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>條件</th><th>要問的問題</th></tr></thead><tbody><tr><td>Urgency</td><td>是否有明確期限、外部承諾、法遵要求或風險窗口？</td></tr><tr><td>Dependency</td><td>這個 gap 是否解鎖多個後續能力？是否被其他項目阻塞？</td></tr><tr><td>Feasibility／effort</td><td>目前是否具備資料、技能、決策權與交付條件？需要多少投入？</td></tr><tr><td>Burden／reversibility</td><td>完成後會增加多少維護成本？做錯時能否回復或調整？</td></tr><tr><td>Confidence／learning</td><td>目前 evidence 是否足以支撐排序？能否先用小範圍行動驗證假設？</td></tr></tbody></table>
+<p>這些條件不必全部加權成一個數字。法遵期限、硬性依賴或不可逆的資料遷移，可能是 gate，不應被平均分數稀釋。若採用計分公式，應同時保留公式版本、評分理由、證據與異議。</p>
+<h2 id="impact-statement-與-priority-statement">Impact statement 與 priority statement</h2>
+<p>兩種 statement 可以使用同一個 gap，但回答不同問題。以好味餐飲的 G-03 為例：</p>
+<h3 id="impact-statement">Impact statement</h3>
+<blockquote>
+<p>如果 G-03 不處理，批次與報表持續和交易共用資料庫，尖峰時可能拖慢所有通路；目前也看不到跨通路交易走到哪一步，結果不明的交易需要人工清查，影響接單、事故診斷與客服作業。</p>
+</blockquote>
+<h3 id="priority-statement">Priority statement</h3>
+<blockquote>
+<p>G-03 的第一步是量測尖峰負載、補交易追蹤與錯誤分類，確認降級邊界，再判斷是否需要平台改造。它列為高優先級，是因為直接影響核心交易，也會阻礙後續擴大通路。</p>
+</blockquote>
+<p>第一段描述不處理的後果，第二段列出目前的行動。優先順序可以改變，影響判斷的證據仍可保留。</p>
+<h2 id="一個案例好味餐飲的-gap-如何排出先後">一個案例：好味餐飲的 gap 如何排出先後</h2>
+<p>以下沿用<a href="/blog/identifying-functional-and-capability-gaps/">〈功能缺口不一定是少一個功能〉</a>中的五個 gap，示範如何把影響、目前行動與延後代價放在同一張表：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Gap</th><th>不處理的影響</th><th>目前的行動</th><th>延後一個週期／到下一個觸發點的代價</th></tr></thead><tbody><tr><td>G-01 資料語意與來源責任</td><td>訂單、付款與廚房狀態不一致，每月約 320 筆交易需要人工核對</td><td>先盤點欄位語意、來源與 owner</td><td>每延後一個月，約再新增 320 筆待核對交易；來源未明前啟動遷移也會擴大返工範圍</td></tr><tr><td>G-02 交易關聯與跨通路整合</td><td>重送請求無法穩定對回同一次結帳，可能出現重複訂單或付款狀態不明</td><td>先抽樣關聯通路、金流、訂單與廚房單</td><td>下一次重送或狀態不明交易仍需客服人工回查；若在擴大通路後才處理，需追查的交易關聯範圍也會增加</td></tr><tr><td>G-03 尖峰負載與交易可觀測性</td><td>共用資料庫可能拖慢所有通路，事故時也看不到交易停在哪一步</td><td>先量測尖峰負載，補交易追蹤與錯誤分類</td><td>若延至下一次大型活動或擴店前才處理，仍沒有尖峰基準與降級邊界可判斷新增負載是否安全</td></tr><tr><td>G-04 流程與交付能力</td><td>正式版平均六週發布，跨模組回歸與異常協調成本高</td><td>先在限定範圍縮短回歸與交付迴圈</td><td>每錯過一個平均六週的發布週期，活動與規則變更可能再多等一個週期，仍難達成十個工作天的目標</td></tr><tr><td>G-05 跨模組維護能力</td><td>只有少數人能獨立追查跨模組問題，且沒有指定備援</td><td>指定能力 owner，補上備援與知識移轉</td><td>備援培訓完成前，每次跨模組事故仍要等少數專家處理；關鍵人員不可用時沒有替代路徑</td></tr></tbody></table>
+<p>這張表列出目前的行動順序。若出現新的法遵期限、事故或業務承諾，排序可以改變，理由也要一併記錄。</p>
+<h2 id="impactpriority-register">Impact／priority register</h2>
+<p>可以在 gap register 上補以下欄位群組，不必為每個 gap 建立一套複雜評分表：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位群組</th><th>用途</th></tr></thead><tbody><tr><td>impact</td><td>影響面向、受影響範圍，以及不處理時的具體後果</td></tr><tr><td>risk evidence</td><td>likelihood、severity、證據與不確定性；只在風險相關時使用</td></tr><tr><td>priority conditions</td><td>urgency、dependency、feasibility、effort、維運負擔與可逆性</td></tr><tr><td>decision</td><td>now、validate first、defer、accept risk 或 reject</td></tr><tr><td>rationale</td><td>為什麼做出這個決定，以及仍未驗證的假設或異議</td></tr><tr><td>owner／review</td><td>責任人與重新檢視日期</td></tr></tbody></table>
+<p>優先級的產物應列出目前採取的行動、接受的風險與重新檢視日期。</p>
+<h2 id="不要讓數字製造假精確">不要讓數字製造假精確</h2>
+<p>優先級評估很容易被誤用成「算出一個分數，所以一定第一」。實務上至少有幾種不確定性：</p>
+<ul>
+<li>evidence 不完整，部分影響只是訪談陳述</li>
+<li>不同角色對嚴重程度與急迫性的看法不同</li>
+<li>effort 估計可能受未知的資料、契約與遷移工作影響</li>
+<li>外部期限或事故可能改變原本的排序</li>
+</ul>
+<p>因此，若組織採用固定計分公式，應把公式、版本、評分者、證據、理由與異議一起保存。分數可以幫助比較，但不能取代判斷。</p>
+<h2 id="小結">小結</h2>
+<p>Impact assessment 要回答「不處理會失去什麼」；prioritization 要回答「在目前限制下，先採取什麼行動」。分開記錄後，排序可以隨時機調整，證據與決策理由也能保留下來。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] The Open Group，〈<a href="https://www.opengroup.org/architecture/togaf7-doc/arch/p2/p2_ios.htm">ADM Input and Output Descriptions</a>〉，TOGAF Version 7 documentation。</li>
+<li><a id="ref-2"></a>[2] Project Management Institute，〈<a href="https://www.pmi.org/-/media/pmi/documents/public/pdf/certifications/standard-for-portfolio-management-third-edition.pdf">The Standard for Portfolio Management—Third Edition</a>〉（2013，歷史版）。</li>
+<li><a id="ref-3"></a>[3] National Institute of Standards and Technology，〈<a href="https://csrc.nist.gov/pubs/sp/800/30/r1/final">SP 800-30 Rev. 1: Guide for Conducting Risk Assessments</a>〉。</li>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/identifying-functional-and-capability-gaps/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（七）：功能缺口不一定是少一個功能</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" aria-label="回到文章列表" title="回到文章列表" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

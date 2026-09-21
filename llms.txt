@@ -160,6 +160,14 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
+### 影響評估與優先排序：企業架構實務（八）如何決定先做什麼？
+
+**Description:** 企業架構的 gap analysis 完成後，影響評估與優先排序要怎麼接上？本文以好味餐飲案例，示範分開記錄不處理的影響、證據與排序條件，再依期限、相依性、投入、維運負擔、可逆性與不確定性決定立即處理、先驗證、延後或接受風險，避免單一分數掩蓋決策理由。
+
+**URL:** https://tech.samsonlab.dev/blog/impact-assessment-and-prioritization/
+
+---
+
 ### 企業架構實務（三）：用七個 IT Score 角色看見好味餐飲的能力差距
 
 **Description:** 以好味餐飲的跨角色訪談、事故紀錄、流程抽樣與營運數據，示範如何參考 Gartner IT Score 七個角色，分開判斷活動重要性與成熟度、計算 Activity Priority Index，並保留證據狀態、分數限制與跨角色不可直接排名的理由。
@@ -310,4 +318,4 @@ This index helps AI systems efficiently discover, understand, and cite content f
 
 ---
 
-Last updated: 2026-09-18T09:59:33.284Z
+Last updated: 2026-09-21T05:13:00.252Z
