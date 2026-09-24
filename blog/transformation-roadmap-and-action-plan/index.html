@@ -1,0 +1,338 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-0WD4Y3ZJE1"></script><script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { window.dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-0WD4Y3ZJE1');
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/transformation-roadmap-and-action-plan/"><!-- Primary Meta Tags --><title>企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫</title><meta name="title" content="企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫"><meta name="description" content="企業架構轉型如何從 gap 優先排序走到可執行的 Roadmap？本文以好味餐飲案例，說明如何連結 baseline、target 與過渡架構，安排能力依賴、階段決策閘門和 action plan，再依營運證據決定擴展、調整或退場，並拆解每階段的成果、依賴與驗收證據，讓規劃能隨實際結果更新。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/transformation-roadmap-and-action-plan/"><meta property="og:title" content="企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫"><meta property="og:description" content="企業架構轉型如何從 gap 優先排序走到可執行的 Roadmap？本文以好味餐飲案例，說明如何連結 baseline、target 與過渡架構，安排能力依賴、階段決策閘門和 action plan，再依營運證據決定擴展、調整或退場，並拆解每階段的成果、依賴與驗收證據，讓規劃能隨實際結果更新。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/transformation-roadmap-and-action-plan.GjRpWcoR.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/transformation-roadmap-and-action-plan/"><meta property="twitter:title" content="企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫"><meta property="twitter:description" content="企業架構轉型如何從 gap 優先排序走到可執行的 Roadmap？本文以好味餐飲案例，說明如何連結 baseline、target 與過渡架構，安排能力依賴、階段決策閘門和 action plan，再依營運證據決定擴展、調整或退場，並拆解每階段的成果、依賴與驗收證據，讓規劃能隨實際結果更新。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/transformation-roadmap-and-action-plan.GjRpWcoR.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫","description":"企業架構轉型如何從 gap 優先排序走到可執行的 Roadmap？本文以好味餐飲案例，說明如何連結 baseline、target 與過渡架構，安排能力依賴、階段決策閘門和 action plan，再依營運證據決定擴展、調整或退場，並拆解每階段的成果、依賴與驗收證據，讓規劃能隨實際結果更新。","datePublished":"2026-09-24T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/transformation-roadmap-and-action-plan.GjRpWcoR.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.B_vMVxZ6.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/transformation-roadmap-and-action-plan.GjRpWcoR_JzJoD.webp" alt="企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-24T00:00:00.000Z">Sep 24, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">enterprise-architecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">digital-transformation</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">transformation-roadmap</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="roadmap-要交代決策順序">Roadmap 要交代決策順序</h2>
+<p>完成 <a href="/blog/identifying-functional-and-capability-gaps/">gap 識別</a>與<a href="/blog/impact-assessment-and-prioritization/">行動優先排序</a>後，常見的下一步是畫一張 roadmap：第一季做平台、第二季做資料、第三季做系統遷移。</p>
+<p>如果 roadmap 只列時程與專案名稱，還有幾個問題沒有答案：</p>
+<ul>
+<li>每一階段要改變什麼能力或行為，為什麼按這個順序推進？</li>
+<li>中間要維持哪些過渡狀態，哪些依賴與決策必須先處理？</li>
+<li>用什麼證據決定進入下一階段，假設不成立時如何調整或回復？</li>
+</ul>
+<blockquote>
+<p>好的轉型路徑交代從 current state 到 target state 的決策順序與學習節點，日期則依證據和條件逐步排定。</p>
+</blockquote>
+<p>這個觀點可對照 TOGAF 對 Architecture Roadmap、work packages、Transition Architectures 與移轉計畫的區分：Roadmap 說明如何逐步實現 target，移轉計畫則進一步安排交付工作。<a href="#ref-1">[1]</a> <a href="#ref-2">[2]</a></p>
+<h2 id="三個狀態要同時存在">三個狀態要同時存在</h2>
+<h3 id="baseline我們現在在哪裡">Baseline：我們現在在哪裡</h3>
+<p>Baseline 除了現有系統清單，還要記錄：</p>
+<ul>
+<li>目前能力與流程如何運作</li>
+<li>哪些資料、系統與介面有明確 owner</li>
+<li>已知的風險、限制、人工 workaround 與技術債</li>
+<li>哪些假設仍然沒有證據</li>
+<li>當前的交付與營運指標</li>
+</ul>
+<p>沒有 baseline，轉型很容易變成用新架構批評舊架構，卻無法說明真正改善了什麼。</p>
+<h3 id="target希望抵達哪裡">Target：希望抵達哪裡</h3>
+<p>Target state 要描述可觀察的能力與結果：</p>
+<ul>
+<li>使用者或業務流程會有什麼不同？</li>
+<li>資料責任、系統邊界與整合契約會如何改變？</li>
+<li>哪些品質屬性與治理要求必須成立？</li>
+<li>用什麼指標確認結果達成？</li>
+</ul>
+<p>Target state 描述後續每個 initiative 都要對照的可觀察能力與結果。</p>
+<h3 id="transition-architecture中間怎麼活著走過去">Transition architecture：中間怎麼活著走過去</h3>
+<p>企業通常無法一次從舊狀態跳到目標狀態。過渡架構描述某個階段「暫時允許什麼共存」，以及這個暫時狀態如何被控制：</p>
+<ul>
+<li>舊系統與新服務如何並存？</li>
+<li>哪一邊可以寫入，哪一邊只讀？</li>
+<li>資料如何同步，短暫不一致是否可接受？</li>
+<li>新舊介面如何相容與觀測？</li>
+<li>何時停止使用舊路徑？誰負責決定？</li>
+</ul>
+<p>過渡架構有明確期限、責任與退場條件，說明中間狀態如何運作。若沒有管理過渡方案，雙寫、雙維護與人工對帳就容易延續下去。</p>
+<p>過渡架構中的元件可以分成四種狀態，方便在每個階段說清楚哪些能力正在發生什麼事：</p>
+<p>TOGAF 將 Transition Architecture 描述為 baseline 與 target 之間具架構意義的中間狀態，並建議依能力增量、商業價值、風險和組織承接能力安排階段。這支持了「過渡狀態要能運作並產生可辨識成果」的設計原則。<a href="#ref-1">[1]</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>狀態</th><th>要回答的問題</th><th>例子</th></tr></thead><tbody><tr><td>新增</td><td>本階段要建立哪些原本不存在的能力？</td><td>新增企業 API 平台、IAM 或集中監控</td></tr><tr><td>保留</td><td>哪些既有能力仍符合需求，需要繼續支撐業務？</td><td>保留既有核心交易系統</td></tr><tr><td>過渡</td><td>哪些新舊能力需要並存，如何逐步移轉？</td><td>API 與既有點對點介接並行</td></tr><tr><td>替換</td><td>哪些舊能力何時可以完全淘汰？</td><td>新平台成熟後下線舊 API Gateway</td></tr></tbody></table>
+<p>這四種狀態讓 roadmap 同時呈現「何時做」與「每個階段的架構如何運作」。</p>
+<p>Roadmap 若只呈現幾個未來架構快照，仍可能看不出實際由哪些專案與遷移工作完成轉變。Buckl 等人提出的 EA Roadmap 視圖，便把架構狀態、專案工作與支援移轉放在時間脈絡中呈現。<a href="#ref-3">[3]</a></p>
+<h2 id="roadmap-如何接上交付計畫">Roadmap 如何接上交付計畫</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>名稱</th><th>主要用途</th><th>典型內容</th></tr></thead><tbody><tr><td>Roadmap</td><td>表達方向、階段與順序</td><td>能力、結果、依賴、里程碑與決策閘門</td></tr><tr><td>Project plan</td><td>管理一個交付單位</td><td>範圍、工作、時程、資源、風險與驗收</td></tr><tr><td>Backlog</td><td>管理可執行工作</td><td>user story、技術工作、缺陷與優先級</td></tr><tr><td>Action plan</td><td>指定下一步責任</td><td>行動、owner、期限、所需決策與檢查方式</td></tr></tbody></table>
+<p>Roadmap 描述目標架構如何透過工作套件與過渡架構逐步實現；Implementation and Migration Plan 再安排專案、資源、時程與相依性。Project plan 管理單一交付單位，backlog 管理可執行工作。若把各層內容塞進同一份文件，後續很難確認該由誰更新哪一部分。<a href="#ref-1">[1]</a> <a href="#ref-2">[2]</a></p>
+<p>要把規劃產物接到可持續執行的 EA 演進流程，Ernst 與 Schneider 也提出涵蓋相關任務與角色的方法模式，並連結專案組合和應用生命週期管理。<a href="#ref-4">[4]</a></p>
+<h3 id="投資組合不等於實施路徑">投資組合不等於實施路徑</h3>
+<p>方案被選進投資組合後，仍要依能力和依賴安排啟動順序。可以先分成三個能力階段：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>階段</th><th>主要目的</th><th>常見能力</th></tr></thead><tbody><tr><td>建立基礎能力</td><td>建立後續方案共同需要的穩定環境</td><td>標準化流程、基礎工具、資料品質、DevSecOps、組織能力</td></tr><tr><td>建立共通平台能力</td><td>讓多個系統可以重複使用企業服務</td><td>API 平台、IAM、監控、共用服務與治理</td></tr><tr><td>建立企業能力</td><td>將成熟的基礎與平台能力轉成業務價值</td><td>MDM、資料分析、AI、CRM 與生態圈整合</td></tr></tbody></table>
+<p>排定路徑時，除了方案重要性，也要檢查三種依賴：</p>
+<ul>
+<li><strong>能力依賴</strong>：後續能力需要前置能力，例如資料品質改善先於 MDM。</li>
+<li><strong>治理依賴</strong>：平台或服務需要先有標準、角色、權責與管理機制，例如 API 治理先於 API 平台擴大採用。</li>
+<li><strong>營運依賴</strong>：新能力需要監控、支援、回復與持續營運能力，例如集中監控先於大量導入共用服務。</li>
+</ul>
+<p>如果沒有分析依賴，所有方案同時啟動容易造成資源衝突、等待、返工與重複建置。TOGAF Phase E 也要求整合差距、方案與依賴，並將企業的變革承接能力納入過渡架構規劃；這些條件會影響路徑與階段安排。<a href="#ref-1">[1]</a></p>
+<h3 id="補充模型單一能力的演進">補充模型：單一能力的演進</h3>
+<p>若要描述單一能力本身如何演進，可以用四階段簡化模型：</p>
+<p><strong>能力建立</strong>（做法尚未一致）→ <strong>能力標準化</strong>（多個團隊遵循共通流程）→ <strong>能力平台化</strong>（以共用平台與治理支援多個系統）→ <strong>能力企業化</strong>（持續優化並支援業務創新）。</p>
+<p>本文整理的四階段模型只用來描述單一能力的發展，不能拿來排序轉型方案或當作通用 EA 成熟度標準。若要評估 EA 管理計畫，可參考 GAO 的七階段 Enterprise Architecture Management Maturity Framework；兩者評估對象不同。<a href="#ref-7">[7]</a></p>
+<p>例如 API 能力可以從各系統各自開發，逐步走向規格標準化、共用平台，再支援外部整合等企業場景。這能補充說明單一能力目前在哪裡、下一步要到哪裡。</p>
+<h2 id="一個案例沿用好味餐飲的情境故事">一個案例：沿用好味餐飲的情境故事</h2>
+<p>以下沿用<a href="/blog/restaurant-transformation-scenario/">〈情境故事：好味餐飲的數位轉型起點〉</a>中的虛構案例。好味有 42 家門市、3 個品牌，OneFood 已從 POS 後端成長為多通路共用的交易核心。會員活動尖峰時，訂單、付款、庫存批次與營運報表同時使用正式資料庫，曾造成多個通路逾時、交易狀態不明與大量人工清查。</p>
+<p>Roadmap 要支援好味兩年內擴展至 80 家門市、推出新品牌與開放加盟，同時改善交易可靠度及交付速度。目標包含：未受影響的門市與通路仍可接單、結果不明的交易在 30 分鐘內查明、人工核對降至每月 50 筆以下、營運資料在 5 分鐘內可查，以及一般活動與規則變更在 10 個工作天內完成驗證並上線。規劃也要保留既有 POS 設備至少三年，容許外部服務商各自變更，並確保加盟店只能查看獲授權的門市資料。</p>
+<h3 id="phase-0建立可決策的-baseline">Phase 0：建立可決策的 baseline</h3>
+<p>先沿用缺口分析中的 G-01 至 G-05，確認基線、責任人與驗收方式：</p>
+<ul>
+<li><strong>G-01 資訊與治理</strong>：盤點訂單、付款、庫存與廚房狀態的定義、來源、更新責任及人工對帳原因；為業務目標指定資料來源與負責人，並固定指標的量測口徑、觀察期間與安全門檻。</li>
+<li><strong>G-02 整合</strong>：抽樣串起通路請求、付款、OneFood 訂單與廚房單，確認重送、重複及結果不明的交易如何識別。</li>
+<li><strong>G-03 品質與技術</strong>：量測一般午餐尖峰及七倍活動流量，檢視庫存批次、報表與訂單交易對共用資料庫的影響，補足端到端交易觀測；同時確認日常接單、付款與外送整合、POS 設備年限及加盟資料權限等限制。</li>
+<li><strong>G-04 流程與交付</strong>：確認六週發布週期、四至五個工作天人工回歸及整版回復的原因，找出可先縮小驗證的變更範圍。</li>
+<li><strong>G-05 人員與能力</strong>：確認跨模組事故處理所需角色、現有技能、責任歸屬與備援；目前 14 名相關人員中只有 2 人能獨立追查，且尚無指定備援。</li>
+</ul>
+<p>**決策閘門：**基線資料、目標衡量方式、關鍵責任人與不得中斷的營運限制是否已確認？是否已有足夠證據比較候選方案並選定一個範圍有限、可回復的驗證項目？</p>
+<h3 id="phase-1驗證一段端到端交易路徑">Phase 1：驗證一段端到端交易路徑</h3>
+<ul>
+<li>依基線選定一個具代表性的品牌、通路或門市範圍，維持既有 POS 與外部服務商運作。</li>
+<li>依候選方案選擇測試環境、影子觀測或限量正式流量；開始前先定義訂單與付款的寫入責任、停止條件及回復負責人，避免新舊路徑重複建立交易。</li>
+<li>驗證同一次結帳能否跨通路請求、付款、訂單與廚房單追查，並明確處理重送、重複及付款結果不明等例外。</li>
+<li>在這段路徑補上交易階段、錯誤分類與負載觀測，並測試活動流量與批次、報表同時執行時的影響。</li>
+<li>演練故障時的門市處理、交易查明、回復與升級流程，記錄實際耗時和人工介入點。</li>
+</ul>
+<p>**決策閘門：**在 Phase 0 定義的範圍與量測口徑下，抽樣交易能否沿路徑查明，結果不明的交易能否在 30 分鐘內確認？測試期間是否避免重複付款與訂單？負載或依賴故障時，未受影響的門市與通路能否繼續接單？若證據不足或觸及停止條件，先縮小範圍、補足量測或回復既有路徑。</p>
+<h3 id="phase-2逐步擴展並建立交付與營運能力">Phase 2：逐步擴展並建立交付與營運能力</h3>
+<ul>
+<li>將已驗證的交易識別、狀態定義與例外處理逐步擴展到其他通路、品牌及門市。</li>
+<li>為共用資料、交易流程及整合介面指定 owner；建立相容性、權限、變更通知與問題升級方式。</li>
+<li>將常見活動與規則變更納入小範圍回歸、自動化驗證及可回復的發布流程。</li>
+<li>依權限矩陣驗證加盟店只能讀取自己的門市資料，顧客與付款資料仍由總部控管。</li>
+<li>持續追蹤人工核對量、營運資料時效、交易查明時間、發布週期與第一線支援負擔。</li>
+</ul>
+<p>**決策閘門：**擴大前是否已通過 Phase 0 列明的安全與營運門檻？人工核對量、營運資料時效、一般規則變更週期等指標是否持續朝目標改善？負責團隊與備援是否能自行處理例外、回復與資料修正？</p>
+<h3 id="phase-3擴大到成長計畫並退場已無必要的舊路徑">Phase 3：擴大到成長計畫並退場已無必要的舊路徑</h3>
+<ul>
+<li>依前階段成效逐步支援新門市、新品牌及加盟店，檢視新門市設定與驗證是否由 15 個工作天縮短至 5 個工作天、新品牌是否能在 8 週內推出第一版、新通路是否能在 4 週內推出第一版。</li>
+<li>只有在替代流程已被實際使用、資料責任與回復方式明確後，才遷移或停止直接存取正式資料庫的報表、批次及其他舊路徑。</li>
+<li>保留既有 POS 設備的使用期限，並為付款、發票、ERP 與外送等不同步變更的服務商維持明確的整合及例外處理方式。</li>
+<li>以事故紀錄、發布紀錄、查明時間、對帳量及展店週期等指標檢視投資成果；尚未達標的項目回到 roadmap 重新排序。</li>
+</ul>
+<p>這條路徑先取得足以選擇方案的證據，再驗證有限範圍的端到端交易，最後依可觀察的營運成果擴展或退場。案例沒有預設要採用特定產品、平台或拆分方式；是否進入下一階段，取決於前一階段的證據與決策閘門。</p>
+<p>本例的 Phase 0 至 Phase 3 表示推動順序與決策閘門。完成 baseline 後，再依可用資源、預算，以及董事會每半年檢視投資的節奏，排定時間窗口，確認路徑能支援兩年成長目標。</p>
+<h2 id="設計路徑先排結果與依賴">設計路徑：先排結果與依賴</h2>
+<h3 id="1-先確認要改變的結果">1. 先確認要改變的結果</h3>
+<p>每個階段先寫 outcome，再列出要支援它的 initiative。例如：</p>
+<ul>
+<li>重要客戶資料有明確來源與修正責任</li>
+<li>查詢流量不再直接壓在核心交易系統</li>
+<li>新通路可以透過穩定契約接入</li>
+<li>事故可以被定位、回復與事後追蹤</li>
+</ul>
+<p>結果清楚後，才開始決定需要哪些 initiative。這可以降低「為了完成專案而完成專案」的風險。</p>
+<h3 id="2-找出前置依賴">2. 找出前置依賴</h3>
+<p>依賴除了系統上線順序，還包括：</p>
+<ul>
+<li>資料定義與 ownership 決策</li>
+<li>權限、稽核與安全邊界</li>
+<li>平台、環境、團隊技能與維運責任</li>
+<li>外部供應商、法遵或合約期限</li>
+<li>量測與觀測能力</li>
+</ul>
+<p>initiative 缺少關鍵前提時，可以拆成「先取得證據」與「再進行改造」兩個階段，先處理阻礙再安排後續工作。</p>
+<h3 id="3-優先安排可降低不確定性的工作">3. 優先安排可降低不確定性的工作</h3>
+<p>有些工作不會立刻帶來完整功能，卻能讓後續決策更可靠，例如：</p>
+<ul>
+<li>建立資料欄位與來源盤點</li>
+<li>補上 API／事件的 trace 與錯誤分類</li>
+<li>對核心流程建立 contract test 或回歸基準</li>
+<li>做一個小範圍的容量、延遲或資料同步實驗</li>
+<li>驗證新舊路徑的切換與回復方式</li>
+</ul>
+<p>這類工作用低成本換取後續方案的 learning value，並應有明確問題、時間盒與決策輸出。Carnegie Mellon 軟體工程研究所提出的 Architecture Options Workshop，會從已識別的系統風險出發，整理設計選項，再形成實施 Roadmap，可作為前置探索工作的參考。<a href="#ref-6">[6]</a></p>
+<h3 id="4-為每個階段設定決策閘門">4. 為每個階段設定決策閘門</h3>
+<p>決策閘門要確認是否有足夠證據，支撐下一階段成本較高、較難回復的變更：</p>
+<ul>
+<li>目標行為是否真的被使用者需要？</li>
+<li>資料責任與品質是否已經清楚？</li>
+<li>效能、可用性、安全與營運負擔是否可接受？</li>
+<li>團隊是否具備長期維護能力，包含處理例外、回復服務與持續改善？</li>
+<li>過渡架構的退場條件與責任是否已經成立？</li>
+</ul>
+<p>證據不足時，可以延後、縮小範圍、補驗證，或停止方案；不必為了守住原時程繼續投入。</p>
+<h3 id="六項考量歸成三組">六項考量歸成三組</h3>
+<p>設計 roadmap 的順序時，可以把六項考量歸成三組問題：</p>
+<ul>
+<li><strong>價值與時機</strong>：是否支援策略、法規、重大痛點或近期價值？</li>
+<li><strong>可行性</strong>：前置能力是否到位？關鍵人力、技能與預算是否足夠，是否需要分階段投入？</li>
+<li><strong>風險與承接</strong>：是否需要先用 Pilot 驗證？使用單位、流程與制度是否準備好接受改變？</li>
+</ul>
+<p>「高價值」代表值得討論，實際啟動仍要看前置能力與承接條件。Roadmap 的結構與規劃流程也要配合議題範圍、參與者和決策用途，才能支援策略溝通與後續行動。<a href="#ref-5">[5]</a></p>
+<h2 id="從路徑拆成-action-plan並持續治理">從路徑拆成 action plan，並持續治理</h2>
+<p>要把能力實作出來，可以拆成四層：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>能力</span></span>
+<span class="line"><span>→ 工作項目</span></span>
+<span class="line"><span>→ 主要活動</span></span>
+<span class="line"><span>→ 里程碑</span></span></code></pre>
+<p>此外，每一項行動計畫至少要寫清楚五件事：目標、要建立的能力、負責單位、時程，以及成功衡量指標。里程碑只是代表某個交付物或階段完成；成功指標則要證明能力真的被使用並產生價值，兩者不能混用。TOGAF 的移轉計畫也將工作分解、相依性、資源、成本、風險、里程碑和時程納入規劃，說明 Roadmap 需要連回可交付與可追蹤的工作。<a href="#ref-2">[2]</a></p>
+<p>Action plan 可以先用一個小表格開始：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>行動</th><th>對應結果與前置條件</th><th>主要 owner／相對時程</th><th>完成證據</th><th>衡量指標／檢視點</th></tr></thead><tbody><tr><td>定義交易狀態、資料來源與責任</td><td>G-01；交易樣本、現行狀態文件與對帳紀錄</td><td>資料 owner（營運、財務協作）；Phase 0 gate 前</td><td>狀態與欄位字典、來源及 owner 對照、未決事項責任人</td><td>人工核對降至每月 50 筆以下，營運資料 5 分鐘內可查；Phase 0 定義口徑，Phase 2 檢視</td></tr><tr><td>驗證同一次結帳的跨系統關聯</td><td>G-02；通路請求、付款服務商交易資料與廚房單樣本</td><td>交易／訂單服務 owner（通路、付款協作）；Phase 1 Pilot 前</td><td>含重送與例外情境的端到端追查紀錄及處理流程</td><td>約定樣本範圍內的交易可關聯，結果不明交易在 30 分鐘內查明；Phase 1 gate</td></tr><tr><td>驗證尖峰隔離與事故診斷</td><td>G-03；尖峰負載資料、批次與報表排程、故障演練環境</td><td>平台 owner（維運、營運協作）；Phase 0 建基線，Phase 1 演練</td><td>一般及七倍流量測試、故障注入與復原紀錄</td><td>未受影響的門市與通路能持續接單，交易查明時間朝 30 分鐘目標改善；Phase 1 gate</td></tr><tr><td>縮短活動與規則變更的驗證週期</td><td>G-04；變更分類、回歸案例、發布與回復紀錄</td><td>產品工程 owner（QA 協作）；Phase 1 試行，Phase 2 擴大</td><td>回歸結果、發布紀錄及回復演練</td><td>一般活動與規則變更在 10 個工作天內完成驗證並上線；每次發布及 Phase 2 gate 檢視</td></tr><tr><td>建立關鍵能力的負責與備援</td><td>G-05；技能盤點、值班及升級流程</td><td>資訊主管（相關業務 owner 協作）；Phase 0 指派，Phase 1 演練</td><td>主責與備援名單、操作手冊、跨模組事故演練紀錄</td><td>每項關鍵交易能力均有主責及備援，並能依流程完成演練；Phase 1、Phase 2 gate</td></tr><tr><td>建立可重複的新門市、品牌與通路設定流程</td><td>展店、新品牌與新通路目標；門市設定流程與外部服務商相依性</td><td>營運能力 owner（產品工程協作）；Phase 0 定義口徑，Phase 2 試行，Phase 3 擴大</td><td>代表性的新門市設定、新品牌與新通路上線流程紀錄</td><td>新門市設定 5 個工作天內；新品牌 8 週、新通路 4 週內推出第一版；Phase 2、Phase 3 gate</td></tr><tr><td>驗證加盟店資料授權與隔離</td><td>加盟資料權限目標；加盟流程、資料分類與最小權限矩陣</td><td>加盟營運 owner（資安、資料 owner 協作）；Phase 0 定義權限，Phase 2 上線前驗證</td><td>權限矩陣及跨門市存取測試紀錄</td><td>授權角色可完成必要工作；未授權的跨店與敏感資料存取均遭拒；首批加盟店上線前檢視</td></tr></tbody></table>
+<p>每項行動都要能回到一個 gap 或 outcome。若說不出它要解決的問題，就要重新確認是否需要納入轉型工作。</p>
+<p>表中的 Phase 是相對時程示意；正式執行時，需指定實際負責人與起訖時間，並將階段檢視排入半年投資決策節奏。</p>
+<h3 id="階段完成後更新-roadmap">階段完成後更新 roadmap</h3>
+<p>每個階段完成後都要更新 Roadmap，至少回寫：</p>
+<ul>
+<li>哪些 target behavior 已驗證，哪些 gap 已關閉或只是被轉移？</li>
+<li>哪些假設、依賴、風險或優先級需要修正？</li>
+<li>過渡架構增加了哪些維運或資料成本，下一階段是否仍值得投入？</li>
+</ul>
+<p>EA 要根據專案交付結果、incident 與使用者回饋持續更新。記錄架構狀態、變更工作與遷移時點，可以保留 Roadmap 的演進脈絡，支援後續檢視。<a href="#ref-3">[3]</a></p>
+<h2 id="參考資料">參考資料</h2>
+<p>本文的三階段轉型策略、四階段能力演進、決策閘門與行動表格，是依本篇脈絡整理的工作模型。以下資料支撐文中引用的 TOGAF 產物、EA Roadmap、架構現代化與成熟度評估概念；沒有任何單一來源定義整套模型。TOGAF 9.2 Phase E/F 的線上閱讀版由第三方提供；現行版本資訊見 <a href="https://www.opengroup.org/togaf/new-version">The Open Group TOGAF 10th Edition 說明</a>。</p>
+<!-- markdownlint-disable MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] The Open Group，〈<a href="https://www.togafcertified.com/TOGAF%209.2%20HTML/chap12.html">The TOGAF Standard, Version 9.2: Phase E – Opportunities &#x26; Solutions</a>〉，2018。</li>
+<li><a id="ref-2"></a>[2] The Open Group，〈<a href="https://www.togafcertified.com/TOGAF%209.2%20HTML/chap13.html">The TOGAF Standard, Version 9.2: Phase F – Migration Planning</a>〉，2018。</li>
+<li><a id="ref-3"></a>[3] Sabine Buckl、Alexander M. Ernst、Florian Matthes、Christian M. Schweda，〈<a href="https://www.cs.cit.tum.de/sebis/publications/2009/bu09b/">Visual Roadmaps for Managed Enterprise Architecture Evolution</a>〉，1st International Workshop on Enterprise Architecture Challenges and Responses，2009，352–357。</li>
+<li><a id="ref-4"></a>[4] Alexander M. Ernst、Alexander W. Schneider，〈<a href="https://subs.emis.de/LNI/Proceedings/Proceedings160/P-160.pdf">Roadmaps for Enterprise Architecture Evolution</a>〉，《Software Engineering 2010 – Workshopband》，2010，253–266。</li>
+<li><a id="ref-5"></a>[5] Robert Phaal、Gerrit Muller，〈<a href="https://www.sciencedirect.com/science/article/pii/S0040162508000632">An Architectural Framework for Roadmapping: Towards Visual Strategy</a>〉，《Technological Forecasting and Social Change》，76(1)，39–49，2009。</li>
+<li><a id="ref-6"></a>[6] Neil Ernst、Mary Popeck、Felix Bachmann、Patrick Donohoe，〈<a href="https://www.sei.cmu.edu/library/creating-software-modernization-roadmaps-the-architecture-options-workshop/">Creating Software Modernization Roadmaps: The Architecture Options Workshop</a>〉，13th Working IEEE/IFIP Conference on Software Architecture，2016，71–80。</li>
+<li><a id="ref-7"></a>[7] U.S. Government Accountability Office，〈<a href="https://www.gao.gov/assets/a77237.html">Organizational Transformation: A Framework for Assessing and Improving Enterprise Architecture Management (Version 2.0)</a>〉，GAO-10-846G，2010。</li>
+</ul>
+<!-- markdownlint-enable MD033 --></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/impact-assessment-and-prioritization/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（八）：影響評估與優先排序，如何決定先做什麼？</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" aria-label="回到文章列表" title="回到文章列表" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>

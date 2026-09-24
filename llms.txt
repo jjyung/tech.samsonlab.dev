@@ -35,6 +35,7 @@ Use this file as a discovery index. Follow relevant links for full context and c
 - [企業架構實務（五）：用 PPTI 分析好味餐飲的訂單履約能力](https://tech.samsonlab.dev/blog/ppti-restaurant-case-study/): 以好味餐飲的訪談、事故紀錄、流程抽樣與營運數據，示範如何界定訂單履約能力，從 People、Process、Technology、Information 裁決成熟度、保留觀點差異、檢查 CHS 權重敏感度，把能力缺口接回業務目標，並說明為什麼低分不能直接推出拆分系統或更換平台。
 - [企業架構實務（一）：專案管理與企業架構如何合作](https://tech.samsonlab.dev/blog/project-management-and-enterprise-architecture/): 說明專案管理（PM）、PMO、企業架構（EA）與業務決策者如何在不同時間尺度上協作，把企業能力、系統邊界與長期架構方向轉成可分階段交付、驗收與追蹤的專案承諾，並用決策紀錄、依賴圖與營運證據降低整合成本、技術債和轉型風險。適合需要同時管理當期交付與長期轉型的團隊。
 - [情境故事：好味餐飲的數位轉型起點](https://tech.samsonlab.dev/blog/restaurant-transformation-scenario/): 以虛構餐飲集團的尖峰事故、成長計畫、跨角色訪談與營運證據，建立企業架構轉型分析可反覆引用的共同情境，整理 OneFood 現況、業務目標、利害關係人與轉型期間不能中斷營運的限制，作為後續 IT Score 與 PPTI 案例的共同基準文件。
+- [企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫](https://tech.samsonlab.dev/blog/transformation-roadmap-and-action-plan/): 企業架構轉型如何從 gap 優先排序走到可執行的 Roadmap？本文以好味餐飲案例，說明如何連結 baseline、target 與過渡架構，安排能力依賴、階段決策閘門和 action plan，再依營運證據決定擴展、調整或退場，並拆解每階段的成果、依賴與驗收證據，讓規劃能隨實際結果更新。
 - [AI 時代的自動化測試與驗收（一）：從測試金字塔到信任系統](https://tech.samsonlab.dev/blog/when-ai-says-done-verification-before-production/): AI 讓生成變快，產品能不能上線的關鍵，早已從生成本身移到驗證能力。這是系列開篇：把測試金字塔重新定義成信任系統，畫出測試與驗收的邊界，再展開接下來要逐層深入的系列路線。
 
 ## Projects
