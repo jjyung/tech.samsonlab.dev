@@ -6,7 +6,7 @@ Use this file as a discovery index. Follow relevant links for full context and c
 
 ## Articles
 
-- [企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？](https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/): 企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。
+- [企業架構實務（十）：企業架構訪談技巧，如何從受訪者取樣、事件追問與交叉驗證建立可追溯的現況證據與決策依據？](https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/): 企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。
 - [Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶](https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/): 從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。
 - [Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡](https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/): 整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。
 - [Agent Sandbox：是什麼、為什麼需要、現在大家怎麼做](https://tech.samsonlab.dev/blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/): Sandbox 不是單純的 code runner，而是 agent 的 execution boundary。這篇文章整理它為什麼重要、常見組合方式，以及主流產品與框架現在怎麼做。
