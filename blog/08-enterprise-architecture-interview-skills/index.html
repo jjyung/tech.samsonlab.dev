@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-0WD4Y3ZJE1"></script><script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { window.dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-0WD4Y3ZJE1');
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/"><!-- Primary Meta Tags --><title>企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？</title><meta name="title" content="企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？"><meta name="description" content="企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/"><meta property="og:title" content="企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？"><meta property="og:description" content="企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/08-enterprise-architecture-interview-skills.-CgHDr1b.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/"><meta property="twitter:title" content="企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？"><meta property="twitter:description" content="企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/08-enterprise-architecture-interview-skills.-CgHDr1b.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？","description":"企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。","datePublished":"2026-09-26T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/08-enterprise-architecture-interview-skills.-CgHDr1b.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.B_vMVxZ6.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/08-enterprise-architecture-interview-skills.-CgHDr1b_JO5ui.webp" alt="企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-09-26T00:00:00.000Z">Sep 26, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">enterprise-architecture</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">business-analysis</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">interview-techniques</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">企業架構訪談：如何從受訪者取樣、事件追問與交叉驗證，建立可追溯的現況證據，支援 gap analysis 與轉型決策？</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><h2 id="這篇要回答的問題">這篇要回答的問題</h2>
+<p>企業架構分析很少能只靠文件完成。系統清單可能過時，流程圖可能和實際工作不同，責任矩陣可能寫得很完整但沒有人照著做。訪談因此很重要，但訪談本身也有風險：</p>
+<ul>
+<li>每個角色只描述自己看到的局部</li>
+<li>受訪者把偏好的解法當成現況</li>
+<li>問題被說成別人的責任</li>
+<li>訪談者只尋找支持原本假設的答案</li>
+<li>會議結束後只留下印象，沒有可追溯證據</li>
+</ul>
+<blockquote>
+<p>EA 訪談的目的不是取得一個大家都同意的故事，而是找出事實、假設、分歧與需要進一步驗證的邊界。</p>
+</blockquote>
+<h2 id="訪談要回答四個問題">訪談要回答四個問題</h2>
+<p>訪談目的可以收斂成四個問題，而不是先準備一長串題目：</p>
+<ol>
+<li><strong>現在怎麼運作？</strong> 了解 As-Is 現況、角色、流程、系統與資料。</li>
+<li><strong>哪裡有痛點？</strong> 找出效率、品質、風險與使用體驗問題。</li>
+<li><strong>為什麼會這樣？</strong> 透過追問找出直接原因與根因。</li>
+<li><strong>未來需要改變什麼？</strong> 確認必要成果、約束與成功定義，再由有決策權的角色形成 To-Be 方向。</li>
+</ol>
+<p>這四個問題可以把訪談和後續的現況分析、gap、願景與目標狀態接起來。</p>
+<h2 id="用-whatwhohowsequence-設計蒐證">用 What、Who、How、Sequence 設計蒐證</h2>
+<p>PMI-PBA 的官方考綱把 requirements management plan、elicitation tools and techniques、stakeholder analysis 等列為相關能力。<a href="#ref-1">[1]</a> 本文借用這個範圍，把訪談前準備工作化成四個面向；What、Who、How、Sequence 是本文採用的整理方式，不是 PMI-PBA 的固定分類：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>規劃項目</th><th>核心問題</th><th>產出</th></tr></thead><tbody><tr><td>What</td><td>要蒐集什麼資訊，要形成什麼結論？</td><td>訪談大綱、問題清單</td></tr><tr><td>Who</td><td>誰知道這些資訊，誰對結果負責？</td><td>利害關係人清單</td></tr><tr><td>How</td><td>用什麼方式取得，才能兼顧深度、廣度與證據？</td><td>訪談、工作坊、問卷、文件分析或現場觀察</td></tr><tr><td>Sequence</td><td>先後順序如何安排，哪些資訊要先取得？</td><td>訪談計畫與排程</td></tr></tbody></table>
+<p>受訪者選擇可以同時參考 Power／Interest Grid 與 RACI，但兩者不能取代取樣判斷。PMI 的業務分析文章也把 Power／Interest Grid、SME 識別與 stakeholder／requirements RACI 放在 stakeholder analysis 的脈絡中。<a href="#ref-2">[2]</a> RACI 適合說明工作或決策的責任，不代表只有 <code>A</code>（Accountable）、<code>R</code>（Responsible）和 <code>C</code>（Consulted）才知道現況。除了這些角色，也要找實際執行 workaround 的人、受影響的使用者、非正式決策者、外部夥伴，以及能提供反例或不同定義的人。<code>I</code>（Informed）通常不是主要資訊來源，但若其掌握決策背景或影響範圍，仍可能需要訪談。</p>
+<p>訪談順序不必固定成「先高層、後第一線、最後驗證」。可以先確認決策問題與範圍，再盡早接觸一線案例或原始紀錄，避免高層敘事成為後續訪談的預設答案；之後再依照缺口安排策略、流程、系統與營運角色的訪談，持續用紀錄交叉驗證。高階主管或資訊長通常適合說明策略、預算與成功標準；部門主管通常適合說明流程、KPI 與跨部門問題；IT／BU working level 則通常適合驗證實際步驟、系統限制與導入風險。</p>
+<h2 id="訪談前先定義要做的決策">訪談前先定義要做的決策</h2>
+<p>沒有決策問題的訪談，很容易變成「請介紹一下目前系統」的漫談。訪談前至少先寫清楚：</p>
+<ul>
+<li>這次分析要支援哪一個投資、風險或轉型決策？</li>
+<li>要確認 current state 的哪一部分？</li>
+<li>哪些假設可能會改變 target state 或 roadmap？</li>
+<li>需要哪些證據才能進入下一個決策閘門？</li>
+<li>哪些內容是探索，哪些內容已經有正式決策？</li>
+<li>誰擁有這個決策、何時必須做出決定，以及判斷門檻是什麼？</li>
+</ul>
+<p>例如，不要只問「客戶資料系統目前有什麼問題」，可以改成：</p>
+<blockquote>
+<p>為了判斷是否需要建立新的查詢能力，我們需要確認客戶欄位的來源責任、更新延遲、錯誤處理與實際人工 workaround。</p>
+</blockquote>
+<p>這樣受訪者比較容易提供具體情境，訪談結果也比較容易回寫到 evidence register。後續可以再接到<a href="/blog/current-state-it-score/">現況能力評估</a>、<a href="/blog/identifying-functional-and-capability-gaps/">gap analysis</a>與<a href="/blog/impact-assessment-and-prioritization/">影響評估與優先排序</a>。</p>
+<h2 id="受訪者不是職稱清單">受訪者不是職稱清單</h2>
+<p>同一個系統需要從不同角色取得不同證據。可以用問題與責任來安排訪談對象：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>角色</th><th>主要要理解的內容</th><th>適合追問的問題／證據</th></tr></thead><tbody><tr><td>業務／流程 owner</td><td>目標結果、例外、風險與業務優先級</td><td>哪個流程失敗時代價最大？多久發生一次？</td></tr><tr><td>產品／需求角色</td><td>使用情境、需求變更與價值排序</td><td>哪些需求被迫用人工 workaround？為什麼？</td></tr><tr><td>實際使用者／受影響者</td><td>真實操作、替代流程、客戶或合作夥伴影響</td><td>最近一次如何完成工作？哪一步最常繞路或等待？</td></tr><tr><td>系統／服務 owner</td><td>系統責任、契約、依賴與變更方式</td><td>最近一次跨系統變更如何完成？誰需要配合？</td></tr><tr><td>開發／測試團隊</td><td>實作限制、驗證方式與返工</td><td>哪些改動最容易造成回歸或等待？</td></tr><tr><td>營運／支援團隊</td><td>事故、容量、觀測、回復與長期負擔</td><td>最近一次異常如何定位？哪個資訊缺失？</td></tr><tr><td>資安／法遵／資料治理</td><td>權限、稽核、資料使用與保留限制</td><td>哪些規則有正式證據？哪些靠人工判斷？</td></tr></tbody></table>
+<p>受訪者的價值不在於職稱高低，而在於他能否提供與決策相關的觀察、紀錄或責任資訊。高階角色能提供方向與取捨，第一線角色往往更清楚實際流程如何繞路。</p>
+<h2 id="問法要從具體事件開始">問法要從具體事件開始</h2>
+<h3 id="先問具體事件不只問最近一次">先問具體事件，不只問最近一次</h3>
+<p>抽象問題容易得到抽象答案；只問最近一次也可能受到回憶與事件嚴重度影響。與其問「流程是否有效」，不如要求受訪者比較最近一次、最嚴重一次、最常見一次或最昂貴的一次：</p>
+<ul>
+<li>最近一次這個流程從需求到上線花了多久？</li>
+<li>最近一次、最嚴重一次與最常見一次是同一個案例嗎？如果不是，差異在哪裡？</li>
+<li>最近一次資料不一致是怎麼被發現的？</li>
+<li>最近一次跨服務變更需要通知哪些團隊？</li>
+<li>最近一次事故從告警到恢復經過哪些步驟？</li>
+<li>最近一次有人提出例外時，誰做了決定？</li>
+</ul>
+<p>具體事件可以讓訪談從理想流程回到實際行為，也比較容易要求對應的紀錄。</p>
+<h3 id="再問邊界與責任">再問邊界與責任</h3>
+<p>事件描述清楚後，繼續追問：</p>
+<ul>
+<li>哪個系統或角色負責做這個決策？</li>
+<li>哪個資料可以被誰修改？</li>
+<li>這個介面由誰維護，變更時誰需要被通知？</li>
+<li>出錯時哪個團隊先處理？什麼情況會升級？</li>
+<li>如果 owner 不在，誰可以做替代決策？</li>
+</ul>
+<p>很多 EA 問題不是完全沒有流程，而是流程在交接、例外與責任轉移時失效。這些追問通常比詢問「是否有標準流程」更能看見真實邊界。</p>
+<h3 id="最後問代價與例外">最後問代價與例外</h3>
+<ul>
+<li>如果不改變目前做法，半年後最可能增加什麼成本？</li>
+<li>哪個 workaround 已經被當成正常流程？</li>
+<li>哪些例外原本應該是暫時的，現在卻沒有退場日期？</li>
+<li>哪個限制是技術造成的，哪個其實是政策、資源或責任造成的？</li>
+<li>有沒有一個低成本的方式先驗證這個判斷？</li>
+</ul>
+<p>這些問題會把訪談內容連回 impact assessment 與 roadmap，而不是停在抱怨或願望。</p>
+<h2 id="把事實陳述與推論分開">把事實、陳述與推論分開</h2>
+<p>訪談記錄不應該把所有句子都當成同一種證據。下表同時保留陳述類型與驗證方式；它們不是完全互斥的標籤，一句受訪者陳述也可能在補上紀錄後變成已驗證的事實：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>類型</th><th>例子</th><th>如何處理</th></tr></thead><tbody><tr><td>已驗證事實</td><td>監控紀錄顯示上個月有三次查詢逾時</td><td>連結原始紀錄，標記時間範圍、資料 owner 與查詢條件</td></tr><tr><td>受訪者陳述</td><td>服務 owner 認為每次變更都需要人工通知</td><td>找變更紀錄與其他角色交叉確認</td></tr><tr><td>現場觀察</td><td>團隊常在發版前才發現 consumer 不相容</td><td>記錄觀察時間與範圍，追查測試、契約與 incident 證據</td></tr><tr><td>推論</td><td>缺少 contract test 可能是返工的主要原因</td><td>標記假設，設計驗證行動</td></tr><tr><td>未知</td><td>尚未知道資料延遲的可接受上限</td><td>指定 owner 與下一個確認方式</td></tr></tbody></table>
+<p>這種分類不是為了降低受訪者的可信度，而是讓後續討論知道哪些內容可以暫時採用，哪些仍需要補證據。沒有原始紀錄支持時，「可驗證」不等於「已驗證」。</p>
+<h2 id="用交叉驗證找出真正的分歧">用交叉驗證找出真正的分歧</h2>
+<p>同一個問題至少可以從三個角度核對：</p>
+<ol>
+<li><strong>業務結果</strong>：這個問題是否真的影響流程、客戶或風險？</li>
+<li><strong>系統行為</strong>：系統、資料、介面或指標是否呈現相同現象？</li>
+<li><strong>交付與營運</strong>：團隊是否在變更、事故或支援過程中付出相同代價？</li>
+</ol>
+<p>如果三者不一致，不要急著選一個版本當答案。先把分歧記錄下來，再判斷它是 gap、定義不一致、時間範圍不同、資料品質問題，還是不同角色的合理視角：例如業務認為資料即時，系統設計卻只提供批次更新；產品認為 API 穩定，consumer 團隊卻持續因欄位變更返工。</p>
+<p>可以在 evidence register 裡保留：</p>
+<ul>
+<li>哪些角色支持這個觀察</li>
+<li>哪些角色提出不同描述</li>
+<li>差異發生在哪個定義或時間範圍</li>
+<li>下一個需要驗證的紀錄或實驗</li>
+</ul>
+<h2 id="evidence-register-的最小欄位">Evidence register 的最小欄位</h2>
+<p>如果訪談結果要接到 current state、gap、impact 與 roadmap，evidence register 至少要能回答「誰在什麼時間、以什麼資料，支持哪一個判斷」：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>欄位</th><th>用途</th></tr></thead><tbody><tr><td>ID</td><td>讓訪談陳述、文件、指標與後續決策可以被引用</td></tr><tr><td>Claim／Current observation</td><td>清楚寫出目前的主張或可觀察狀態，避免只留摘要印象</td></tr><tr><td>Source</td><td>訪談識別碼、受訪角色、文件、系統或紀錄位置</td></tr><tr><td>Time／Scope</td><td>觀察期間、案例範圍、適用流程或系統邊界</td></tr><tr><td>Evidence type／Status</td><td>受訪者陳述、觀察、已驗證事實、推論或未知；以及未驗證、部分驗證或已驗證</td></tr><tr><td>Corroboration／Disagreement</td><td>支持、反對或尚未交叉檢查的角色與資料</td></tr><tr><td>Related decision／Gap／Impact</td><td>這筆證據影響哪個決策、缺口或業務結果</td></tr><tr><td>Owner／Next check</td><td>誰負責補證據，以及下一個驗證行動與期限</td></tr></tbody></table>
+<p>原始訪談筆記、受訪者陳述與分析者推論要分開保存；register 保存的是可追溯的判斷摘要，不是把不同層次的內容混成一段話。</p>
+<h2 id="用半結構式訪談從探索走到結論">用半結構式訪談從探索走到結論</h2>
+<p>訪談執行可以分成三步，但三步通常會來回迭代，不是一次性的直線流程：</p>
+<ol>
+<li><strong>探索式半結構訪談</strong>：所有角色都使用共同的核心問題，再依其責任與經驗開放追問，探索尚未知道的方向、痛點與限制。</li>
+<li><strong>驗證式半結構訪談</strong>：把已出現的假設、具體事件與數據帶回不同角色，確認真實性、嚴重程度、適用範圍與反例；不是只對第一線人員使用固定問題。</li>
+<li><strong>整理與收斂結論</strong>：把訪談寫回 evidence register，保留共通議題、分歧、轉型假設、證據狀態與後續驗證行動，再決定是否需要補訪。</li>
+</ol>
+<p>不要一開始只用結構式問卷，也不要直接問「要改什麼功能」。先探索問題，再驗證假設，才能避免把訪談限制在預先想好的解法裡；當需要估計普遍程度或比較群體差異時，問卷仍可以作為後續補充。</p>
+<h2 id="用-5-whys-往根因追問">用 5 Whys 往根因追問</h2>
+<p>受訪者常說的是症狀，例如「系統不好用」、「報表太慢」、「資料不準」或「整合很困難」。5 Whys 的重點不是一定問五次，而是持續追問「為什麼會這樣」，直到找到可以介入的根因。它產生的是待驗證的因果假設，不會自動證明只有一個根因；跨系統問題通常需要同時檢查流程、資料、技術、責任與治理因素。</p>
+<p>例如護理人員需要重複輸入病患資料，以下只示範一條可能的假設鏈：</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="text"><code><span class="line"><span>重複輸入（已觀察，仍需保留實際案例）</span></span>
+<span class="line"><span>→ 同一筆資料要分別輸入不同系統（確認欄位、角色與頻率）</span></span>
+<span class="line"><span>→ 兩個系統缺乏可用的共享或介接機制（待驗證）</span></span>
+<span class="line"><span>→ 可能是介接能力不足、資料 owner 不明，或受到資安／政策／契約限制</span></span>
+<span class="line"><span>→ 可能與不同時期建置、缺少共同整合原則有關（待驗證）</span></span></code></pre>
+<p>不要把這條鏈的最後一格直接寫成「組織缺乏整體資訊架構與治理規劃」。如果只停在「請做一個按鈕」或「請增加欄位」，可能會改善操作表面，卻保留真正的資訊架構問題；但反過來，若未驗證就直接歸因於治理不足，也可能錯過較小、可逆的流程或介接改善。</p>
+<h2 id="傾聽內容脈絡與落差">傾聽內容、脈絡與落差</h2>
+<p>主動傾聽不只是記下受訪者說了什麼，還要注意：</p>
+<ul>
+<li><strong>內容</strong>：受訪者描述了什麼事實與資訊？</li>
+<li><strong>脈絡</strong>：為什麼在這個角色、流程或限制下會這樣說？</li>
+<li><strong>落差</strong>：不同角色的說法是否互相矛盾？</li>
+</ul>
+<p>遇到「每天都要重複輸入很多資料」這類描述，可以先用中性的覆述確認：</p>
+<blockquote>
+<p>我聽到的是：你每天需要在不同系統輸入同一批資料。可以帶我走一次最近的案例，看看涉及哪些欄位、交接與限制嗎？我先把「跨系統整合不足」記為待驗證假設。</p>
+</blockquote>
+<p>覆述不是替受訪者下結論，而是把目前的理解攤開，讓對方修正，也讓後續紀錄知道哪些內容已經確認、哪些仍是分析者的假設。</p>
+<h2 id="ea-訪談要特別補問的架構問題">EA 訪談要特別補問的架構問題</h2>
+<p>一般需求訪談容易停在功能、痛點與願望；EA 訪談還要把觀察接回跨域邊界與長期治理：</p>
+<ul>
+<li>這個問題影響哪個業務能力、價值流或業務結果？能力的責任邊界在哪裡？</li>
+<li>哪些資料是誰的 owner？資料如何建立、修改、交換、保存與淘汰？</li>
+<li>哪些系統、團隊、供應商或流程形成依賴？變更時誰需要被通知或核准？</li>
+<li>真正的約束是技術、資安、法遵、政策、預算、技能，還是決策權不清？</li>
+<li>目標狀態需要哪些非功能需求，例如可用性、延遲、可追溯性、恢復時間或稽核性？</li>
+<li>如果不能一次完成，過渡狀態、可逆的小實驗與淘汰條件是什麼？</li>
+</ul>
+<h2 id="一個訪談流程">一個訪談流程</h2>
+<h3 id="訪談前">訪談前</h3>
+<ul>
+<li>寫下決策問題與初始假設</li>
+<li>依 People、Process、Technology、Information 分配觀察範圍</li>
+<li>選擇能提供不同視角的受訪者</li>
+<li>預先取得架構圖、流程、紀錄或指標，但不把它們當成已驗證事實</li>
+<li>告知訪談目的、使用方式與預計輸出</li>
+<li>先確認是否錄音、如何匿名化、誰可以查看，以及受訪者如何更正紀錄</li>
+<li>指定記錄者、時間盒與訪談後的摘要確認方式</li>
+</ul>
+<h3 id="訪談中">訪談中</h3>
+<ul>
+<li>先請受訪者描述實際事件，再談理想做法</li>
+<li>追問時間、頻率、責任、例外與影響</li>
+<li>把關鍵名詞寫下來，確認不同角色是否使用同一個意思</li>
+<li>區分觀察、意見、假設與解法</li>
+<li>追問什麼證據可以支持或推翻目前假設</li>
+<li>不在當場急著承諾方案或責怪個人</li>
+</ul>
+<h3 id="訪談後">訪談後</h3>
+<ul>
+<li>將內容回寫到 evidence register</li>
+<li>把未知與分歧列成待驗證項目</li>
+<li>對照系統紀錄、流程文件與其他訪談</li>
+<li>將訪談摘要交給受訪者確認事實、範圍與名詞，但不把分析結論交由單一受訪者審批</li>
+<li>更新 current state、gap、impact 或 owner</li>
+<li>把需要決策的事項帶到適合的治理節點</li>
+</ul>
+<h2 id="參考資料">參考資料</h2>
+<p>本文的 What／Who／How／Sequence、evidence register、半結構式訪談流程與 EA 追問清單，是本筆記的工作模型；以下來源只支持 PMI-PBA 的業務分析、蒐證與利害關係人分析脈絡，不代表本文整套分類是外部標準。</p>
+<!-- markdownlint-disable MD033 -->
+<ul>
+<li><a id="ref-1"></a>[1] Project Management Institute，〈<a href="https://www.pmi.org/-/media/pmi/documents/public/pdf/certifications/professional-business-analysis-exam-outline.pdf">PMI Professional in Business Analysis (PMI-PBA) Examination Content Outline</a>〉，2013。</li>
+<li><a id="ref-2"></a>[2] Greta Blash、Steve Blash，〈<a href="https://www.pmi.org/learning/library/partnership-project-managers-business-analysts-9865">Project Management and Business Analysis: A Real Life Partnership</a>〉，PMI Global Congress 2015—North America，2015。</li>
+</ul>
+<!-- markdownlint-enable MD033 --></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/transformation-roadmap-and-action-plan/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">企業架構實務（九）：企業轉型 Roadmap 規劃指南，如何從目標架構走到可執行的過渡階段與行動計畫</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" aria-label="回到文章列表" title="回到文章列表" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
