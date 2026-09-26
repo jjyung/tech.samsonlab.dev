@@ -6,7 +6,6 @@ Use this file as a discovery index. Follow relevant links for full context and c
 
 ## Articles
 
-- [企業架構實務（十）：企業架構訪談技巧，如何從受訪者取樣、事件追問與交叉驗證建立可追溯的現況證據與決策依據？](https://tech.samsonlab.dev/blog/08-enterprise-architecture-interview-skills/): 企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。
 - [Agent 成本，不只看模型單價：從 Context Architecture 談快取、壓縮與記憶](https://tech.samsonlab.dev/blog/agent-cost-context-cache-compaction-memory/): 從 context caching、context compaction 到 session 與 memory，拆解 agent 成本不只是模型單價，而是整體 context architecture 的設計問題。
 - [Loop Engineering：從 Anthropic、OpenAI、IBM 文件看 Agent Loop 的工程脈絡](https://tech.samsonlab.dev/blog/agent-loops-and-long-running-agents-from-official-docs/): 整理 Anthropic、OpenAI、IBM 官方文件裡的 agent loop pattern，把 loop engineering 拆成「下一輪怎麼開始、什麼時候停、跨輪次留下什麼」三組可驗證的工程問題。
 - [Agent Sandbox：是什麼、為什麼需要、現在大家怎麼做](https://tech.samsonlab.dev/blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/): Sandbox 不是單純的 code runner，而是 agent 的 execution boundary。這篇文章整理它為什麼重要、常見組合方式，以及主流產品與框架現在怎麼做。
@@ -22,6 +21,7 @@ Use this file as a discovery index. Follow relevant links for full context and c
 - [企業架構實務（二）：用 Gartner IT Score 找出該先補的能力缺口](https://tech.samsonlab.dev/blog/current-state-it-score/): 本文說明 Gartner IT Score 如何用成熟度標記、重要性與 Activity Priority Index 排出改善優先順序，並整理評估範圍、參與方式、證據留存、結果解讀與分數限制。重點不是追逐最低分，而是找出對策略重要、成熟度卻還跟不上的活動，再決定下一步蒐證。
 - [企業架構實務（四）：用 PPTI 拆開業務能力的結構性問題](https://tech.samsonlab.dev/blog/current-state-ppti/): 本文把 People、Process、Technology、Information 四個維度疊在業務能力地圖上，用可回查的證據與行為錨定 rubric，檢查單一業務能力的人員、流程、技術與資訊是否失衡；並整理證據門檻、權重 profile、CHS 摘要與排名限制，以及和 IT Score、TIME 的分工。
 - [當實作不再是瓶頸，治理與溝通才是 AI 時代的核心能力](https://tech.samsonlab.dev/blog/devopsdays-taipei-2026-governance-is-the-new-bottleneck/): 從 DevOpsDays Taipei 2026 兩天議程筆記出發，整理一個越來越清楚的共識：AI 加速實作後，真正稀缺的能力轉向治理、溝通、協作與可靠性。
+- [企業架構實務（十）：企業架構訪談技巧，如何從受訪者取樣、事件追問與交叉驗證建立可追溯的現況證據與決策依據？](https://tech.samsonlab.dev/blog/enterprise-architecture-interview-skills/): 企業架構訪談如何從聊天變成可追溯的現況證據？本文整理決策問題、受訪者取樣、事件追問、交叉驗證與 evidence register，說明如何把事實、分歧與待驗證假設接回現況分析、gap、impact 與 roadmap，避免把偏好解法誤當成現況，讓決策有證據可回查。
 - [Figma-to-Code 之前：先建立 Design Evidence Pack 對齊需求與技術規格](https://tech.samsonlab.dev/blog/figma-to-code-before-design-evidence-pack/): Figma-to-Code 之前，先用 Design Evidence Pack 整理畫面、行為、狀態與未知事項，保留每筆 evidence 的來源與信心，再由 SA、SD、前後端轉成可追蹤的需求、API、資料、權限與驗證契約，降低從設計直接猜規格的風險。
 - [From SEO to AEO: Why Agent Experience is Rewriting How We Design Content](https://tech.samsonlab.dev/blog/from-seo-to-aeo/): SEO optimizes for search engines, AEO optimizes for AI agents. Understanding how llms.txt and content architecture shift from human-first discovery to agent-friendly interfaces.
 - [Graphify：先建 AST 與知識圖譜，再查詢 codebase，為什麼比純 LLM trace code 更省時省成本](https://tech.samsonlab.dev/blog/graphify-knowledge-graph-first-code-tracing/): Graphify 這類先建 AST 與知識圖譜、再讓 agent 查詢結構的做法，為什麼在大型 repo tracing、RCA 與重複追問場景裡更省時、省 token，也更穩。
