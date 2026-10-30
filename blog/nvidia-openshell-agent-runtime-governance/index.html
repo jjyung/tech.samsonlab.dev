@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-0WD4Y3ZJE1"></script><script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { window.dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-0WD4Y3ZJE1');
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/nvidia-openshell-agent-runtime-governance/"><!-- Primary Meta Tags --><title>NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理</title><meta name="title" content="NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理"><meta name="description" content="NVIDIA OpenShell 是開源的 agent runtime，透過 sandbox 外的 policy、網路控管與憑證代理管理 agent 權限。本文拆解它與一般 sandbox 的差異、policy advisor 與 prover 的限制，以及企業導入時的 Linux 相依性、維運成本和適用情境。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/nvidia-openshell-agent-runtime-governance/"><meta property="og:title" content="NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理"><meta property="og:description" content="NVIDIA OpenShell 是開源的 agent runtime，透過 sandbox 外的 policy、網路控管與憑證代理管理 agent 權限。本文拆解它與一般 sandbox 的差異、policy advisor 與 prover 的限制，以及企業導入時的 Linux 相依性、維運成本和適用情境。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/nvidia-openshell-agent-runtime-governance.CWyGGv_s.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/nvidia-openshell-agent-runtime-governance/"><meta property="twitter:title" content="NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理"><meta property="twitter:description" content="NVIDIA OpenShell 是開源的 agent runtime，透過 sandbox 外的 policy、網路控管與憑證代理管理 agent 權限。本文拆解它與一般 sandbox 的差異、policy advisor 與 prover 的限制，以及企業導入時的 Linux 相依性、維運成本和適用情境。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/nvidia-openshell-agent-runtime-governance.CWyGGv_s.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理","description":"NVIDIA OpenShell 是開源的 agent runtime，透過 sandbox 外的 policy、網路控管與憑證代理管理 agent 權限。本文拆解它與一般 sandbox 的差異、policy advisor 與 prover 的限制，以及企業導入時的 Linux 相依性、維運成本和適用情境。","datePublished":"2026-10-30T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/nvidia-openshell-agent-runtime-governance.CWyGGv_s.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.CDtox-ab.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/nvidia-openshell-agent-runtime-governance.CWyGGv_s_Z4mYKB.webp" alt="NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-10-30T00:00:00.000Z">Oct 30, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">nvidia-openshell</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ai-agent</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">security-governance</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><blockquote>
+<p>概念整理｜初次查閱：2026-10-24｜更新：2026-10-29｜未經實測
+主要來源：NVIDIA OpenShell 官方文件、GitHub、產品頁、GTC Berlin 2026 報導與新聞稿</p>
+</blockquote>
+<p>2026 年 10 月的柏林，黃仁勳在 GTC Berlin 的主題演講、與德國總理 Friedrich Merz 的對談，以及 Yahoo Finance 訪問裡，數次把 OpenShell 拉到 agent 故事的中心。<a href="#ref-17">[17]</a></p>
+<p>他在 GTC 前的 Build-A-Claw 開發者活動裡，把 OpenShell 講成一個 containment system、另一種 operating system；受訪時提到，據報導今年夏天有前沿實驗室的 agent 逃出隔離、入侵 Hugging Face 等網站，並說如果當時有 OpenShell，結果會不同。<a href="#ref-18">[18]</a> <a href="#ref-19">[19]</a> 他與 Merz 對談時也說，安全不是喊話，是 technology and engineering。<a href="#ref-20">[20]</a></p>
+<p>把場景拉回一般開發者：你給 coding agent 一個 container，它確實在裡面跑。但它要裝套件、要 push code、要打內部 API，這些動作各自帶著不同的風險。Container 只回答「它在哪裡跑」，沒有回答「哪個執行檔、可以連到哪個 host、帶哪一組憑證、誰批准了這次放行」。</p>
+<p>這就是 NVIDIA OpenShell 想補的那一層。它是一個開源的 agent runtime，主打讓企業執行「fleets of autonomous AI agents」，在 kernel 隔離的 sandbox 裡跑，並用宣告式 YAML policy 控制檔案、網路與憑證存取。<a href="#ref-1">[1]</a> <a href="#ref-2">[2]</a></p>
+<p>從文件來看，OpenShell 想把 policy enforcement、credential handling、egress 與 audit 統一放到 agent process 外面管理。代價是平台複雜度、Linux 核心相依性，以及一套需要人維護的 policy 語言。這篇先整理它的概念與代價，把它當成一個 agent runtime 治理的解決方案方向來看。</p>
+<h2 id="定位不是-agent-framework也不是單純的-sandbox">定位：不是 agent framework，也不是單純的 sandbox</h2>
+<p>先從產品定位來看。NVIDIA 在產品頁說得很清楚：它不是另一個 agent framework，它坐在 Claude Code、Codex、OpenCode、OpenClaw 或自訂 agent stack 下面。<a href="#ref-14">[14]</a> 官方產品頁也列出 GitHub Copilot CLI、Hermes、LangChain Deep Agents 等支援路徑。<a href="#ref-14">[14]</a></p>
+<p>它也不是「把 process 關進 container」而已。NVIDIA 的區分是：sandbox 是為單一有界任務隔離 process；OpenShell 則是在 agent 的整個生命週期裡治理它的動作，包含 gateway 協調、sandbox supervision、policy-enforced egress、provider credential 處理、inference 存取與 log。<a href="#ref-14">[14]</a></p>
+<p>專案採 Apache-2.0 授權。本文查閱時，最新穩定版是 2026 年 10 月 27 日發布的 v0.1.6；以下功能與限制以 v0.1.6 文件為主。<a href="#ref-1">[1]</a> <a href="#ref-2">[2]</a></p>
+<h2 id="openshell-跟主流-agent-sandbox-差在哪">OpenShell 跟主流 agent sandbox 差在哪？</h2>
+<p>「主流 agent sandbox」其實不是同一種東西。比較常見的有三類：</p>
+<ul>
+<li><strong>本機隔離型</strong>：Docker、devcontainer、bubblewrap，或 Claude Code、Codex 內建的 sandbox。啟動快、摩擦低，隔離邊界通常是 process 或 container。</li>
+<li><strong>遠端／microVM 型</strong>：E2B、Daytona、Kubernetes Agent Sandbox，或 gVisor／Kata 這類 runtime。重點在遠端執行、快照、調度與規模。</li>
+<li><strong>Agent 內建的 permission／approval 層</strong>：Claude Code 的 allow／ask／deny、Codex 的 approval。它們管的是「這個 tool call 要不要執行」，不是「這個 process 可以連到哪個 host、帶哪組憑證」。</li>
+</ul>
+<p>OpenShell 不是這三類的替代品。它比較像在這三類之上再加一層控制面，把 policy 決策放到 sandbox 外面；但它自己也會透過 compute driver 建立 sandbox，不是只在既有 sandbox 外面加一層 proxy。差異可以從幾個面向看：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>面向</th><th>主流 agent sandbox</th><th>OpenShell</th></tr></thead><tbody><tr><td>決策位置</td><td>多在 sandbox 內，或 runtime／harness 內</td><td>在 sandbox 外的 supervisor；sandbox 只攔截與回報</td></tr><tr><td>權限粒度</td><td>process、container、workspace、host／domain</td><td>binary + host + port + method + path + MCP tool</td></tr><tr><td>網路</td><td>常是 allow-all、domain allowlist 或簡單 egress proxy</td><td>default-deny；TCP／DNS 經 supervisor，支援 L7 檢查</td></tr><tr><td>憑證</td><td>常以環境變數注入 sandbox</td><td>placeholder + endpoint binding；必要時動態換 token</td></tr><tr><td>治理</td><td>log、approval、policy hook</td><td>policy prover、policy advisor、OCSF／OTel</td></tr><tr><td>可移植性</td><td>常綁定特定 runtime 或產品</td><td>policy 與 Docker／Podman／K8s／MicroVM 解耦</td></tr><tr><td>營運成本</td><td>對使用者較輕，適合單人、單任務</td><td>較重，需要 gateway、DB、IAM</td></tr></tbody></table>
+<p>OpenShell 這一側的細節，分別在後面的架構、policy、憑證與治理章節。<a href="#ref-3">[3]</a> <a href="#ref-5">[5]</a> <a href="#ref-7">[7]</a> <a href="#ref-9">[9]</a> <a href="#ref-10">[10]</a> <a href="#ref-12">[12]</a> 這裡的比較是架構層次的整理；各產品實際行為仍以各自文件為準。</p>
+<p>多數 sandbox 回答「agent 在哪裡跑、能不能連網」；OpenShell 進一步追問「哪個執行檔、在什麼授權下、帶哪組憑證、對哪個 endpoint 做了什麼」。想先了解 sandbox 的基本概念，可參考<a href="/blog/agent-sandbox-what-it-is-why-agents-need-it-and-how-it-works/">Agent Sandbox 的介紹</a>。</p>
+<p>這裡有兩個要分清楚的地方。</p>
+<p>第一，OpenShell 的隔離強度取決於你選的 runtime。它可以用 Docker、Podman、Kubernetes 或 MicroVM；如果你選 MicroVM，隔離就來自那層 VM。OpenShell 自己加的是 policy、credential 與 audit，不是新的 hypervisor。如果你的威脅模型是 malicious code 逃逸，microVM 或 gVisor 可能更直接；如果你的問題是 agent 亂連網、亂用憑證，OpenShell 補的是那一層。</p>
+<p>OpenShell 的價值主要出現在多 agent、多憑證、多環境的情境。若只需要乾淨的執行環境，Docker、devcontainer 或遠端 sandbox 可能更輕。導入成本主要來自 gateway、資料庫、policy 維護與 IAM 整合。</p>
+<p>如果要快速選：單人、本機、少量憑證，先用 Docker 或 devcontainer；需要遠端執行與快照，選 remote sandbox；需要 per-binary 的網路政策、憑證代理與 audit，才考慮 OpenShell。</p>
+<p>這也是為什麼它和 Claude Code 的 permission 系統不是同一層：Claude Code 在 harness 裡決定 tool call 要不要執行；OpenShell 在 process 外面決定這個 binary 能不能連到某個 endpoint。兩者可以一起用，但解決的是不同問題。</p>
+<h2 id="架構信任邊界畫在-supervisor-與-sandbox-之間">架構：信任邊界畫在 supervisor 與 sandbox 之間</h2>
+<p>先看 agent、sandbox、container／VM 與 OpenShell 的關係：agent 在 sandbox 的隔離邊界內執行，container 或 VM 負責實作這個邊界。OpenShell 透過 compute driver 建立環境，並把負責網路政策判斷與憑證注入的 supervisor 放在邊界外。<a href="#ref-3">[3]</a></p>
+<p><img alt="NVIDIA OpenShell 官方架構圖：Gateway 管理生命週期，Supervisor 位於 sandbox 隔離邊界外，agent 的對外連線必須經過 Supervisor" loading="lazy" decoding="async" width="1280" height="870" src="/_astro/openshell-system-architecture.BhnjDSam_ZCc1ih.svg" srcset=""></p>
+<p>圖：NVIDIA OpenShell 官方架構總覽，依 v0.1.5 文件整理；原圖於 2026-10-27 下載，未修改。來源：〈<a href="https://docs.nvidia.com/openshell/v0.1.5/about/architecture">Architecture</a>〉；原圖標示 Apache-2.0，版權與來源記錄見<a href="../../../assets/nvidia-openshell/README.md">圖片說明</a>。<a href="#ref-3">[3]</a></p>
+<p>讀這張圖時，可以先看左邊的 Gateway、右邊的 Supervisor，再看右側綠色虛線框裡的 agent。綠色虛線框代表整個 sandbox 隔離環境；框內標成「Sandbox」的方塊，則是 OpenShell 用來管理 agent 程序、攔截與轉送網路操作的 runtime 程序。這兩種用法指的範圍不同。<a href="#ref-3">[3]</a></p>
+<p>Container 與 VM 是建立 workload 邊界的不同選項，圖中沒有要求兩者一定要疊在一起。真實的 provider 憑證由信任側管理，agent 取得的是 placeholder；請求通過政策與 endpoint 綁定檢查後，supervisor 才代換憑證並對外連線。<a href="#ref-3">[3]</a> <a href="#ref-7">[7]</a></p>
+<p>OpenShell 把系統拆成幾個角色。<a href="#ref-3">[3]</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>元件</th><th>位置</th><th>負責什麼</th></tr></thead><tbody><tr><td>Gateway</td><td>控制面</td><td>管理 sandbox 生命週期、身分驗證、policy 與 provider 派送、連線協調</td></tr><tr><td>Compute driver</td><td>基礎設施層</td><td>在 Docker、Podman、Kubernetes 或 MicroVM 上建立 sandbox、啟動 supervisor 與 workload、架起網路圍籬</td></tr><tr><td>Supervisor</td><td>信任側</td><td>檢查每個請求是否符合 policy、解析 DNS、開啟核准的連線、注入憑證</td></tr><tr><td>Sandbox</td><td>與 agent 同側</td><td>託管 agent process、辨識發出請求的執行檔、攔截 TCP 與 DNS，轉給 supervisor</td></tr></tbody></table>
+<p>關鍵在於：supervisor 在 sandbox 邊界外，sandbox 與不被信任的 agent 同側。sandbox 只回報「agent 想做什麼」，不自己做 policy 決定。<a href="#ref-3">[3]</a></p>
+<p>目前 Linux backend 的做法是：workload 使用單一非 root 身分、沒有 Linux capabilities；Landlock 限制檔案存取；seccomp user notification 把網路操作攔下來；sandbox 從 <code>/proc</code> 的受信任觀察辨識呼叫的執行檔。<a href="#ref-3">[3]</a></p>
+<p>一個網路請求的流程大概是這樣：<a href="#ref-3">[3]</a></p>
+<ol>
+<li>agent 開啟 TCP 連線或發出 DNS 查詢。</li>
+<li>sandbox 辨識發出請求的程式。</li>
+<li>請求經由 OpenShell Sandbox Protocol 送到 supervisor。</li>
+<li>supervisor 對照 policy，必要時加上憑證。</li>
+<li>若允許，supervisor 才開真正的連線並轉送流量。</li>
+</ol>
+<p>也就是說，sandbox 對外唯一的 egress 路徑就是 supervisor。外層網路圍籬會擋掉其他所有連線，agent 不能直接碰到服務、gateway、DNS 或另一個私有位址。<a href="#ref-3">[3]</a></p>
+<p>這個設計有一個很實際的營運特性：如果 supervisor 斷線，sandbox 會凍結 agent，只有同一個 supervisor process 能重連並恢復。新的 supervisor 就算有合法憑證，也不能接管正在跑的 sandbox。<a href="#ref-3">[3]</a> 這是 fail closed 的選擇，代價是 supervisor 的可用性會直接影響 agent 的工作。</p>
+<p>runtime 的選擇不影響 policy 行為。Docker 用獨立的 supervisor container 加 Unix socket；Kubernetes 用獨立 pod 加 mutual TLS；VM 用 host process 加 vsock。runtime 只負責建立邊界與證明邊界存在，不決定請求是否放行。<a href="#ref-3">[3]</a> 這個切法讓同一份 policy 在不同環境有一致的語意，對平台團隊來說是好事。</p>
+<p>OpenShell 也留了幾個 extension point：gateway interceptor 管控制面 API 的治理，supervisor middleware 在 policy 通過後、憑證注入前檢查或改寫 HTTP 與 WebSocket 流量，driver 接 compute 與 secret store，isolation backend 接 sandbox runtime。<a href="#ref-13">[13]</a> 這對企業整合很重要，因為 policy 不可能涵蓋所有組織特有的規則；但 middleware 也意味著 traffic 會多經過一層服務，latency 與可用性要一起算。</p>
+<h2 id="policy-才是產品核心">Policy 才是產品核心</h2>
+<p>OpenShell 的 policy 是一份 YAML，分成幾個區塊：<code>filesystem_policy</code>、<code>landlock</code>、<code>process</code>、<code>network_policies</code>、<code>network_middlewares</code>。<a href="#ref-5">[5]</a></p>
+<p>其中 filesystem、Landlock 與 process 設定在 sandbox 啟動時固定；network rules 與 middleware 可以在執行中熱更新。<a href="#ref-5">[5]</a> 這個區分很合理：檔案與身分邊界不該在 agent 跑一半時被改掉，但網路放行可以隨著任務進展調整。</p>
+<p>這套設計讓 policy 可以 per-sandbox 調整：每個 sandbox 有自己的 policy，global policy 則是管理者另外套用的覆寫。<a href="#ref-5">[5]</a></p>
+<p>預設是 deny。任何沒有被 <code>network_policies</code> 允許的 outbound 連線都會被擋。<a href="#ref-6">[6]</a> 每條 rule 列出允許的 <code>endpoints</code> 與可以連線的 <code>binaries</code>，兩者是 many-to-many 關係。<a href="#ref-6">[6]</a></p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#85E89D">network_policies</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">  github_readonly</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#85E89D">    endpoints</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">host</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">api.github.com</span></span>
+<span class="line"><span style="color:#85E89D">        port</span><span style="color:#E1E4E8">: </span><span style="color:#79B8FF">443</span></span>
+<span class="line"><span style="color:#85E89D">        protocol</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">rest</span></span>
+<span class="line"><span style="color:#85E89D">        enforcement</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">enforce</span></span>
+<span class="line"><span style="color:#85E89D">        access</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">read-only</span></span>
+<span class="line"><span style="color:#85E89D">    binaries</span><span style="color:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E1E4E8">      - </span><span style="color:#85E89D">path</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">/usr/bin/gh</span></span></code></pre>
+<p>實際寫 policy 時，有三個地方很容易踩到。</p>
+<p>第一，binary 比對用的是執行檔的 real path，不是你在命令列打的指令。<code>pip</code> 是 Python script，所以真正連 PyPI 的是 Python interpreter；rule 要列 interpreter 的路徑。<a href="#ref-6">[6]</a> OpenShell 也會在第一次連線時記錄執行檔 hash，之後如果同一個路徑的檔案變了，連線會被拒絕。<a href="#ref-6">[6]</a></p>
+<p>第二，<code>protocol</code> 決定要不要做 L7 檢查。<code>rest</code> 可以看 HTTP method、path、query；<code>graphql</code> 看 operation type、name 與 top-level fields；<code>mcp</code> 看 MCP method 與 tool name；<code>tcp</code> 只看 host、port 與 binary，不做 request 檢查。<a href="#ref-6">[6]</a> 對 agent 來說，這個差異很重要：只擋 host 不等於擋住 <code>DELETE</code>；只允許 <code>tools/call</code> 也不等於只允許某個 tool，還要再指定 <code>tool</code> 名稱。</p>
+<p>第三，overlapping rules 不是有序防火牆。多條 rule 同時 match 時，每一條都會加上它允許的存取；但 deny rule 優先於任何 allow，不管順序。<a href="#ref-6">[6]</a> 所以 review policy 時不能只看第一條 match 的 rule。</p>
+<p>還有一個文件自己特別提醒的點：<code>access: read-only</code> 是 HTTP method preset，允許 <code>GET</code>、<code>HEAD</code>、<code>OPTIONS</code>，但不保證上游的 <code>GET</code> 沒有副作用。<a href="#ref-6">[6]</a> 這個提醒很實在，policy 只能管到請求形狀，管不到服務語意。</p>
+<p>Provider 也會貢獻 policy。當你 attach 一個 provider，它的 profile 會把 <code>_provider_*</code> 的 network rule 加進 effective policy。<a href="#ref-7">[7]</a> 好處是 GitHub provider 可以自己帶著「允許 <code>api.github.com</code>」的規則，使用者不用在每個 sandbox 複製同一段 policy。壞處是 effective policy 不再等於你手寫的那份，排查時要看 <code>openshell policy get &#x3C;sandbox> --full</code>。<a href="#ref-8">[8]</a></p>
+<p>Gateway 管理員還可以套用 global policy。Global policy 是「取代」每個 sandbox 自己的 policy，不是往上加一層限制；它也會抑制 provider 貢獻的規則。<a href="#ref-5">[5]</a> 這是中央治理的強力工具，但語意要先講清楚，不然團隊會以為自己的 policy 還有效。</p>
+<h2 id="憑證不進-sandbox這件事比-sandbox-更難">憑證不進 sandbox，這件事比 sandbox 更難</h2>
+<p>Agent 的憑證是主要風險之一：它拿到哪一組憑證，又把憑證帶到哪裡。</p>
+<p>OpenShell 的做法是：provider profile 描述 credential、endpoint、binary 與 refresh 行為；provider instance 儲存某一組具體憑證；sandbox 裡看到的是 opaque placeholder，真正的值只會在 profile 授權的 endpoint 被替換。<a href="#ref-7">[7]</a></p>
+<p>靜態憑證的綁定不是只看 host，還會看 port 與 canonical request path。如果請求帶了某個 provider 的 placeholder，卻送到未被授權的 endpoint，OpenShell 會回 HTTP 403 <code>credential_endpoint_mismatch</code>。<a href="#ref-7">[7]</a> 也就是說，network policy 授權「可以連到哪裡」，credential binding 授權「這個憑證可以用在哪裡」，兩者是分開的。</p>
+<p>這個分離很重要。很多 sandbox 方案做到「agent 看不到 host 上的 <code>~/.ssh</code>」，但 agent 還是可能從環境變數拿到一組 token，然後把它送到任何被允許的 host。OpenShell 把「憑證的存在」與「憑證的使用地點」拆開，讓 prompt injection 能偷到的東西變少。</p>
+<p>Minimum privilege 的重點，是 runtime 依任務只提供必要的工具與憑證。</p>
+<p>動態憑證更進一步。Provider profile 可以宣告 <code>token_grant</code>，由 supervisor 在請求時向 token endpoint 換取短效 access token，再注入 header；支援 <code>client_credentials</code> 與 <code>token_exchange</code>，並使用 sandbox 的 SPIFFE JWT-SVID 作為 client assertion。<a href="#ref-7">[7]</a> AWS 的 SigV4 也可以在 proxy 側簽章，sandbox 不需要持有真正的 access key。<a href="#ref-7">[7]</a></p>
+<p>Inference 也走同一套。Workload 直接呼叫 provider 的 native endpoint，OpenShell 只負責 policy 與 credential substitution；provider attachment 不會幫你選 model，也不會改寫 model 名稱或 request body。憑證注入與 middleware 是另一層。<a href="#ref-8">[8]</a></p>
+<p>產品頁仍以 inference router 描述 OpenShell，但 v0.1.6 文件已說明 workspace-global managed inference route 與 <code>openshell inference</code> 指令已移除，改由 provider profile 綁定憑證、端點與可呼叫的 binary，再讓 workload 呼叫 provider 的原生 endpoint。<a href="#ref-8">[8]</a> <a href="#ref-14">[14]</a> 舊版的統一 virtual endpoint 不再是 v0.1.6 的做法；評估時要按實際部署版本讀文件。</p>
+<p>憑證設計也有它的邊界。已經在跑的 process 不會因為新 attach provider 就長出新的環境變數，要開新 process 才會拿到 placeholder。<a href="#ref-8">[8]</a> Profile 的 <code>binaries</code> 路徑也綁定 image layout；路徑不對，憑證不會注入，traffic 也會被 deny。<a href="#ref-7">[7]</a> 自訂 base URL 也不能直接沿用 <code>openai</code> 或 <code>anthropic</code> 的範例 profile，因為那些 profile 把憑證綁在公開 vendor endpoint；換 host 要自己匯出、改 endpoint、重新 import。<a href="#ref-8">[8]</a></p>
+<h2 id="讓-agent-自己申請權限但把核准權留在人手上">讓 agent 自己申請權限，但把核准權留在人手上</h2>
+<p>這是我覺得 OpenShell 最值得看的一段。</p>
+<p>Agent 被 policy 擋住時，通常只能停下來等人改 policy。OpenShell 的 policy advisor 讓 agent 在 sandbox 裡提出它需要的 network rule，再由人核准。<a href="#ref-10">[10]</a> 這也把「每次 launch 的權限都不同」變成一個可協商的流程：agent 提出需求，人決定要不要給，prover 在中間做風險檢查。</p>
+<p>流程是：agent 的請求被 deny，回應會說明被擋了什麼、怎麼申請；agent 讀 sandbox 裡的 guide，透過 <code>http://policy.local</code> 讀目前 policy、看最近的 denial、送出 proposal；OpenShell 用 policy prover 做 risk check，連同 proposal 放進 pending 清單；人用 <code>openshell rule approve</code> 或 <code>reject</code> 決定；核准後 rule 熱載入，agent 重試。<a href="#ref-10">[10]</a></p>
+<p>Policy advisor 預設關閉。<a href="#ref-10">[10]</a> 無論 advisor 有沒有開，OpenShell 都會從被擋的連線自己草擬 proposal；這些 draft 走同一套檢查與審核。<a href="#ref-10">[10]</a></p>
+<p>這裡有兩種檢查，回答的問題不同：<a href="#ref-9">[9]</a></p>
+<ul>
+<li><strong>Boundary check</strong>：candidate policy 是否超出你定義的 boundary policy。用 <code>openshell-prover</code> CLI 跑，主要給 agent 或 CI 用。</li>
+<li><strong>Proposal risk check</strong>：proposed rule 是否比目前 policy 多出風險，例如新的 credentialed reach、新的 HTTP method、cloud metadata 位址。Policy advisor 每次收到 proposal 都會跑。</li>
+</ul>
+<p>Prover 用 SMT solver，檢查的是 policy model 裡有建模的特徵：filesystem、process identity、Landlock、network L4、REST。<a href="#ref-9">[9]</a> 如果 policy 用了 GraphQL、MCP、WebSocket、JSON-RPC，prover 會回 <code>unsupported</code>，不會假裝檢查過。<a href="#ref-9">[9]</a> 但 <code>within_boundary</code> 只代表「在你依賴的範圍內沒有超出 boundary」，不代表 policy 安全，也不代表 runtime 一定照著執行。</p>
+<p>自動核准模式也要看清楚。開啟 <code>proposal_approval_mode=auto</code> 後，沒有 risk finding、也沒有被標記的 proposal 會直接通過；但「連到一個新的 public host」本身不算 risk，只要那裡沒有 provider credential。<a href="#ref-10">[10]</a> 文件自己提醒，這代表 sandbox 裡的 binary 可以在沒有人看的情況下取得新的 public host 存取。<a href="#ref-10">[10]</a> 要開這個模式，最好先想清楚你的 threat model。</p>
+<h2 id="觀測營運與成本">觀測、營運與成本</h2>
+<p>OpenShell 產生 OpenTelemetry traces、Prometheus metrics 與 OCSF JSON events；sandbox log 可以用 CLI 或 TUI 看，OCSF 可以送到 SIEM。<a href="#ref-12">[12]</a> 對合規或事故調查來說，這些記錄比 agent 自己的說法可靠：policy 是版控的 YAML，allow/deny 有記錄，官方也強調 credential 值不會出現在 OCSF 事件與 refresh log。<a href="#ref-2">[2]</a> <a href="#ref-7">[7]</a></p>
+<p>Sandbox 生命週期也做得完整：create、connect、exec、upload/download、port forward、service expose、stop/start、delete，還有 <code>--no-keep</code> 的 ephemeral 模式。<a href="#ref-4">[4]</a> 這些看起來是基本功能，但對「agent 跑一整天」的情境來說，stop/start 與 service forwarding 會直接影響可操作性。</p>
+<p>成本不在 CLI，而在平台。Gateway 需要資料庫（Helm 預設 SQLite，HA 用 PostgreSQL）、OIDC、TLS 憑證、Kubernetes 或 Docker/Podman 環境；多副本還要處理 peer routing 與憑證輪替。<a href="#ref-11">[11]</a> 這不是一個「裝個 CLI 就結束」的工具，比較像一個小型控制面。</p>
+<h2 id="我會怎麼看它的-trade-off">我會怎麼看它的 trade-off</h2>
+<p><strong>適合的場景</strong>：平台團隊要讓多個 coding agent 或長時間執行的 agent 共用一套授權模型；企業需要把「哪個 agent 用了哪組憑證、連了哪個 API」變成可審計的 policy；agent 要碰 GitHub、雲端 API、內部服務，但不想把長期憑證放進 sandbox。</p>
+<p><strong>不一定適合的場景</strong>：只想要一個乾淨的執行環境，Docker 或 devcontainer 可能就夠；單人開發、追求最低摩擦的本機 workflow；Windows 原生環境（目前只有 WSL 2 + Docker Desktop 是 experimental）；或是 kernel 不支援 Landlock ABI 3 的舊 Linux。<a href="#ref-11">[11]</a></p>
+<ul>
+<li><strong>執行環境有明確門檻。</strong> Linux backend 需要 Landlock ABI 3（Linux 6.2+）、nested seccomp user notification、<code>process_vm_readv</code> 或 <code>/proc/&#x3C;pid>/mem</code>、<code>SO_BINDTODEVICE</code> 等能力，不是每個發行版或 container runtime 都能直接提供。<a href="#ref-11">[11]</a></li>
+<li><strong>Policy 與驗證需要專業維護。</strong> 作者要處理 binary path、interpreter、real path、hash pinning、L7 protocol 與重疊規則；寫錯時，可能等到 agent 被拒絕才發現。<a href="#ref-6">[6]</a> Prover 目前不支援 GraphQL、MCP、WebSocket、JSON-RPC 等 boundary check，遇到會回報 <code>unsupported</code>。<a href="#ref-9">[9]</a></li>
+<li><strong>既有防護可能重複處理同一流量。</strong> 防火牆、egress proxy、DNS 控制、IAM／Secrets、EDR 與稽核平台，可能已負責部分網路授權、憑證管理或事件記錄。若每層都再代理、檢查和記錄同一請求，就會增加延遲、政策同步與故障排查成本。<a href="#ref-3">[3]</a> <a href="#ref-13">[13]</a></li>
+<li><strong>版本仍在快速演進。</strong> 穩定版大致每週發布，API 與行為仍會改變；文件列出的後續項目包括 credential placement、binary-scoped injection，以及在 sandbox 啟動時自動執行 policy prover。<a href="#ref-7">[7]</a></li>
+<li><strong>廠商整合增加，實際採用仍待觀察。</strong> 2026-10-21 NVIDIA 在 GTC Berlin 宣布 OpenShell Reference Architecture，整合 Vera Rubin、Vera CPU 與 BlueField-4 上的 Sentry，並宣稱 Sentry 可在毫秒級隔離越界 agent。<a href="#ref-15">[15]</a> 這是 NVIDIA 的產品說法；OpenShell 軟體本身不需要 Vera CPU。<a href="#ref-14">[14]</a> Red Hat 也表示正把 OpenShell 接進 Red Hat AI Factory。<a href="#ref-16">[16]</a> 廠商投入不等於一般開發者與企業已廣泛採用。</li>
+</ul>
+<p>因此，企業評估時要先把控制責任攤開來看：現有哪一層負責網路邊界、哪一層識別 agent 與執行程式、憑證由誰保管、政策由誰維護、紀錄要送到哪裡。如果現有 proxy 已能辨識 agent 身分並執行相同粒度的授權，OpenShell 帶來的新增價值可能有限；如果現有控制只看來源網段或共用服務帳號，它補上的則是 agent 層的權限與憑證邊界。</p>
+<p>還要把流量路徑算進去。OpenShell 會讓 sandbox 的 egress 經過 supervisor；若後面還要串企業 proxy 或 TLS inspection，延遲與故障點都會增加。Gateway 可以在 Kubernetes 上部署多個副本，但需要外部 PostgreSQL；這處理的是 Gateway 控制面的可用性，sandbox 的 supervisor 仍是各自流量路徑上的關鍵元件。<a href="#ref-21">[21]</a> 導入前應以實際 agent 工作負載量測延遲、吞吐量與故障恢復時間，再判斷新增的 agent 專屬控管是否值得這筆成本。</p>
+<h2 id="概念先整理採用情況還要觀察">概念先整理，採用情況還要觀察</h2>
+<p>這篇依照官方文件與公開資料整理，沒有實際操作。平台需求與支援範圍列在官方 Support Matrix；macOS 僅支援 Apple Silicon。<a href="#ref-11">[11]</a></p>
+<p>讀完文件，我仍覺得這套設計不太直覺。OpenShell 橫跨 Gateway、Supervisor 與 sandbox 內的 runtime 程序，底下又有 container／VM 的選擇；network policy 與 provider 的憑證綁定也各有一套規則。要理解一次請求為什麼被拒絕，得先分清楚這幾層各自負責什麼。</p>
+<p>它提出的問題值得記下來：agent 的權限、憑證與對外連線，需要有 agent 自己無法繞過的控制。但要讓團隊接受這套方案，還得有人負責寫 policy、處理被擋住的請求，以及維護 Gateway。這些工作會不會比各自管理 agent 更省事，光看架構圖還無法回答。</p>
+<p>目前引用的資料以官方文件與廠商公告為主，還不足以判斷實際採用情況。OpenShell 提供 agent runtime 治理的一種做法；學習與維護成本是否划算，仍要看更多實際導入經驗。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-1"></a>[1] NVIDIA，〈<a href="https://github.com/NVIDIA/OpenShell">OpenShell</a>〉，GitHub repository。</li>
+<li><a id="ref-2"></a>[2] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/about/overview">Overview of NVIDIA OpenShell</a>〉。</li>
+<li><a id="ref-3"></a>[3] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/about/architecture">Architecture</a>〉。</li>
+<li><a id="ref-4"></a>[4] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/sandboxes/overview">Manage Sandboxes</a>〉。</li>
+<li><a id="ref-5"></a>[5] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/policies/overview">Sandbox Policies</a>〉。</li>
+<li><a id="ref-6"></a>[6] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/policies/network-rules">Network Rules</a>〉。</li>
+<li><a id="ref-7"></a>[7] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/providers/profiles">Profiles</a>〉。</li>
+<li><a id="ref-8"></a>[8] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/inference">Inference</a>〉。</li>
+<li><a id="ref-9"></a>[9] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/policies/prover">Policy Prover</a>〉。</li>
+<li><a id="ref-10"></a>[10] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/how-it-works/policies/advisor">Policy Advisor</a>〉。</li>
+<li><a id="ref-11"></a>[11] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/about/support-matrix">Support Matrix</a>〉。</li>
+<li><a id="ref-12"></a>[12] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/observability/overview">Observability Overview</a>〉。</li>
+<li><a id="ref-13"></a>[13] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/extensibility/overview">Extensibility</a>〉。</li>
+<li><a id="ref-14"></a>[14] NVIDIA，〈<a href="https://www.nvidia.com/en-us/ai/openshell/">NVIDIA OpenShell</a>〉，產品頁。</li>
+<li><a id="ref-15"></a>[15] NVIDIA Newsroom，〈<a href="https://nvidianews.nvidia.com/news/openshell-reference-architecture">NVIDIA Launches OpenShell Reference Architecture for Safe AI Agents</a>〉，2026-10-21。</li>
+<li><a id="ref-16"></a>[16] Red Hat，〈<a href="https://www.redhat.com/en/about/press-releases/red-hat-ai-factory-nvidia-expands-support-new-class-autonomous-agents-enterprise">Red Hat AI Factory with NVIDIA Expands Support for a New Class of Autonomous Agents in the Enterprise</a>〉，2026-05-12。</li>
+<li><a id="ref-17"></a>[17] NVIDIA Blog，〈<a href="https://blogs.nvidia.com/blog/gtc-berlin-2026-keynote/">GTC Berlin 2026: Live Updates From NVIDIA CEO Jensen Huang’s Keynote</a>〉，2026-10-21。</li>
+<li><a id="ref-18"></a>[18] NVIDIA Blog，〈<a href="https://blogs.nvidia.com/gtc-berlin-2026-news/">NVIDIA GTC Berlin: Live Updates on What’s Next in AI</a>〉，2026-10-12–24。</li>
+<li><a id="ref-19"></a>[19] Daniel Howley，〈<a href="https://finance.yahoo.com/technology/article/nvidia-ceo-jensen-huang-we-have-to-accelerate-ai-safety-124206653.html">Nvidia CEO Jensen Huang: ‘We have to accelerate AI safety’</a>〉，Yahoo Finance，2026-10-21。</li>
+<li><a id="ref-20"></a>[20] The Singju Post，〈<a href="https://singjupost.com/transcript-merz-x-jensen-huang-ai-safety-regulation-germanys-industrial-future">Transcript: Merz x Jensen Huang – AI Safety, Regulation &#x26; Germany’s Industrial Future</a>〉，2026-10-20。</li>
+<li><a id="ref-21"></a>[21] NVIDIA OpenShell Docs，〈<a href="https://docs.nvidia.com/openshell/v0.1.6/kubernetes/high-availability">High Availability</a>〉。</li>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/bitter-lesson-and-its-critics/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">Bitter Lesson 是什麼：AI 算力擴展的主張、爭議與工程實務，從 Sutton 原文看 LLM</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" aria-label="回到文章列表" title="回到文章列表" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
