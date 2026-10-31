@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-TW"><head><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-0WD4Y3ZJE1"></script><script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { window.dataLayer.push(arguments); }
+	gtag('js', new Date());
+
+	gtag('config', 'G-0WD4Y3ZJE1');
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/dama-dmbok-reading-guide/"><!-- Primary Meta Tags --><title>把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法</title><meta name="title" content="把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法"><meta name="description" content="DAMA-DMBOK 把資料管理拆成 11 個知識領域，治理放中間。本文整理 DAMA 與 DMBOK 是什麼、CDMP 認證考什麼、17 章的全局地圖，以及我自己讀下來比較有效的導讀路線。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/dama-dmbok-reading-guide/"><meta property="og:title" content="把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法"><meta property="og:description" content="DAMA-DMBOK 把資料管理拆成 11 個知識領域，治理放中間。本文整理 DAMA 與 DMBOK 是什麼、CDMP 認證考什麼、17 章的全局地圖，以及我自己讀下來比較有效的導讀路線。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/dama-dmbok-reading-guide.B1fU-6Ev.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/dama-dmbok-reading-guide/"><meta property="twitter:title" content="把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法"><meta property="twitter:description" content="DAMA-DMBOK 把資料管理拆成 11 個知識領域，治理放中間。本文整理 DAMA 與 DMBOK 是什麼、CDMP 認證考什麼、17 章的全局地圖，以及我自己讀下來比較有效的導讀路線。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/dama-dmbok-reading-guide.B1fU-6Ev.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法","description":"DAMA-DMBOK 把資料管理拆成 11 個知識領域，治理放中間。本文整理 DAMA 與 DMBOK 是什麼、CDMP 認證考什麼、17 章的全局地圖，以及我自己讀下來比較有效的導讀路線。","datePublished":"2026-10-30T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/dama-dmbok-reading-guide.B1fU-6Ev.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.CDtox-ab.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="w-full px-4 pt-10 sm:pt-14"><div class="mx-auto max-w-5xl rounded-[1.5rem] border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/dama-dmbok-reading-guide.B1fU-6Ev_nEzGP.webp" alt="把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-[1rem] bg-white object-contain"></div></div><div class="mx-auto max-w-[760px] px-4 py-6 text-[rgb(var(--gray-dark))] sm:py-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[rgb(var(--accent))]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-10-30T00:00:00.000Z">Oct 30, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">dama-dmbok</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">data-management</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">data-governance</span></div><h1 class="mb-0 text-4xl font-bold leading-[0.98] tracking-[-0.04em] text-[rgb(var(--black))] sm:text-6xl">把資料管理當成一門專業：DAMA-DMBOK2 導讀、CDMP 認證與讀法</h1></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-[rgb(var(--gray-light))] prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-none prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[rgb(var(--accent))] sm:prose-xl"><p>同一個「客戶」在 CRM、帳務、風控三個系統裡有三種定義，月底報表對不起來，開會時每個部門對「客戶數」的算法都不一樣。這種問題我以前會直覺從技術下手：加一層 view、做一個 mapping table、寫一支 sync job。做完之後才發現，真正卡住的不是技術，是沒有任何人有權決定哪個定義才是對的，也沒有人需要為定義不一致負責。</p>
+<p>這類問題在企業裡到處都是。而 DAMA-DMBOK 這本書，基本上就是為了這件事而存在的。</p>
+<p>老實說，第一次翻開 DMBOK 的人多半會失望。它不像教科書那樣循序漸進，也不像工具書那樣查得到具體做法。它更像一份專業的地圖加字典：把資料管理拆成十一個知識領域，幫每一個領域定義目標、活動、角色、產出和衡量方式。</p>
+<p>這篇文章想做的事情很簡單：講清楚 DAMA 是什麼、CDMP 認證在考什麼、這本書的骨架長什麼樣，最後給一份我自己讀下來覺得比較有效的導讀。</p>
+<h2 id="dama-是什麼dmbok-又是什麼">DAMA 是什麼？DMBOK 又是什麼</h2>
+<p>DAMA 是 Data Management Association 的縮寫，正式名稱是 DAMA International，一個以資料管理為主題的非營利專業組織，全球各地有分會，例如 DAMA Netherlands、DAMA UK。它主要做兩件事：維護 DAMA-DMBOK 這份知識體系，以及維護 CDMP（Certified Data Management Professional）認證。</p>
+<p>DMBOK 的全名是 Data Management Body of Knowledge，第二版在 2017 年出版，目前官方建議以 DMBOK2 Revised Edition 作為考試範圍。書的中譯本市面上也有，但部分術語翻譯跟業界慣用語有落差，我建議中英對照讀，特別是 governance、stewardship、metadata 這幾個字。</p>
+<p>這裡有個定位上的關鍵：DMBOK 是 body of knowledge，不是方法論。它回答的是「這門專業包含哪些範圍、每個範圍的目標和職能是什麼」，不回答「你下週一該做哪件事」。把這個定位先想清楚，後面讀起來才不會一直覺得它空泛。</p>
+<h2 id="cdmp-認證考什麼又買到什麼">CDMP 認證：考什麼，又買到什麼</h2>
+<p>我會注意到這張證照，最早是從一次職涯諮商開始。當時跟一位在資料圈很有份量的前輩聊下一步的方向，談到資料治理，他推薦我去考這張 CDMP。後來在一個 EA（Enterprise Architecture）課程中，又輾轉聽到一位 Data Architect 提到同一張證照。兩個不同背景的人都指向它，這件事讓我起了濃厚的興趣，也才認真開始讀 DMBOK。</p>
+<p>CDMP 是 DAMA International 推出的資料管理專業認證，目前分三個等級，透過線上監考或實體場次的考試取得。<a href="#ref-2">[2]</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>等級</th><th>考試要求</th><th>經驗要求</th><th>續證</th></tr></thead><tbody><tr><td>Associate</td><td>Data Management Fundamentals（DMF）≥ 60%</td><td>無</td><td>初次認證三年後每年續證</td></tr><tr><td>Practitioner</td><td>DMF 與兩門專科，各 ≥ 70%</td><td>建議 2 到 10 年</td><td>初次認證三年後每年續證</td></tr><tr><td>Master</td><td>DMF 與兩門專科，各 ≥ 80%</td><td>10 年以上經驗，需提交 CV 審查</td><td>初次認證三年後每年續證</td></tr></tbody></table>
+<p>專科考有七門可以挑：資料建模與設計、Metadata、資料品質、資料治理、資料倉儲與 BI、主資料與參考資料、資料整合與互通性。<a href="#ref-3">[3]</a></p>
+<p>考試形式的部分：每科 100 題選擇題、90 分鐘，非英語母語者可以選擇多 20 分鐘的版本。線上監考每科 USD$311，購買時附一份 40 題的練習題。2024 年 8 月起，考試購買後 12 個月內要考完。單科成績三年有效；初次認證三年期滿後，每年須繳費、提交資料管理活動聲明並簽署倫理準則。<a href="#ref-2">[2]</a> <a href="#ref-4">[4]</a></p>
+<p>Fundamentals 考試覆蓋 14 個主題，出題配重長這樣：<a href="#ref-3">[3]</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>主題</th><th>佔比</th></tr></thead><tbody><tr><td>資料治理、資料建模、資料品質、Metadata</td><td>各 11%</td></tr><tr><td>主資料與參考資料、資料倉儲與 BI</td><td>各 10%</td></tr><tr><td>資料架構、資料整合、資料安全、資料儲存、文件與內容管理</td><td>各 6%</td></tr><tr><td>Data Management Process、資料倫理、Big Data</td><td>各 2%</td></tr></tbody></table>
+<h3 id="考這張證照實際買到的是什麼">考這張證照，實際買到的是什麼</h3>
+<p>我對 CDMP 的判斷是這樣：它考的是共同語言，不是實戰能力。題目偏定義辨識，例如「這句話描述的是 threat 還是 vulnerability」「registry 式 MDM 跟 hub 式 MDM 的差別」。這類題目考得過，不代表你能把一個資料治理專案推起來；但考不過，通常代表你連這個領域的詞彙邊界都還沒建立。</p>
+<p>所以它真正買到的東西有三樣：一套跨部門可以共用的詞彙，之後開會吵的是內容，不是名詞；一個盤點自己知識缺口的框架，很多人是在準備考試時才發現 Metadata 或主資料完全沒碰過；還有履歷上一個可以被驗證的信號，在某些求職市場這確實有用。</p>
+<p>代價也很實際。英文考題對非母語者有閱讀負擔；題目偏記憶，準備過程容易變成背定義；拿下 Practitioner 三科大約 933 美元，加上時間成本不算便宜。還有一件事官方不會告訴你：考過之後，你在組織裡推動治理時遇到的阻力一點都不會變少，證照不會幫你取得決策權。</p>
+<h2 id="這本書的骨架wheelcontext-diagram-與固定格式">這本書的骨架：Wheel、Context Diagram 與固定格式</h2>
+<p>DMBOK2 有三張核心視覺，理解它們之後，這本書的結構就清楚了。</p>
+<p>第一張是 DAMA Wheel。Data Governance 放在中心，其他十個知識領域環繞在周圍。這個構圖想說的是：治理負責方向、決策權與領域間的平衡，其他領域各自負責自己的實務工作，但都需要治理來協調。書裡的第 3 到 13 章，就是這十一個領域各一章。</p>
+<p><img alt="DAMA Wheel：治理位於中心，其他資料管理知識領域環繞其外" loading="lazy" decoding="async" width="1665" height="1665" src="/_astro/dama-dmbok-wheel.D18AMtpq_ZVWaWv.webp" srcset=""></p>
+<p>第二張是 Environmental Factors hexagon，把人、流程、技術的關係畫出來，目標與原則放在中心。它其實是在提醒：每個知識領域的活動都受到角色、組織文化、工具與技術的制約，不是畫完流程就結束。</p>
+<p>第三張是 Knowledge Area Context Diagram。它是 SIPOC 的變形：活動放在中間，左邊是輸入與供應者，右邊是產出與消費者，下方是參與者、工具、技術與指標，活動再依 Plan、Develop、Operate、Control 分類。每章開頭的那張圖就是它。</p>
+<p>每章內部的格式也固定：定義、目標與原則、必要概念、活動、工具、技術、落地指引、與資料治理的關係、衡量指標。這個格式讀起來很像 ISO 標準，不像書。也因為這樣，它適合當參考書，不適合從頭讀到尾。我自己的讀法是：每章先看定義和 context diagram，把地圖先立起來，細節等需要時再回來查。</p>
+<h2 id="全局17-章其實是一條資料生命週期">全局：17 章其實是一條資料生命週期</h2>
+<p>如果把資料的一生想成一條線：資料被產生、被定義、被儲存、被搬動、被保護、被改善、被分析，最後被拿去做決策。DMBOK 的 17 章就是把這條線的每一段攤開來寫。先把全局分成六塊，讀的時候會比較有位置感：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>分組</th><th>章節</th><th>在資料生命週期的位置</th></tr></thead><tbody><tr><td>地基與邊界</td><td>1、2</td><td>這門專業怎麼定義自己，哪些事不該做</td></tr><tr><td>方向、責任與人</td><td>3、15、16、17</td><td>誰決定、誰負責、怎麼衡量、怎麼推動</td></tr><tr><td>設計與結構</td><td>4、5</td><td>資料長什麼樣、往哪裡流</td></tr><tr><td>運行、流動與保護</td><td>6、7、8</td><td>怎麼存、怎麼動、怎麼防</td></tr><tr><td>語意與品質</td><td>10、12、13</td><td>名詞對不對、資料可不可信</td></tr><tr><td>消費與進階使用</td><td>9、11、14</td><td>資料怎麼被拿去用，用到什麼程度</td></tr></tbody></table>
+<p>另外有三塊橫切的黏著劑：Metadata（Ch 12）讓資料可被找到與理解，資料品質（Ch 13）讓資料可被信任，資料安全（Ch 7）讓資料不被濫用。這三塊不會只出現在自己的章節裡，它們在每一條資料流上都會出現。我後來覺得，這個視角比章節順序有用：當你要評估一個資料專案缺了什麼，就沿著這條線掃過去，缺哪一段一目了然。</p>
+<h2 id="地基總論與倫理">地基：總論與倫理</h2>
+<h3 id="chapter-1-data-management先拿到全書的地圖">Chapter 1 Data Management：先拿到全書的地圖</h3>
+<p>這一章回答「資料管理這門專業到底包含什麼」。它的核心主張是：資料是組織資產，但資料不會自己變有價值，要靠管理、品質與保護的投入。</p>
+<ul>
+<li><strong>Data vs. Information</strong>：資料是被記錄的事實，資訊是資料經過脈絡化、解讀後能支援決策的結果。有資料不代表有資訊。</li>
+<li><strong>Data as an asset</strong>：資料不會因為被使用而耗損，可以重複使用與複製，這跟其他資產很不一樣，也讓它的估值和管理特別困難。</li>
+<li><strong>生命週期思維</strong>：從建立、儲存維護、使用分享，到保留與處置，每一段都要有明確的責任和控制。</li>
+<li><strong>DAMA Wheel</strong>：治理居中，其他知識領域環繞，這張圖就是全書的目錄。</li>
+<li><strong>跨職能</strong>：資料管理不是 IT 的副產品，它橫跨業務、風控、法遵與技術。</li>
+</ul>
+<p>全局位置：這章是全書的目錄和字典。不管你之後想深入哪個領域，先把這裡的詞彙定義弄熟，後面的章節才讀得懂。</p>
+<h3 id="chapter-2-data-handling-ethics合法不等於正當">Chapter 2 Data Handling Ethics：合法不等於正當</h3>
+<p>這一章處理資料使用的邊界：一個用途合法，不代表它對使用者公平、對被蒐集的人無害。書裡給出的判斷流程很務實：提出用途、評估受影響者、檢查法律與公平性、做資料最小化、持續監測實際結果。</p>
+<ul>
+<li><strong>目的限制</strong>：資料依清楚說明的目的使用，新用途要重新檢視依據，不能拿舊授權直接套用。</li>
+<li><strong>偏誤（Bias）</strong>：資料或模型可能排除、錯誤代表特定群體，資料量大不等於結論公正。</li>
+<li><strong>呈現風險</strong>：時間區間、圖表比例、比較基準的選擇，可以讓正確數字產生誤導。</li>
+<li><strong>去識別不等於匿名</strong>：遮蔽降低風險，但資料組合起來仍可能重新識別到人。</li>
+<li><strong>倫理文化</strong>：審查與責任要進流程，只靠個人善意撐不住。</li>
+</ul>
+<p>全局位置：這是所有知識領域的前置檢查點。特別是資料科學和 AI 應用（Ch 14），這章的問題會以最大倍率出現。</p>
+<h2 id="方向責任與人">方向、責任與人</h2>
+<h3 id="chapter-3-data-governance誰有權決定">Chapter 3 Data Governance：誰有權決定</h3>
+<p>治理要建立的是決策權、責任、政策與監督機制。它的核心活動是設計治理運作模式、定義政策與標準、建立 Business Glossary、管理資料議題直到有人採取處置。</p>
+<ul>
+<li><strong>Decision rights</strong>：哪些人能對定義、品質、存取、變更作決定。</li>
+<li><strong>Data Stewardship</strong>：由 Steward 代表業務維護定義、規則與品質責任。</li>
+<li><strong>Policy / Standard / Procedure</strong>：政策講原則，標準把原則變成一致規格，程序描述怎麼執行。</li>
+<li><strong>Issue management</strong>：資料問題要能被記錄、分派、升級、追蹤，不能靠聊天室裡的臨時協調。</li>
+<li><strong>工具不是治理</strong>：Glossary、workflow、scorecard 都只是支援，業務決策和責任無法外包給工具。</li>
+</ul>
+<p>全局位置：Wheel 的中心。後面每一章的「與資料治理的關係」小節，最後都會連回這裡。跨部門定義衝突時，解方在這一章，不在技術。</p>
+<h3 id="chapter-15-data-management-maturity-assessment現在到底在哪裡">Chapter 15 Data Management Maturity Assessment：現在到底在哪裡</h3>
+<p>DMMA 是診斷工具，不是改善計畫。它用成熟度模型評估組織目前的能力，找出差距，排出行動優先序。書裡反覆強調一件事：評分要能回溯到證據，訪談印象不能直接變成分數。</p>
+<ul>
+<li><strong>Scope 先行</strong>：評估哪些資料領域、組織範圍、期間，要先講清楚，否則結論會超出證據。</li>
+<li><strong>Current vs. Target</strong>：目標狀態連到業務需求和風險，不是每個領域都要衝最高成熟度。</li>
+<li><strong>Gap and Roadmap</strong>：依價值、風險、依賴、資源排改善順序。</li>
+<li><strong>Re-assessment</strong>：措施落實一段時間後重新評估，才知道計畫有沒有效。</li>
+</ul>
+<p>全局位置：它把前面所有知識領域變成「現況在哪、下一步做什麼」的管理語言。要向高層爭取資源時，這章的輸出最好用。</p>
+<h3 id="chapter-16-data-management-organization誰來做">Chapter 16 Data Management Organization：誰來做</h3>
+<p>這一章講 DMO（Data Management Organization）：角色、責任、決策流程與合作方式。重點是 operating model 不是組織圖，組織圖只畫匯報關係，operating model 要回答決策怎麼作成、跨團隊怎麼協作。</p>
+<ul>
+<li><strong>常見模式</strong>：Decentralized、Centralized、Network、Hybrid / Federated，各有取捨，端看業務分布與文化。</li>
+<li><strong>Executive sponsorship</strong>：跨部門協調需要高階授權，這是治理能不能動起來的前提條件。</li>
+<li><strong>角色分工</strong>：CDO、Governance Council、Data Owner、Data Steward、Architect、Custodian，決策、定義、設計與技術保管的責任不同。</li>
+<li><strong>Steward vs. Custodian</strong>：前者負責業務定義與品質責任，後者負責技術環境與操作控制。</li>
+</ul>
+<p>全局位置：Ch 3 設計的治理機制，要靠這一章的人和角色去運作。沒有這層，政策只是文件。</p>
+<h3 id="chapter-17-organizational-change-management怎麼讓人真的採用">Chapter 17 Organizational Change Management：怎麼讓人真的採用</h3>
+<p>這章可能是全書最不像「資料管理」卻最實用的一章。它的論點是：導入流程或工具不等於改變發生，人要理解、接受、實際採用並維持新做法，才算完成。</p>
+<ul>
+<li><strong>Bridges transition</strong>：Ending → Neutral Zone → New Beginning。Neutral Zone 最不確定，也最需要支持和溝通。</li>
+<li><strong>Kotter 八階段</strong>：從建立急迫性、組織領導聯盟，到創造短期成果、把新做法錨定進文化。</li>
+<li><strong>Gleicher 公式</strong>：D × V × F > R。對現況的不滿、願景、可開始的第一步，三者缺一，推動力就壓不過阻力。</li>
+<li><strong>Diffusion of Innovation</strong>：相對優勢、相容性、易用性、可試用性、可觀察成果，決定新做法擴散的速度。</li>
+</ul>
+<p>全局位置：前面 16 章的所有方案，都要通過這一章才會落地。我自己的經驗是，資料專案失敗的原因多半寫在這裡，不在技術章節。</p>
+<h2 id="設計與結構">設計與結構</h2>
+<h3 id="chapter-4-data-architecture從策略到藍圖">Chapter 4 Data Architecture：從策略到藍圖</h3>
+<p>資料架構把業務策略和資料需求，轉成可溝通、可治理、可逐步實現的藍圖：資料領域怎麼劃、資料往哪裡流、標準是什麼、系統怎麼演進。</p>
+<ul>
+<li><strong>現況 vs. 目標 vs. Roadmap</strong>：現況揭露既有系統和限制，目標描述要達成的狀態，Roadmap 安排中間的可行步驟。</li>
+<li><strong>Subject Area</strong>：按業務意義劃出資料領域邊界，責任和治理範圍就跟著它走。</li>
+<li><strong>Data Flow</strong>：畫出資料在流程、應用、存放區之間怎麼建立、移動、被使用。</li>
+<li><strong>架構治理</strong>：專案設計要符合企業原則和標準，但要留例外流程給合理的偏差。</li>
+</ul>
+<p>全局位置：策略和實作之間的橋。資料流圖（Data Flow Diagram）也是發現整合風險最直接的地方，很多重複介面和孤兒資料在圖上一眼就看得到。</p>
+<h3 id="chapter-5-data-modeling-and-design把語意寫成結構">Chapter 5 Data Modeling and Design：把語意寫成結構</h3>
+<p>資料模型用精確、可溝通的方式表達業務資料需求和資料間的關係。這一章的重點是先弄清楚業務語意，再選細節層次，最後才是實作方案。</p>
+<ul>
+<li><strong>三層模型</strong>：Conceptual 對業務確認範圍，Logical 細化實體、屬性、鍵與規則，Physical 才落到表、欄位、索引。</li>
+<li><strong>Normalization vs. Denormalization</strong>：前者減少重複、避免更新異常，後者用冗餘換讀取效能，代價是一致性維護成本。</li>
+<li><strong>Forward / Reverse engineering</strong>：從需求生成實作，或從既有資料庫反推模型。</li>
+<li><strong>Model governance</strong>：命名、定義、版本、與企業模型的一致性都要維護，不然模型很快就跟現實脫節。</li>
+</ul>
+<p>全局位置：架構決定資料往哪裡流，建模決定流動的資料長什麼樣。模型壞了，下游的整合、倉儲、品質規則會一起壞。</p>
+<h2 id="運行流動與保護">運行、流動與保護</h2>
+<h3 id="chapter-6-data-storage-and-operations資料真正落地的地方">Chapter 6 Data Storage and Operations：資料真正落地的地方</h3>
+<p>這一章涵蓋資料庫技術選擇、建置和日常營運：效能、可用性、備份復原、測試資料、遷移、退役。它大概是全書最貼近傳統 DBA 工作的一章。</p>
+<ul>
+<li><strong>Database vs. DBMS</strong>：前者是資料集合，後者是管理它的軟體。</li>
+<li><strong>交易 vs. 分析處理</strong>：交易重視單筆操作的正確與回應，分析重視大量查詢和彙整。</li>
+<li><strong>Business continuity</strong>：備份只是起點，復原程序、可用副本、演練和復原目標才算數。</li>
+<li><strong>環境管理</strong>：開發、測試、正式要有版本與變更控制，測試資料的保護常被忽略。</li>
+</ul>
+<p>全局位置：前面所有設計的產物，最終都要存在這裡被穩定運行。也是「有備份卻還原不了」這種問題的案發現場。</p>
+<h3 id="chapter-7-data-security以風險為基礎的控制">Chapter 7 Data Security：以風險為基礎的控制</h3>
+<p>資料安全的目標是機密性、完整性、可用性（CIA），手段是分類、政策、角色和控制，並且要從設計一路貫徹到事件處理。</p>
+<ul>
+<li><strong>Threat / Vulnerability / Risk</strong>：威脅是可能的危害事件，弱點是可被利用的缺口，風險是兩者結合後的可能性與影響。</li>
+<li><strong>Authentication vs. Authorization</strong>：先確認你是誰，再決定你能做什麼，兩者順序和分工不能混。</li>
+<li><strong>Least privilege</strong>：只給完成工作所需的最低權限，並定期檢視。</li>
+<li><strong>Encryption vs. Masking</strong>：加密用金鑰可還原，遮蔽降低可辨識性但不一定可逆，測試資料常用後者。</li>
+<li><strong>Security classification</strong>：依敏感性和法規分級，據以決定存取、傳輸、儲存和保留。</li>
+</ul>
+<p>全局位置：橫切層，資料流到哪裡控制就要跟到哪裡。它跟 Ch 2 倫理（正當性）、Ch 13 品質（完整性）經常是同一組問題的不同面。</p>
+<h3 id="chapter-8-data-integration-and-interoperability系統之間的血管">Chapter 8 Data Integration and Interoperability：系統之間的血管</h3>
+<p>整合的目標是讓資料在需要的時間、位置和形式被正確使用。設計順序是先理解來源、目標和業務規則，再選整合模式。</p>
+<ul>
+<li><strong>ETL vs. ELT</strong>：轉換發生在載入目標之前或之後，選擇看平台能力、資料量、治理和時效需求。</li>
+<li><strong>Latency</strong>：批次、近即時、即時，需求決定模式，不是越即時越好。</li>
+<li><strong>Canonical model</strong>：共通格式能大幅減少系統兩兩互轉的成本。</li>
+<li><strong>Coupling</strong>：point-to-point 介面一多，維護成本會指數上升，hub 或共通服務可以集中協調。</li>
+<li><strong>Lineage</strong>：資料從哪來、經過哪些轉換、流向哪裡，這是影響分析和問題追查的基礎。</li>
+</ul>
+<p>全局位置：MDM、資料倉儲、品質追查都建立在整合之上。也是大多數「資料對不起來」問題的技術案發現場。</p>
+<h2 id="語意與品質">語意與品質</h2>
+<h3 id="chapter-10-reference-and-master-data跨系統的一致語意">Chapter 10 Reference and Master Data：跨系統的一致語意</h3>
+<p>主資料和參考資料是多系統共用的核心資料。MDM 著重跨來源整合與身分解析，RDM 著重受控代碼與其定義，兩者都需要業務 Stewardship。</p>
+<ul>
+<li><strong>Master vs. Reference Data</strong>：主資料描述客戶、產品這類核心實體，參考資料是狀態碼、國家碼這類受控值集合。</li>
+<li><strong>Identity resolution</strong>：判斷不同來源的紀錄是否代表同一個實體，再決定連結或合併。</li>
+<li><strong>System of Record</strong>：每個主資料領域要有正式來源，責任才追得到。</li>
+<li><strong>Golden record</strong>：整合後的可信視圖，不代表所有原始紀錄都該被刪除。</li>
+<li><strong>Sharing architecture</strong>：Registry、整併式 Hub、交易型 Hub，在來源控制、集中視圖和 Hub 維護之間取捨。</li>
+</ul>
+<p>全局位置：這一章就是開頭那個「三個系統三種客戶定義」問題的正式解法所在地。它跟治理、品質、整合的綁定非常深，幾乎不可能單獨做完。</p>
+<h3 id="chapter-12-metadata-management資料管理的記憶體">Chapter 12 Metadata Management：資料管理的記憶體</h3>
+<p>Metadata 是理解、管理、尋找、使用資料所需的描述資訊。這章要做的是整合不同來源的 Metadata、維護定義與標準，讓資料來源、流向和影響可查。</p>
+<ul>
+<li><strong>三類 Metadata</strong>：Business（名稱、定義、政策、責任）、Technical（模型、欄位、介面、轉換）、Operational（載入時間、執行狀態、錯誤、使用量）。</li>
+<li><strong>Lineage vs. Impact analysis</strong>：前者描述既有路徑，後者用路徑預測變更會影響什麼。</li>
+<li><strong>Repository 架構</strong>：Centralized 好搜尋但要同步，Distributed 貼近來源但難全域搜尋，Hybrid 兩邊都要維護。</li>
+</ul>
+<p>全局位置：沒有 Metadata，治理、品質、影響分析都只能靠人的記憶運作。資料目錄（Data Catalog）這幾年很紅，其實就是在做這一章。</p>
+<h3 id="chapter-13-data-quality對用途是否適用">Chapter 13 Data Quality：對用途是否適用</h3>
+<p>資料品質的定義是 fitness for use：同一筆資料對某個用途足夠，對另一個用途可能不夠。所以品質管理要依業務規則量測、排優先序、找根因、改善流程並持續監控。</p>
+<ul>
+<li><strong>品質面向</strong>：準確性、完整性、一致性、及時性、有效性、唯一性，哪些適用要看業務規則。</li>
+<li><strong>Business rule</strong>：把「資料應該長什麼樣」寫成可檢查的條件，品質規則才有依據。</li>
+<li><strong>Data profiling</strong>：先看實際資料的分布、空值、重複和異常，再下結論。</li>
+<li><strong>Preventive vs. Corrective</strong>：預防改善輸入流程，矯正處理已存在的錯，兩者不能互相取代。</li>
+<li><strong>Root cause analysis</strong>：只修值不修根因，問題會無限再生。</li>
+</ul>
+<p>全局位置：治理最有感的落地點。報表對不起來、模型效果差、稽核出問題，最後多半會追到這一章。</p>
+<h2 id="消費與進階使用">消費與進階使用</h2>
+<h3 id="chapter-9-document-and-content-management資料庫以外的那一半">Chapter 9 Document and Content Management：資料庫以外的那一半</h3>
+<p>這一章管的是文件、紀錄等非結構化內容的生命週期：捕捉、分類、保護、搜尋、保留與處置。很多合規和證據需求其實落在這裡，不在資料庫。</p>
+<ul>
+<li><strong>Content vs. Record</strong>：文件可能只是工作內容，符合法律或業務證據要求時，才升級成 Record 用更嚴格的規則管理。</li>
+<li><strong>Controlled vocabulary</strong>：統一標籤和分類詞彙，內容才找得到。</li>
+<li><strong>Retention / Disposition</strong>：依規則保存，到期後依法規封存、移轉或安全銷毀。</li>
+<li><strong>E-discovery 與 Legal hold</strong>：法律程序中要能識別、保存、提供相關電子資料，legal hold 會暫停一般銷毀流程。</li>
+</ul>
+<p>全局位置：提醒你資料管理的版圖比資料庫大得多。這一章跟 Metadata、安全、倫理的交錯特別多。</p>
+<h3 id="chapter-11-data-warehousing-and-business-intelligence資料變成決策">Chapter 11 Data Warehousing and Business Intelligence：資料變成決策</h3>
+<p>Data Warehouse 整合並保存適合決策分析的資料，BI 把它轉成報表、儀表板和洞察。書裡同時處理來源、品質、整合、歷史和使用者需求。</p>
+<ul>
+<li><strong>DW 特性</strong>：主題導向、整合、具時間性、相對穩定。</li>
+<li><strong>ODS vs. DW</strong>：ODS 給低延遲的近期營運資料，DW 給整合後的歷史分析。</li>
+<li><strong>Inmon vs. Kimball</strong>：前者從企業級整合倉儲出發，後者從維度資料集市出發，用一致維度（Conformed Dimensions）整合。</li>
+<li><strong>Data Mart</strong>：為特定主題或部門整理的分析區域。</li>
+<li><strong>BI</strong>：報表、自助分析、視覺化，工具要依使用者任務選。</li>
+</ul>
+<p>全局位置：資料被消費成決策的主要出口。倉儲報表出問題時，根因幾乎都在上游的整合和品質，不在報表工具。</p>
+<h3 id="chapter-14-big-data-and-data-science新玩法沒有豁免權">Chapter 14 Big Data and Data Science：新玩法沒有豁免權</h3>
+<p>Big Data 和資料科學擴大了可分析資料的規模、來源和方法，但管理責任沒有消失。從商業假設、資料準備、建模，到部署和監控，品質、Metadata、安全、治理一樣都不能少。</p>
+<ul>
+<li><strong>Data Science 流程</strong>：定義假設、選來源、取得資料、整合、建模、部署、監控，部署不是終點。</li>
+<li><strong>Data Lake</strong>：能收納各種形式的資料，但缺目錄、Metadata、品質和生命週期管理，很快就會變成資料沼澤。</li>
+<li><strong>Predictive vs. Prescriptive</strong>：前者回答「可能發生什麼」，後者回答「在限制下該做什麼」。</li>
+<li><strong>模型生命週期</strong>：特徵、訓練資料、評估方法、版本、部署後表現都要留紀錄。</li>
+<li><strong>Services-based architecture</strong>：Batch layer 保存完整歷史、Speed layer 提供低延遲更新、Serving layer 合併可查詢視圖。</li>
+</ul>
+<p>全局位置：這章在告訴你，資料科學不是資料管理的例外。反過來說，Ch 1 到 13 的整套東西，就是為了讓這一章的產出真的能被信任。</p>
+<h2 id="導讀路徑不要照順序讀">導讀路徑：不要照順序讀</h2>
+<p>這本書照順序讀的 CP 值很低。我建議依目的選路線：</p>
+<p><strong>打底路線</strong>：Ch 1 → Ch 3 → Ch 13 → Ch 12 → Ch 10。先把共同語言、責任、品質、Metadata、主資料弄起來。這五個領域是跨部門吵架最高頻的地方，也是 CDMP 配重最高的幾塊。</p>
+<p><strong>工程路線</strong>：Ch 4 → Ch 5 → Ch 8 → Ch 6 → Ch 11。架構、建模、整合、儲存、倉儲，這條線對做後端和平台的人最順。</p>
+<p><strong>管理路線</strong>：Ch 3 → Ch 16 → Ch 17 → Ch 15。如果你的工作是推動治理、爭取資源、設計組織，這四本比技術章節重要。</p>
+<p><strong>考試路線</strong>：先讀配重 11% 的四個領域（治理、建模、品質、Metadata），再讀 10% 的主資料與倉儲 BI，Process、Ethics、Big Data 各 2% 最後掃過。不過每題都算分，別完全放掉任何一章。</p>
+<p>幾個讀法上的具體建議。每章先看定義和 context diagram，把地圖立起來再看細節。讀完一章做一張自己的速讀卡：30 秒複習、核心概念、易混淆點、三題閉卷回想。讀這本書最大的風險，是讀完之後腦中沒有留下可回憶的結構。最後把易混淆組合單獨拉出來複習：治理與管理、主資料與參考資料、Threat 與 Vulnerability、Inmon 與 Kimball、ETL 與 ELT、ODS 與 DW，考試和實務都在考這些邊界。</p>
+<h2 id="這本書沒辦法給你的東西">這本書沒辦法給你的東西</h2>
+<p>把限制講清楚，才知道該拿它做什麼。</p>
+<p>它是共識文件。每個知識領域都點到為止，深度有限，真要落地還得去看各領域的專書和實務經驗。書裡告訴你「應該做什麼」，很少告訴你「先做哪個、可以不做哪個」。</p>
+<p>它有時效性。2017 年出版，DataOps、Data Mesh、現代雲端資料平台、LLM 治理這些後來的發展，書裡都沒有。讀的時候要自己補上近十年的實務演化。</p>
+<p>它假設的組織比多數讀者的真實組織大。書裡的治理委員會、DMO operating model、Stewardship 體系，對十人團隊來說太重。小團隊可以借它的詞彙和檢查清單，不必照抄它的組織設計。</p>
+<p>還有一個很現實的問題：認證和實務是兩條線。考得過定義辨識題，不代表你能說服業務部門接受一個全域客戶定義；反過來，很多把資料治理做起來的人也沒有這張證照。兩者是互補，不是替代。</p>
+<h2 id="結尾">結尾</h2>
+<p>對我來說，DMBOK 最大的價值在於把資料管理從一堆雜事變成一張可以討論的地圖。它不是流程聖經，它的用處是在會議上問出比較好的問題：這是定義問題、責任問題，還是品質問題？誰有權決定？決定之後誰負責維護？</p>
+<p>如果手上正好有跨系統資料對不起來、報表數字沒人相信、資料專案推不動這類問題，與其先找工具，不如先花幾個小時把這本書的地圖看熟。工具什麼時候都能換，共同語言才是最難補的東西。</p>
+<h2 id="參考資料">參考資料</h2>
+<ul>
+<li><a id="ref-2"></a>[2] DAMA International，〈<a href="https://dama.org/certification/cdmp-certification-levels/">CDMP Certification Levels</a>〉</li>
+<li><a id="ref-3"></a>[3] CDMP.info，〈<a href="https://cdmp.info/about/">About CDMP：Exam Information</a>〉</li>
+<li><a id="ref-4"></a>[4] DAMA International，〈<a href="https://dama.org/certification/cdmp-renewal-and-maintenance/">CDMP Renewal &#x26; Maintenance</a>〉</li>
+</ul></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/bitter-lesson-and-its-critics/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">Bitter Lesson 是什麼：AI 算力擴展的主張、爭議與工程實務，從 Sutton 原文看 LLM</span></a><a href="/blog/nvidia-openshell-agent-runtime-governance/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 text-left no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5 sm:text-right"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">下一篇・較新文章 →</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">NVIDIA OpenShell 是什麼？Agent Runtime 的 Sandbox、政策與憑證治理</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" aria-label="回到文章列表" title="回到文章列表" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[rgb(var(--accent))] focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.ChJcT6jB.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
