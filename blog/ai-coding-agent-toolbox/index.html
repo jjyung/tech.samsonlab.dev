@@ -4,11 +4,11 @@
 	gtag('js', new Date());
 
 	gtag('config', 'G-0WD4Y3ZJE1');
-</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><!-- Primary Meta Tags --><title>AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查</title><meta name="title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta name="description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><meta property="og:title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta property="og:description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><meta property="twitter:title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta property="twitter:description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查","description":"這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。","datePublished":"2026-11-20T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.vzcO94lS.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="mx-auto max-w-[760px] px-4 pt-10 pb-6 text-[rgb(var(--gray-dark))] sm:pt-14 sm:pb-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[var(--accent)]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-11-20T00:00:00.000Z">Nov 20, 2026</time></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ai-coding</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">coding-agent</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">developer-tools</span></div><h1 class="mb-0 text-4xl font-bold leading-[1.2] tracking-[-0.01em] text-[rgb(var(--black))] sm:text-6xl">AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查</h1></div><div class="w-full pb-8"><div class="mx-auto max-w-5xl rounded-xl border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-coding-agent-toolbox.CiQm7eWH_1uAHRo.webp" alt="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-lg bg-white object-contain"></div></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-current prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-lg prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[var(--accent)] sm:prose-xl"><p>使用 Coding Agent 寫程式，除了選擇 Agent 本身，還可以搭配 Skills、程式碼分析、架構圖和多工作目錄工具。這份清單依開發工作階段整理工具，主要根據專案公開資料，尚未逐項實測；實際導入前，建議先確認功能、授權與適用情境。</p>
+</script><!-- Global Metadata --><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="https://tech.samsonlab.dev/favicon.svg"><link rel="sitemap" href="https://tech.samsonlab.dev/sitemap-index.xml"><link rel="alternate" type="application/rss+xml" title="Samson Tech Blog" href="https://tech.samsonlab.dev/rss.xml"><meta name="generator" content="Astro v7.2.4"><!-- Font preloads --><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin><link rel="preload" href="https://tech.samsonlab.dev/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin><!-- Canonical URL --><link rel="canonical" href="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><!-- Primary Meta Tags --><title>AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查</title><meta name="title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta name="description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><meta property="og:title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta property="og:description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><meta property="og:image" content="https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp"><meta property="og:locale" content="zh_TW"><meta property="og:site_name" content="Samson Tech Blog"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://tech.samsonlab.dev/blog/ai-coding-agent-toolbox/"><meta property="twitter:title" content="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查"><meta property="twitter:description" content="這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。"><meta property="twitter:image" content="https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查","description":"這份 AI Coding Agent 工具清單依開發任務整理終端機 Agent、Skills、規格工具、UI 設計、架構圖、程式碼理解、Git worktree 與安全審查工具。每項附上 GitHub 連結、星數快照和適用情境，讓你先選一個順手的 Agent，再按工作需要補上工具，並在導入前確認授權與權限。","datePublished":"2026-11-20T00:00:00.000Z","dateModified":"2026-11-23T00:00:00.000Z","image":{"@type":"ImageObject","url":"https://tech.samsonlab.dev/_astro/ai-coding-agent-toolbox.CiQm7eWH.webp","width":1600,"height":800},"author":{"@type":"Person","name":"Samson","url":"https://tech.samsonlab.dev/"}}</script><link rel="stylesheet" href="/_astro/Header.vzcO94lS.css"></head><body><header class="sticky top-0 z-10 border-b border-[rgb(var(--gray-light))] bg-white/92 px-4 backdrop-blur"><a href="/#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-[rgb(var(--black))] focus:shadow-lg">Skip to main content</a><nav class="mx-auto flex max-w-5xl items-center justify-between gap-4"><div class="m-0 text-base font-semibold leading-none tracking-[0.16em] text-[rgb(var(--black))] uppercase"><a href="/" style="color: rgb(var(--black));" class="cursor-pointer py-5 text-[rgb(var(--black))] no-underline">Samson Tech Blog</a></div><div class="flex items-center gap-1"><a href="/blog/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Blog</a><a href="/projects/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Projects</a><a href="/conferences/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">Conferences</a><a href="/about/" style="color: rgb(var(--black));" class="inline-flex cursor-pointer items-center border-b px-2 py-5 text-sm font-medium uppercase tracking-[0.14em] text-[rgb(var(--black))] no-underline border-transparent">About</a></div><div class="hidden items-center gap-1 sm:flex"><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" style="color: rgb(var(--black));" class="cursor-pointer p-2 text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></nav></header><main id="main-content" class="w-full"><article><div class="mx-auto max-w-[760px] px-4 pt-10 pb-6 text-[rgb(var(--gray-dark))] sm:pt-14 sm:pb-8"><div class="mb-8 border-b border-[rgb(var(--gray-light))] py-4 text-center leading-none sm:mb-10 sm:py-6"><p class="mb-4 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-[var(--accent)]">Architecture Journal</p><div class="mb-3 text-sm uppercase tracking-[0.14em] text-[rgb(var(--gray))]"><time datetime="2026-11-20T00:00:00.000Z">Nov 20, 2026</time><div class="mt-2 text-[0.75rem] italic tracking-normal normal-case">Last updated on <time datetime="2026-11-23T00:00:00.000Z">Nov 23, 2026</time></div></div><div class="mb-4 flex flex-wrap justify-center gap-2"><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">ai-coding</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">coding-agent</span><span class="rounded-full border border-[rgb(var(--gray-light))] px-3 py-0.5 text-xs text-[rgb(var(--gray))]">developer-tools</span></div><h1 class="mb-0 text-4xl font-bold leading-[1.2] tracking-[-0.01em] text-[rgb(var(--black))] sm:text-6xl">AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查</h1></div><div class="w-full pb-8"><div class="mx-auto max-w-5xl rounded-xl border border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] p-3 shadow-[var(--box-shadow)] sm:p-5"><img src="/_astro/ai-coding-agent-toolbox.CiQm7eWH_1uAHRo.webp" alt="AI Coding Agent 工具箱：從選 Agent、搭配 Skills 到介面設計、程式碼理解與安全審查" loading="eager" fetchpriority="high" decoding="async" width="1600" height="800" class="block w-full rounded-lg bg-white object-contain"></div></div><div class="prose prose-lg max-w-none text-[rgb(var(--gray-dark))] prose-headings:tracking-[-0.03em] prose-headings:text-[rgb(var(--black))] prose-lead:text-[rgb(var(--gray))] prose-a:text-[var(--accent)] prose-a:decoration-current prose-a:underline prose-a:underline-offset-[0.22em] prose-a:hover:text-[rgb(var(--black))] prose-strong:text-[rgb(var(--black))] prose-blockquote:border-l-[var(--accent)] prose-blockquote:bg-[rgb(var(--surface))] prose-blockquote:px-5 prose-blockquote:py-3 prose-blockquote:text-[rgb(var(--gray-dark))] prose-code:rounded prose-code:bg-[rgb(var(--surface))] prose-code:px-[5px] prose-code:py-[2px] prose-pre:rounded-lg prose-pre:border prose-pre:border-[rgb(var(--gray-light))] prose-pre:bg-[rgb(var(--black))] prose-pre:px-6 prose-pre:py-6 prose-pre:text-[rgb(245_247_250)] prose-img:rounded-lg prose-img:border prose-img:border-[rgb(var(--gray-light))] prose-hr:border-[rgb(var(--gray-light))] prose-li:marker:text-[var(--accent)] sm:prose-xl"><p>使用 Coding Agent 寫程式，除了選擇 Agent 本身，還可以搭配 Skills、程式碼分析、架構圖和多工作目錄工具。這份清單依開發工作階段整理工具，主要根據專案公開資料，尚未逐項實測；實際導入前，建議先確認功能、授權與適用情境。</p>
 <blockquote>
-<p>GitHub Star 數除另有註明外，為 <strong>2026 年 11 月 19 日</strong> 透過 GitHub API 查詢的快照，會隨時間變動。Star 數只能反映關注程度，不代表品質或安全性。工具開源也不代表搭配的模型免費，或資料一定留在本機。</p>
+<p>GitHub Star 數除另有註明外，為 <strong>2026 年 11 月 19 日</strong> 透過 GitHub API 查詢的快照，會隨時間變動。Star 數只能反映關注程度，不代表品質或安全性。</p>
 </blockquote>
-<h2 id="選擇-coding-agent-與管理任務">選擇 Coding Agent 與管理任務</h2>
+<h2 id="通用">通用</h2>
 <h3 id="coding-agents">Coding Agents</h3>
 
 
@@ -35,8 +35,8 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/anomalyco/opencode">OpenCode</a></td><td align="right">227,846</td><td>想在終端機或桌面環境使用可切換模型的 Coding Agent，可以從這裡開始。</td></tr><tr><td><a href="https://github.com/earendil-works/pi">Pi</a></td><td align="right">122,771</td><td>偏好精簡核心，並想透過 extensions 和 skills 自行組裝工作流程時，可以試試 Pi。</td></tr><tr><td><a href="https://github.com/openai/codex">Codex CLI</a></td><td align="right">135,809</td><td>想在終端機使用 OpenAI 的 Coding Agent 時可以試試；CLI 採 Apache 2.0 授權，模型使用條件另計。</td></tr></tbody></table>
-<h3 id="agent-管理與編排">Agent 管理與編排</h3>
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/anomalyco/opencode">OpenCode</a></td><td align="right">227,846</td><td>想在終端機或桌面環境使用可切換模型的 Coding Agent，可以從這裡開始。</td></tr><tr><td><a href="https://github.com/openai/codex">Codex CLI</a></td><td align="right">135,809</td><td>想在終端機使用 OpenAI 的 Coding Agent 時可以試試；CLI 採 Apache 2.0 授權，模型使用條件另計。</td></tr><tr><td><a href="https://github.com/earendil-works/pi">Pi</a></td><td align="right">122,771</td><td>偏好精簡核心，並想透過 extensions 和 skills 自行組裝工作流程時，可以試試 Pi。</td></tr></tbody></table>
+<h3 id="agent-管理與平行開發">Agent 管理與平行開發</h3>
 
 
 
@@ -57,11 +57,21 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/pingdotgg/t3code">T3 Code</a></td><td align="right">65,306</td><td>想透過圖形介面管理 Coding Agent 的任務和進度，可以看看 T3 Code。</td></tr><tr><td><a href="https://github.com/multica-ai/multica">Multica</a></td><td align="right">56,626</td><td>需要把人員、Agent 和任務放進同一個協作空間時，可以評估 Multica；使用前請確認其額外授權條件。</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/pingdotgg/t3code">T3 Code</a></td><td align="right">65,306</td><td>想透過圖形介面管理 Coding Agent 的任務和進度，可以看看 T3 Code。</td></tr><tr><td><a href="https://github.com/multica-ai/multica">Multica</a></td><td align="right">56,626</td><td>需要把人員、Agent 和任務放進同一個協作空間時，可以評估 Multica；使用前請確認其額外授權條件。</td></tr><tr><td><a href="https://github.com/herdrdev/herdr">Herdr</a></td><td align="right">52,342（2026 年 11 月 23 日）</td><td>同時跑多個 Coding Agent 時，可以在同一個終端機切換工作階段，查看哪些 Agent 還在跑、哪些已經完成。</td></tr><tr><td><a href="https://github.com/max-sixty/worktrunk">Worktrunk</a></td><td align="right">12,625</td><td>同時讓多個 Agent 處理不同任務時，用它管理 Git worktree 和隔離工作目錄。</td></tr></tbody></table>
+<p>Herdr 管理終端機工作階段，Worktrunk 管理 Git 工作目錄。可以讓不同 Agent 在各自的 worktree 工作，再用 Herdr 查看執行狀態。</p>
 <blockquote>
 <p>Multica 的專案文件將它描述為 source-available，其授權在 Apache 2.0 文字之外另有條件；因此與本清單其他標準開源授權專案分開看待。</p>
 </blockquote>
-<h2 id="釐清需求與規劃開發流程">釐清需求與規劃開發流程</h2>
 <h3 id="skills-集合">Skills 集合</h3>
 
 
@@ -101,7 +111,7 @@
 <table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/mattpocock/skills">Matt Pocock’s Skills</a></td><td align="right">327,606</td><td>需要釐清需求、規劃或開發時，可按任務挑選 Skill，不必一次導入全部。</td></tr><tr><td><a href="https://github.com/affaan-m/ECC">Everything Claude Code（ECC）</a></td><td align="right">306,740</td><td>想參考 Skills、記憶與安全機制的整合方式可以看 ECC；導入前先挑選需要的功能。</td></tr><tr><td><a href="https://github.com/anthropics/skills">Anthropic Skills</a></td><td align="right">197,344</td><td>想參考官方 Skills 的結構與範例，可以從這個集合開始；使用前請逐項確認授權。</td></tr><tr><td><a href="https://github.com/addyosmani/agent-skills">Addy Osmani’s Agent Skills</a></td><td align="right">119,043</td><td>想用可選的 Skills 涵蓋需求、TDD、審查與發布等工程工作，可以參考這組集合。</td></tr><tr><td><a href="https://github.com/ComposioHQ/awesome-claude-skills">Awesome Claude Skills</a></td><td align="right">79,852</td><td>想依用途尋找其他 Skills 與工具時，可以把它當成資源目錄；各項專案仍需個別確認品質與授權。</td></tr></tbody></table>
 <p>ECC 除了 Skills，也包含較廣的 Agent 工作流程。安裝這些工具前，請確認各功能支援的 Agent，以及需要授予的權限。</p>
 <p>Matt Pocock’s Skills 裡的 <strong><code>grill-me</code></strong> 會針對想法或需求持續追問，協助你在開始實作前釐清尚未決定的問題。適合用在需求模糊、需要先討論取捨的時候；上表的 Star 數是整個儲存庫的數字，不是這個 Skill 的獨立數據。</p>
-<h3 id="需求規格與開發流程">需求、規格與開發流程</h3>
+<h3 id="contexttoken-管理">Context／Token 管理</h3>
 
 
 
@@ -127,72 +137,10 @@
 
 
 
-
-
-
-
-
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/obra/superpowers">Superpowers</a></td><td align="right">321,473</td><td>重視 TDD、審查與驗證時可以試用；小任務需留意流程成本。</td></tr><tr><td><a href="https://github.com/github/spec-kit">Spec Kit</a></td><td align="right">150,544</td><td>需要將規格、計畫與任務留下來時可以試用；團隊也需要維護這些產物。</td></tr><tr><td><a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a></td><td align="right">75,216</td><td>想以變更為單位管理規格與任務時可以試用，也適合在既有專案評估。</td></tr><tr><td><a href="https://github.com/bmad-code-org/BMAD-METHOD">BMad Method</a></td><td align="right">55,531</td><td>需要涵蓋分析、規劃與實作的完整流程時可以參考，不一定要整套導入。</td></tr></tbody></table>
-<p><strong>Superpowers</strong> 的特色是把多個 Skills 串成開發流程：先透過 brainstorming 確認需求與設計，再拆解實作計畫；實作時強調 TDD 的 Red-Green-Refactor 循環，並搭配程式碼審查與完成前驗證。它也提供 Git worktree 和子代理協作的流程，但實際使用時仍要確認 Agent 的支援情況，並留意流程帶來的時間與 token 成本。</p>
-<p><strong>Spec Kit</strong> 則以規格驅動開發為主要入口，透過專案原則、規格、計畫與任務等產物，讓人與 Agent 逐步確認要做什麼、如何實作。它也提供獨立的除錯與構想評估擴充；相較 Superpowers 強調的 TDD 與開發紀律，Spec Kit 的切入點是維護規格和流程產物，兩者並非互斥。</p>
-<h2 id="設計介面與理解程式碼">設計介面與理解程式碼</h2>
-<h3 id="uiux-skills">UI/UX Skills</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill">UI UX Pro Max</a></td><td align="right">151,377</td><td>需要替 Agent 補上介面風格、配色與設計系統建議時，可以從這個 Skill 開始。</td></tr><tr><td><a href="https://github.com/pbakaus/impeccable">Impeccable</a></td><td align="right">112,943</td><td>想用設計指令調整介面，並檢查視覺、可及性與常見 AI 樣板問題時可以試用。</td></tr><tr><td><a href="https://github.com/Nutlope/hallmark">Hallmark</a></td><td align="right">57,572</td><td>想讓 Agent 在產生或重設計網頁時避開常見制式風格，可以看看 Hallmark。</td></tr><tr><td><a href="https://github.com/Leonxlnx/taste-skill">Taste Skill</a></td><td align="right">118,648</td><td>想引導 Agent 設計或重設計網站，並透過瀏覽器檢查成果時可以試用；設計風格和素材仍須自行審核。</td></tr><tr><td><a href="https://github.com/GoogleChrome/modern-web-guidance-src">Modern Web Guidance</a></td><td align="right">8,924</td><td>想讓 Agent 在前端開發時參考現代瀏覽器 API、可及性與相容性建議，可以試試這組 Skills。</td></tr></tbody></table>
-<p>Modern Web Guidance 不只是視覺設計工具，也提供網頁平台與漸進增強的實作指引。上表 Star 數來自提供編輯與評估工具的來源儲存庫；實際發布的 Skills 位於 <a href="https://github.com/GoogleChrome/modern-web-guidance">modern-web-guidance</a>。專案程式碼與文件分別採用不同授權，使用前請確認。</p>
-<h3 id="ui-設計系統與元件">UI 設計系統與元件</h3>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/meta/astryx">Astryx</a></td><td align="right">30,693</td><td>想讓人與 Agent 共用 React 元件、主題和文件時可以評估；目前為 Beta，需使用 React 19 以上版本。</td></tr></tbody></table>
-<p>Astryx 是 Meta 開源的設計系統，提供可直接用來建構介面的 React 元件、主題和 CLI。</p>
-<h3 id="架構圖與視覺化">架構圖與視覺化</h3>
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/JuliusBrussee/caveman">Caveman</a></td><td align="right">121,326</td><td>想讓 Agent 的回覆更短、減少輸出 token 時，可以試試 Caveman。</td></tr><tr><td><a href="https://github.com/rtk-ai/rtk">RTK</a></td><td align="right">87,133</td><td>想精簡開發指令輸出以減少 Context 消耗時可以試用；排查問題時仍應確認是否需要完整輸出。</td></tr><tr><td><a href="https://github.com/headroomlabs-ai/headroom">Headroom</a></td><td align="right">80,122</td><td>想透過 Library、Proxy 或 Agent wrapper 壓縮工具輸出與訊息內容時可以評估；實際效果與原文取回能力取決於整合方式。</td></tr></tbody></table>
+<p>RTK 主要從 Shell 指令輸出切入，也提供可選的 API proxy；Headroom 則提供較通用的 Context 壓縮層。兩者的處理範圍可能重疊，搭配使用前應測試資訊保留和任務結果，不宜直接將節省比例相加。</p>
+<p>RTK 的 <code>rtk-oss</code> 版本採 Apache 2.0；完整 <code>rtk</code> 和 <code>rtk-proxy</code> 包含 BUSL-1.1 元件，使用前應確認各版本授權條件。</p>
+<h2 id="架構架構圖與說明頁">架構：架構圖與說明頁</h2>
 
 
 
@@ -220,7 +168,7 @@
 
 <table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/tt-a1i/archify">Archify</a></td><td align="right">97,770</td><td>想把需求、流程或程式碼庫轉成互動式架構圖與說明頁面時，可以試試 Archify。</td></tr><tr><td><a href="https://github.com/nicobailon/visual-explainer">Visual Explainer</a></td><td align="right">11,187</td><td>想把架構、方案比較或計畫整理成包含圖表的 HTML 說明頁時，可以試用。</td></tr><tr><td><a href="https://github.com/Agents365-ai/drawio-skill">drawio-skill</a></td><td align="right">10,872</td><td>需要讓 Agent 產生可在 draw.io 繼續編輯的架構圖、ERD 或流程圖時，可以評估。</td></tr></tbody></table>
 <p>Visual Explainer 與 drawio-skill 的 Star 數查詢日期為 2026 年 11 月 20 日。前者偏向整合圖文的說明頁，後者偏向可繼續編輯的圖表；實際產出仍需檢查內容與配置。</p>
-<h3 id="程式開發與程式碼理解">程式開發與程式碼理解</h3>
+<h2 id="畫面uiux-與前端開發">畫面：UI/UX 與前端開發</h2>
 
 
 
@@ -246,9 +194,6 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/Graphify-Labs/graphify">Graphify</a></td><td align="right">150,198</td><td>想從程式碼與文件建立可查詢的關係圖譜，輔助理解專案時可以試用。</td></tr><tr><td><a href="https://github.com/Egonex-AI/Understand-Anything">Understand Anything</a></td><td align="right">93,234</td><td>想以互動式知識圖譜探索程式碼庫或 Wiki 時可以試用；首次分析大型專案可能消耗較多 token。</td></tr><tr><td><a href="https://github.com/DietrichGebert/ponytail">Ponytail</a></td><td align="right">194,087</td><td>希望 Agent 寫新程式前先考慮既有功能與較簡單解法時，可以加入這組 Skills。</td></tr></tbody></table>
-<h2 id="平行開發與管理上下文">平行開發與管理上下文</h2>
-<h3 id="開發體驗與平行工作">開發體驗與平行工作</h3>
 
 
 
@@ -264,13 +209,16 @@
 
 
 
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill">UI UX Pro Max</a></td><td align="right">151,377</td><td>需要替 Agent 補上介面風格、配色與設計系統建議時，可以從這個 Skill 開始。</td></tr><tr><td><a href="https://github.com/Leonxlnx/taste-skill">Taste Skill</a></td><td align="right">118,648</td><td>想引導 Agent 設計或重設計網站，並透過瀏覽器檢查成果時可以試用；設計風格和素材仍須自行審核。</td></tr><tr><td><a href="https://github.com/pbakaus/impeccable">Impeccable</a></td><td align="right">112,943</td><td>想用設計指令調整介面，並檢查視覺、可及性與常見 AI 樣板問題時可以試用。</td></tr><tr><td><a href="https://github.com/Nutlope/hallmark">Hallmark</a></td><td align="right">57,572</td><td>想讓 Agent 在產生或重設計網頁時避開常見制式風格，可以看看 Hallmark。</td></tr><tr><td><a href="https://github.com/meta/astryx">Astryx</a></td><td align="right">30,693</td><td>想讓人與 Agent 共用 React 元件、主題和文件時可以評估；目前為 Beta，需使用 React 19 以上版本。</td></tr><tr><td><a href="https://github.com/GoogleChrome/modern-web-guidance-src">Modern Web Guidance</a></td><td align="right">8,924</td><td>想讓 Agent 在前端開發時參考現代瀏覽器 API、可及性與相容性建議，可以試試這組 Skills。</td></tr></tbody></table>
+<p>Modern Web Guidance 不只是視覺設計工具，也提供網頁平台與漸進增強的實作指引。上表 Star 數來自提供編輯與評估工具的來源儲存庫；實際發布的 Skills 位於 <a href="https://github.com/GoogleChrome/modern-web-guidance">modern-web-guidance</a>。專案程式碼與文件分別採用不同授權，使用前請確認。</p>
+<p>Astryx 是 Meta 開源的設計系統，提供實際用來建構介面的元件、主題與 CLI。表中的 Skills 則提供設計或實作指引。</p>
+<h2 id="開發">開發</h2>
+<h3 id="開發流程與規格驅動">開發流程與規格驅動</h3>
 
 
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/max-sixty/worktrunk">Worktrunk</a></td><td align="right">12,625</td><td>同時讓多個 Agent 處理不同任務時，用它管理 Git worktree 和隔離工作目錄。</td></tr><tr><td><a href="https://github.com/JuliusBrussee/caveman">Caveman</a></td><td align="right">121,326</td><td>想精簡 Agent 的文字輸出、減少閱讀負擔時，可以試試 Caveman。</td></tr></tbody></table>
-<h3 id="contexttoken-管理">Context／Token 管理</h3>
 
 
 
@@ -291,16 +239,15 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/rtk-ai/rtk">RTK</a></td><td align="right">87,133</td><td>想精簡開發指令輸出以減少 Context 消耗時可以試用；排查問題時仍應確認是否需要完整輸出。</td></tr><tr><td><a href="https://github.com/headroomlabs-ai/headroom">Headroom</a></td><td align="right">80,122</td><td>想透過 Library、Proxy 或 Agent wrapper 壓縮工具輸出與訊息內容時可以評估；實際效果與原文取回能力取決於整合方式。</td></tr></tbody></table>
-<p>RTK 主要從 Shell 指令輸出切入，也提供可選的 API proxy；Headroom 則提供較通用的 Context 壓縮層。兩者的處理範圍可能重疊，搭配使用前應測試資訊保留和任務結果，不宜直接將節省比例相加。</p>
-<p>RTK 的 <code>rtk-oss</code> 版本採 Apache 2.0；完整 <code>rtk</code> 和 <code>rtk-proxy</code> 包含 BUSL-1.1 元件，使用前應確認各版本授權條件。</p>
-<h2 id="審閱計畫程式碼與安全問題">審閱計畫、程式碼與安全問題</h2>
-<h3 id="人工審閱與回饋">人工審閱與回饋</h3>
 
 
 
 
 
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/obra/superpowers">Superpowers</a></td><td align="right">321,473</td><td>想把需求釐清、規劃、實作和審查串成一套開發流程時可以試用；實作採用 TDD，小任務需留意流程成本。</td></tr><tr><td><a href="https://github.com/github/spec-kit">Spec Kit</a></td><td align="right">150,544</td><td>想從規格一路拆出計畫與任務，再交給 Agent 實作時可以試用；團隊也需要維護這些產物。</td></tr><tr><td><a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a></td><td align="right">75,216</td><td>想以每次變更為單位，把規格、任務與實作串起來時可以試用，也適合在既有專案評估。</td></tr><tr><td><a href="https://github.com/bmad-code-org/BMAD-METHOD">BMad Method</a></td><td align="right">55,531</td><td>需要涵蓋分析、規劃與實作的完整流程時可以參考，不一定要整套導入。</td></tr></tbody></table>
+<p><strong>Superpowers</strong> 把多個 Skills 串成開發流程：先透過 brainstorming 確認需求與設計，再拆解實作計畫；實作時採用 TDD 的 Red-Green-Refactor 循環，並搭配程式碼審查與完成前驗證。它也提供 Git worktree 和子代理協作的流程，但實際使用時仍要確認 Agent 的支援情況，並留意流程帶來的時間與 token 成本。</p>
+<p><strong>Spec Kit</strong> 以規格驅動開發為入口，透過專案原則、規格、計畫與任務等產物，讓人與 Agent 逐步確認要做什麼、如何實作。它也提供獨立的除錯與構想評估擴充。</p>
+<h3 id="程式碼索引與關係查詢">程式碼索引與關係查詢</h3>
 
 
 
@@ -311,9 +258,6 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/backnotprop/plannotator">Plannotator</a></td><td align="right">13,549</td><td>想在瀏覽器標註 Agent 的計畫、文件或程式碼差異，並將意見送回 Agent 時可以試用。</td></tr></tbody></table>
-<p>Plannotator 可與 T3 Code 整合，讓審閱和任務管理各有入口。</p>
-<h3 id="程式碼審查">程式碼審查</h3>
 
 
 
@@ -324,14 +268,37 @@
 
 
 
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/Graphify-Labs/graphify">Graphify</a></td><td align="right">150,198</td><td>想查程式碼與文件之間的關聯，例如改動前先找出相關模組和文件，可以用它建立可查詢的關係圖譜。</td></tr><tr><td><a href="https://github.com/Egonex-AI/Understand-Anything">Understand Anything</a></td><td align="right">93,234</td><td>想以互動式知識圖譜探索程式碼庫或 Wiki 時可以試用；首次分析大型專案可能消耗較多 token。</td></tr></tbody></table>
+<h3 id="實作審閱與回饋">實作、審閱與回饋</h3>
 
 
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/alibaba/open-code-review">Open Code Review</a></td><td align="right">54,242</td><td>想用專門的審查流程分析 Git 差異或掃描檔案時可以試用；結果仍需人工判斷。</td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/DietrichGebert/ponytail">Ponytail</a></td><td align="right">194,087</td><td>希望 Agent 寫新程式前先考慮既有功能與較簡單解法時，可以加入這組 Skills。</td></tr><tr><td><a href="https://github.com/alibaba/open-code-review">Open Code Review</a></td><td align="right">54,242</td><td>想用專門的審查流程分析 Git 差異或掃描檔案時可以試用；結果仍需人工判斷。</td></tr><tr><td><a href="https://github.com/backnotprop/plannotator">Plannotator</a></td><td align="right">13,549</td><td>想在瀏覽器標註 Agent 的計畫、文件或程式碼差異，並將意見送回 Agent 時可以試用。</td></tr></tbody></table>
 <p>Open Code Review 結合規則、固定的審查步驟與 AI Agent，也提供 Skills，讓現有 Coding Agent 參與審查。專案提供自行設定模型的原生模式，以及使用既有 Agent 模型與驗證方式的委派模式；兩種模式的執行流程不同。</p>
-<h3 id="安全審查">安全審查</h3>
+<p>Plannotator 著重讓人審閱成果並提供回饋；它不是用來取代 T3 Code 或 Multica 的 Agent 管理介面，也可與 T3 Code 整合。</p>
+<h2 id="資安審查">資安審查</h2>
 
 
 
@@ -357,8 +324,8 @@
 
 
 
-<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/cloudflare/security-audit-skill">security-audit-skill</a></td><td align="right">75,403</td><td>想讓 Agent 有系統地協助檢查程式碼安全問題時可以試用，但結果仍需人工驗證，不能取代完整的安全測試。</td></tr><tr><td><a href="https://github.com/semgrep/semgrep">Semgrep</a></td><td align="right">17,815</td><td>想用規則式靜態分析輔助尋找安全問題時可以試用；應區分開源核心與商業功能，並人工確認結果。</td></tr><tr><td><a href="https://github.com/openai/codex-security">Codex Security</a></td><td align="right">14,148</td><td>想掃描程式碼、整理疑似安全問題並協助修補時可以評估；模型使用與部分資安能力的存取條件另計。</td></tr></tbody></table>
+<table><thead><tr><th>工具</th><th align="right">GitHub Stars</th><th>一句話建議</th></tr></thead><tbody><tr><td><a href="https://github.com/cloudflare/security-audit-skill">security-audit-skill</a></td><td align="right">75,403</td><td>想讓 Agent 有系統地協助檢查程式碼安全問題時可以試用，但結果仍需人工驗證，不能取代完整的安全測試。</td></tr><tr><td><a href="https://github.com/semgrep/semgrep">Semgrep</a></td><td align="right">17,815</td><td>想用規則式靜態分析輔助尋找安全問題時可以試用；應區分開源核心與商業功能，並人工確認結果。</td></tr><tr><td><a href="https://github.com/openai/codex-security">Codex Security</a></td><td align="right">14,148</td><td>想掃描程式碼、驗證疑似漏洞並協助產生修補方案時可以評估；模型使用與部分資安能力的存取條件另計。</td></tr></tbody></table>
 <p>Codex Security 提供 CLI、TypeScript SDK 與 Codex 工作流程，可掃描儲存庫、指定路徑或 Git 變更。它的 CLI 與 SDK 採 Apache 2.0 授權；模型服務的費用、資料處理方式與帳號資格仍須另行確認。掃描報告應檢查證據和排除範圍，不能視為沒有漏洞的保證。</p>
 <h2 id="怎麼開始">怎麼開始？</h2>
-<p>不必一次裝完所有工具。先挑一個順手的 Coding Agent，再依眼前的工作補上需要的能力：要做介面就試 UI/UX Skill，需要理解專案就<a href="/blog/graphify-knowledge-graph-first-code-tracing/">用 Graphify 追程式碼</a>，要平行處理任務再考慮 worktree 或編排平台。</p>
+<p>不必一次裝完所有工具。先挑一個順手的 Coding Agent，再依眼前的工作補上需要的能力：要做介面就試 UI/UX Skill，需要理解專案就<a href="/blog/graphify-knowledge-graph-first-code-tracing/">看 Graphify</a>。要平行處理任務，可以用 Worktrunk 隔離工作目錄，或用 Herdr 查看各 Agent 的執行狀態。</p>
 <p>安裝第三方 Skills 前，先閱讀其指示、腳本與權限需求；工具如何呼叫模型、處理程式碼與執行指令，也應依專案敏感度確認。</p></div><nav class="mt-14 border-t border-[rgb(var(--gray-light))] pt-8 sm:mt-18" aria-label="文章導覽"><div class="grid gap-4 sm:grid-cols-2"><a href="/blog/from-code-graph-to-repo-wiki-self-growing-knowledge-layer/" class="group rounded-xl border border-[rgb(var(--gray-light))] p-4 no-underline transition-colors hover:border-[rgb(var(--gray))] sm:p-5"><span class="block text-xs uppercase tracking-[0.14em] text-[rgb(var(--gray))]">← 上一篇・較早文章</span><span class="mt-2 block font-bold leading-snug text-[rgb(var(--black))] group-hover:text-[var(--accent)]">Code Graph 到 Repo Wiki：用 LangChain OpenWiki 讓文件跟著程式碼更新</span></a></div><a href="/blog/" class="mx-auto mt-8 block w-fit text-sm font-bold uppercase tracking-[0.14em] text-[rgb(var(--gray-dark))] hover:text-[var(--accent)]">回到 Blog</a></nav></div></article></main><div class="fixed left-4 z-20 sm:left-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><a href="/blog/" data-blog-list-link aria-label="回到文章列表" aria-keyshortcuts="ArrowLeft" title="回到文章列表（←）" class="flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M19 12H5m0 0 6-6m-6 6 6 6"></path></svg><span class="sr-only">回到文章列表</span></a></div><div class="fixed right-4 z-20 sm:right-6" style="bottom: calc(1rem + env(safe-area-inset-bottom));"><button type="button" data-back-to-top tabindex="-1" aria-label="回到文章開頭" title="回到文章開頭" class="hidden h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--gray-light))] bg-white/95 text-[rgb(var(--gray-dark))] shadow-[var(--box-shadow)] backdrop-blur transition-colors hover:border-[rgb(var(--gray))] hover:text-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"><svg viewBox="0 0 24 24" aria-hidden="true" class="h-5 w-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M12 19V5m0 0 6 6m-6-6-6 6"></path></svg><span class="sr-only">回到文章開頭</span></button></div><script type="module" src="/_astro/BlogPost.astro_astro_type_script_index_0_lang.B4LDDJOP.js"></script><footer class="mt-20 border-t border-[rgb(var(--gray-light))] bg-[rgb(var(--surface))] px-4 pb-20 pt-8 text-center text-[rgb(var(--gray))]"><div class="mx-auto max-w-5xl"><p class="m-0 text-xs uppercase tracking-[0.16em]">&copy; 2026 Samson. All rights reserved.</p><div class="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3"><a href="/rss.xml" aria-label="RSS" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">RSS</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28"><path fill="currentColor" d="M5.75 4.75a.75.75 0 0 0 0 1.5c6.627 0 12 5.373 12 12a.75.75 0 0 0 1.5 0c0-7.456-6.044-13.5-13.5-13.5a.75.75 0 0 0 0 1.5Zm0 6a.75.75 0 0 0 0 1.5 6 6 0 0 1 6 6 .75.75 0 0 0 1.5 0 7.5 7.5 0 0 0-7.5-7.5ZM6.5 21.25a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z"></path></svg></a><a href="https://www.linkedin.com/in/samson-zheng/" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on LinkedIn</span><svg viewBox="0 0 24 24" aria-hidden="true" width="28" height="28" astro-icon="social/linkedin"><path fill="currentColor" d="M6.94 8.5A1.56 1.56 0 1 0 6.94 5.38a1.56 1.56 0 0 0 0 3.12ZM5.62 18.5h2.63V9.56H5.62v8.94Zm4.11 0h2.62v-4.99c0-1.31.25-2.58 1.88-2.58 1.6 0 1.62 1.5 1.62 2.66v4.9h2.63v-5.44c0-2.67-.58-4.72-3.7-4.72-1.5 0-2.5.83-2.91 1.62h-.03V9.56H9.73c.03.62 0 8.94 0 8.94ZM4.15 3.5h15.7A.65.65 0 0 1 20.5 4.15v15.7a.65.65 0 0 1-.65.65H4.15a.65.65 0 0 1-.65-.65V4.15a.65.65 0 0 1 .65-.65Z"></path></svg></a><a href="https://github.com/jjyung" target="_blank" rel="noreferrer" class="text-[rgb(var(--gray))] no-underline transition-colors hover:text-[rgb(var(--black))]"><span class="sr-only">Visit Samson on GitHub</span><svg viewBox="0 0 16 16" aria-hidden="true" width="28" height="28" astro-icon="social/github"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></div></div></footer></body></html>
