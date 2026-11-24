@@ -11,7 +11,9 @@
 | `awesome-claude-skills.png` | GitHub 組織頭像 | [Composio](https://avatars.githubusercontent.com/u/128464815?s=60&v=4) |
 | `bmad-method.png` | 文件站 favicon | [BMAD-METHOD 儲存庫](https://github.com/bmad-code-org/BMAD-METHOD/blob/main/docs-site/public/favicon.svg) |
 | `caveman.png` | 擴充功能圖示 | [Caveman 儲存庫](https://github.com/JuliusBrussee/caveman/blob/main/extension/icons/icon48.png) |
+| `cli-anything.png` | 專案 README 圖示 | [CLI-Anything 儲存庫](https://github.com/HKUDS/CLI-Anything/blob/main/assets/icon.png) |
 | `codex.png` | Codex 產品圖示 | [Codex 官網素材](https://images.ctfassets.net/8su2tbn87fck/37ep8OPlSuUYpcTFkkW9NO/1a6381ac6612a83ec6d07b3fac5c5228/Blossom_4k_Icon_1.png) |
+| `diagram-design.png` | Codex 外掛標誌 | [圖示](https://github.com/cathrynlavery/diagram-design/blob/main/assets/logo.png)・[外掛設定](https://github.com/cathrynlavery/diagram-design/blob/main/.codex-plugin/plugin.json#L48) |
 | `ecc.svg` | 專案圖示 | [ECC 儲存庫](https://github.com/affaan-m/ECC/blob/main/assets/ecc-icon.svg) |
 | `graphify.png` | 官網頁首標誌 | [Graphify 官網的六角形 G](https://graphify.com/assets/logo-icon.svg) |
 | `hallmark.png` | 官網 favicon | [Hallmark](https://www.usehallmark.com/favicon.svg) |
@@ -35,4 +37,5 @@
 | `taste-skill.png` | 官網 favicon | [Taste Skill](https://tasteskill.dev/favicon.webp) |
 | `ui-ux-pro-max.png` | 官網 favicon | [UI/UX Pro Max](https://www.uupm.cc/icon.svg) |
 | `understand-anything.png` | 官網 favicon | [Understand Anything 儲存庫](https://github.com/Egonex-AI/Understand-Anything/blob/main/homepage/public/favicon.svg) |
+| `univer.png` | 官網 favicon | [Univer](https://univer.ai/favicon.svg) |
 | `worktrunk.png` | 文件站 favicon | [Worktrunk 儲存庫](https://github.com/max-sixty/worktrunk/blob/main/docs/public/favicon-48.png) |
